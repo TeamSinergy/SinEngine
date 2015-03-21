@@ -11,10 +11,7 @@
 
 bool FirstFile(const String& folder, String& path_found)            // placing path here if found
 {
-
-	//printf(TEXT("Target file is %s\n"), argv[1]);
-	//hFind = FindFirstFile(folder.c_str(), &FindFileData);
-	//ErrorIf(hFind == INVALID_HANDLE_VALUE, "Failed To Find Directory: %s\n", directory.c_str());
+	//NOT CROSS PLATFORM!
 	std::vector<std::string> names;
 	char search_path[200];
 
@@ -74,7 +71,7 @@ int main(void)
 	ZilchLibrary.Initialize();
 	
 	String path;
-	FirstFile("C:/Users/Josh/Desktop/SinEngine/Assets/*", path);
+	FirstFile("../*", path);
 	
 
 	system("pause");
