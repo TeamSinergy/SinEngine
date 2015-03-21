@@ -13,6 +13,9 @@
     <Filter Include="Source\Build\Console">
       <UniqueIdentifier>{178C380D-031B-C2D6-AC39-D6D198A7D27C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Build\Serializer">
+      <UniqueIdentifier>{DE517331-4A89-BBC8-5393-1FECBF49E2C1}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Core">
       <UniqueIdentifier>{6E95150F-DA4A-8E04-633F-88DBCFF38408}</UniqueIdentifier>
     </Filter>
@@ -32,11 +35,17 @@
     <ClInclude Include="..\Source\Build\Precompiled.h">
       <Filter>Source\Build</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Build\Serializer\Serializer.h">
+      <Filter>Source\Build\Serializer</Filter>
+    </ClInclude>
     <ClInclude Include="..\Source\Core\Engine.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Core\SinEntity.h">
       <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Zilch\ZilchCompiledLib.h">
+      <Filter>Source\Zilch</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -45,6 +54,9 @@
     </ClCompile>
     <ClCompile Include="..\Source\Build\Precompiled.cpp">
       <Filter>Source\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Build\Serializer\Serializer.cpp">
+      <Filter>Source\Build\Serializer</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Core\Engine.cpp">
       <Filter>Source\Core</Filter>
@@ -56,6 +68,9 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Zilch\Zilch.cpp">
+      <Filter>Source\Zilch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Zilch\ZilchCompiledLib.cpp">
       <Filter>Source\Zilch</Filter>
     </ClCompile>
   </ItemGroup>

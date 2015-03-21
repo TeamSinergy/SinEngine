@@ -1,0 +1,20 @@
+Engine = 
+{
+    Settings = 
+    {
+        String Name = "SinEngine";
+        Real Size = 1.5;
+        
+    },
+    OtherSystem = 
+    {
+        String Name = "HelloWorld";
+        Integer Guy = 10;
+        Real Size = 1.5;
+        Real2 Tuple = [0, 1];
+        Real3 Position = [3, 10, 16];
+        Real4 Color = [10.5, 12.84, 289, 666];
+        //Array[Integer] = [ 
+        /* This is a comment */
+    },
+},

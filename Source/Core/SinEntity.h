@@ -1,12 +1,15 @@
 #pragma once
 
+#define ComponentPointer(Name) Name* Name = nullptr
+
 class DataNode
 {
 };
 
-class SinEntity
+class SinEntity : public EventHandler
 {
 public:
+	ZilchDeclareDerivedType(SinEntity, Zilch::EventHandler);
 	String Name;
 
 	SinEntity() {}
@@ -16,7 +19,7 @@ public:
 	virtual void Create() {}
 	virtual void Initialize() {}
 	virtual void Update(float dt) {}
-	virtual void Unitialize() {}
+	virtual void Uninitialize() {}
 	virtual void Destroy() {}
 	~SinEntity() {}
 private:

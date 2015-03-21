@@ -7,7 +7,7 @@
 
 // Includes
 
-#define ZilchUnsafeEvents 1
+//#define ZilchUnsafeEvents 1
 
 namespace Zilch
 {
