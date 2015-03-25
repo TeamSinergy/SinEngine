@@ -58,14 +58,14 @@
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\Serializer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Core;..\Source\Zilch;..\Source\Build\Console;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <ProgramDataBaseFileName>$(OutDir)SinEngine.pdb</ProgramDataBaseFileName>
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\Serializer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Core;..\Source\Zilch;..\Source\Build\Console;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -81,7 +81,7 @@
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\Serializer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Core;..\Source\Zilch;..\Source\Build\Console;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ProgramDataBaseFileName>$(OutDir)SinEngine.pdb</ProgramDataBaseFileName>
       <Optimization>Full</Optimization>
@@ -92,7 +92,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\Serializer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Core;..\Source\Zilch;..\Source\Build\Console;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -107,7 +107,6 @@
   <ItemGroup>
     <ClInclude Include="..\Source\Build\Console\SinSole.h" />
     <ClInclude Include="..\Source\Build\Precompiled.h" />
-    <ClInclude Include="..\Source\Build\Serializer\Serializer.h" />
     <ClInclude Include="..\Source\Core\Engine.h" />
     <ClInclude Include="..\Source\Core\SinEntity.h" />
     <ClInclude Include="..\Source\Zilch\ZilchCompiledLib.h" />
@@ -118,7 +117,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\Source\Build\Serializer\Serializer.cpp" />
     <ClCompile Include="..\Source\Core\Engine.cpp" />
     <ClCompile Include="..\Source\Core\SinEntity.cpp" />
     <ClCompile Include="..\Source\WinMain.cpp" />

@@ -20,7 +20,7 @@ bool FirstFile(const String& folder, String& path_found)            // placing p
 	//Stores information about the current File or Folder
 	WIN32_FIND_DATA FileData;
 	//A Handle to the current file or folder
-	HANDLE hFind = ::FindFirstFile(search_path, &FileData);
+	HANDLE hFind = FindFirstFile(search_path, &FileData);
 	//If there are still files in the folder...
 	if (hFind != INVALID_HANDLE_VALUE) 
 	{
@@ -31,8 +31,8 @@ bool FirstFile(const String& folder, String& path_found)            // placing p
 			{
 				names.push_back(FileData.cFileName);
 			}
-		} while (::FindNextFile(hFind, &FileData));
-		::FindClose(hFind);
+		} while (FindNextFile(hFind, &FileData));
+		FindClose(hFind);
 	}
 	
 	FindClose(hFind);
