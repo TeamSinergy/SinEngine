@@ -8,7 +8,6 @@ DefineType(SinEntity, SinningZilch)
 	BindFieldGetSet(Name);
 
 	BindConstructor();
-	//BindMethod(Serialize); Not until serializer is done
 	BindMethod(Create);
 	BindMethod(Initialize);
 	BindMethod(Uninitialize);

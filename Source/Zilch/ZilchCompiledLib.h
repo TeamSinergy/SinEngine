@@ -1,7 +1,7 @@
 #pragma once
 #include "Precompiled.h"
 
-#define ScriptFilePath "Assets/ZilchScripts/"
+#define ScriptFilePath "../Assets/ZilchScripts"
 
 ZilchStaticLibrary(SinningZilch);
 
@@ -13,7 +13,6 @@ public:
 	void Serialize(DataNode* node);
 	void Create() override;
 	void Initialize() override;
-	void Update(float dt) override;
 	void Uninitialize() override;
 	void Destroy() override;
 	~ZilchCompiledLib() {}

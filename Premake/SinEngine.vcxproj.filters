@@ -4,6 +4,9 @@
     <Filter Include="Assets">
       <UniqueIdentifier>{3824E0A7-24C6-0A7E-0D81-1ED2F9C191CE}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets\ZilchScripts">
+      <UniqueIdentifier>{4964BD8C-B5C5-9A9A-3E33-E14CAA93D159}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source">
       <UniqueIdentifier>{56EB95D1-428D-C0A7-2B48-D4FB178947F8}</UniqueIdentifier>
     </Filter>
@@ -12,6 +15,9 @@
     </Filter>
     <Filter Include="Source\Build\Console">
       <UniqueIdentifier>{178C380D-031B-C2D6-AC39-D6D198A7D27C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Build\Serializer">
+      <UniqueIdentifier>{DE517331-4A89-BBC8-5393-1FECBF49E2C1}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Core">
       <UniqueIdentifier>{6E95150F-DA4A-8E04-633F-88DBCFF38408}</UniqueIdentifier>
@@ -24,13 +30,25 @@
     <None Include="..\Assets\Settings.data">
       <Filter>Assets</Filter>
     </None>
+    <None Include="..\Assets\ZilchScripts\ScriptTest.z">
+      <Filter>Assets\ZilchScripts</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Build\Console\SinSole.h">
       <Filter>Source\Build\Console</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Build\Defines.h">
+      <Filter>Source\Build</Filter>
+    </ClInclude>
     <ClInclude Include="..\Source\Build\Precompiled.h">
       <Filter>Source\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Build\Serializer\DataNode.h">
+      <Filter>Source\Build\Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Build\Serializer\Serializer.h">
+      <Filter>Source\Build\Serializer</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Core\Engine.h">
       <Filter>Source\Core</Filter>
@@ -48,6 +66,12 @@
     </ClCompile>
     <ClCompile Include="..\Source\Build\Precompiled.cpp">
       <Filter>Source\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Build\Serializer\DataNode.cpp">
+      <Filter>Source\Build\Serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Build\Serializer\Serializer.cpp">
+      <Filter>Source\Build\Serializer</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Core\Engine.cpp">
       <Filter>Source\Core</Filter>

@@ -1,62 +1,11 @@
 #pragma once
 #include "Precompiled.h"
-#include "Shlwapi.h"
-#include <io.h>
-#include <fcntl.h>
+#include "Serializer.h"
 #include "SinSole.h"
 #include "ZilchCompiledLib.h"
 
 #define SINBUILD
 #ifdef SINBUILD
-
-bool FirstFile(const String& folder, String& path_found)            // placing path here if found
-{
-	//NOT CROSS PLATFORM!
-	std::vector<std::string> names;
-	char search_path[200];
-
-	sprintf(search_path, "%s", folder.c_str());
-
-	//Stores information about the current File or Folder
-	WIN32_FIND_DATA FileData;
-	//A Handle to the current file or folder
-	HANDLE hFind = FindFirstFile(search_path, &FileData);
-	//If there are still files in the folder...
-	if (hFind != INVALID_HANDLE_VALUE) 
-	{
-		do 
-		{
-			//if the current file is NOT a Folder
-			if (!(FileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
-			{
-				names.push_back(FileData.cFileName);
-			}
-		} while (FindNextFile(hFind, &FileData));
-		FindClose(hFind);
-	}
-	
-	FindClose(hFind);
-	return true;
-	//std::fstream fs;
-	////fs.open(ScriptFileList);
-	//if (!exists(dir_path.c_str())) return false;
-	//directory_iterator end_itr; // default construction yields past-the-end
-	//for (directory_iterator itr(dir_path);
-	//	itr != end_itr;
-	//	++itr)
-	//{
-	//	if (is_directory(itr->status()))
-	//	{
-	//		if (find_file(itr->path(), file_name, path_found)) return true;
-	//	}
-	//	else if (itr->leaf() == file_name) // see below
-	//	{
-	//		path_found = itr->path();
-	//		return true;
-	//	}
-	//}
-	//return false;
-}
 
 int main(void)
 {
@@ -65,19 +14,21 @@ int main(void)
 
 	//A 'static' initialization of the Zilch Project for the debugger.
 	ZilchStartup(Debugging::UseZilchErrorHandler);
-	ZilchCompiledLib ZilchLibrary = ZilchCompiledLib("ZilchCompiledLib");
-	ZilchLibrary.Create();
-	ZilchLibrary.CompiledProject = &Project(ZilchLibrary.Errors);
-	ZilchLibrary.Initialize();
+	ZilchCompiledLib* ZilchLibrary = new ZilchCompiledLib("ZilchCompiledLib");
+	ZilchLibrary->Create();
+	ZilchLibrary->CompiledProject = &Project(ZilchLibrary->Errors);
+	ZilchLibrary->Initialize();
 	
-	String path;
-	FirstFile("../*", path);
+	ExecutableState* state = ZILCH->GetDependencies();
+	Handle EngineHandle = state->AllocateDefaultConstructedHeapObject(ZilchTypeId(SinEntity), ZILCH->Report, Zilch::HeapFlags::NonReferenceCounted);
+	SinEntity* Engine = (SinEntity*)EngineHandle.Dereference();
 	
 
 	system("pause");
 
-	ZilchLibrary.Uninitialize();
-	ZilchLibrary.Destroy();
+	ZilchLibrary->Uninitialize();
+	ZilchLibrary->Destroy();
+	delete ZilchLibrary;
 	SinSole::DestroyConsole();
 	return 0;
 }

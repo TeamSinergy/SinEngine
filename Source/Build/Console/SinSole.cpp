@@ -78,13 +78,13 @@ void SinSole::DestroyConsole()
 	FreeConsole();
 }
 
-std::ostream& operator<<(std::ostream& os, unsigned color)
+std::ostream& operator<<(std::ostream& os, ConsoleColors::ConsoleColors color)
 {
 	SinSole::SetTextColor(color);
 	return os;
 }
 
-std::istream& operator>>(std::istream& is, unsigned color)
+std::istream& operator>>(std::istream& is, ConsoleColors::ConsoleColors color)
 {
 	SinSole::SetTextColor(color);
 	return is;

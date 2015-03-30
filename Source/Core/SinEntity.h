@@ -18,7 +18,6 @@ public:
 	virtual void Serialize(DataNode* node) {}
 	virtual void Create() {}
 	virtual void Initialize() {}
-	virtual void Update(float dt) {}
 	virtual void Uninitialize() {}
 	virtual void Destroy() {}
 	~SinEntity() {}

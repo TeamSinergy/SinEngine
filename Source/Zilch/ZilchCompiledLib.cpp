@@ -1,5 +1,6 @@
 #include "Precompiled.h"
 #include "ZilchCompiledLib.h"
+#include "Serializer.h"
 
 ZilchCompiledLib* ZILCH = NULL;
 
@@ -57,10 +58,6 @@ void ZilchCompiledLib::Initialize()
 	/////////////////////////////////////////////////////////////////
 	std::cout << "Zilch Initialized" << std::endl;
 }
-void ZilchCompiledLib::Update(float dt) 
-{
-
-}
 void ZilchCompiledLib::Uninitialize()
 {
 
@@ -78,27 +75,15 @@ void ZilchCompiledLib::Destroy()
 void ZilchCompiledLib::LoadZilchFiles(Zilch::Project & project)
 {
 	std::cout << "Loading Scripts \n";
-	std::fstream fs;
-	//fs.open(ScriptFileList);
 
-	//ErrorIf(!fs.is_open(), "Error, Could not open ScriptFileList");
-	std::string zilchfile;
-
-	while (!fs.eof())
+	String filepath;
+	Array<String> files;
+	Serializer::FindAllFilesInFolder("../Assets", ".z", files, true);
+	for (auto i : files)
 	{
-		//Make filename to load
-		zilchfile.append(ScriptFilePath);
-		char filename[256];
-		fs.getline(filename, 256);
-		if (filename[0] != '\0')
-		{
-			zilchfile.append(filename);
-			std::cout << "Loading : " << filename << std::endl;
-
-			//Load file ISN't WORKING?!?
-			project.AddCodeFromFile(zilchfile.c_str());
-		}
-		zilchfile.clear();
+		filepath = String::Join("/", ScriptFilePath, i);
+		std::cout << "Loading: " << ConsoleColors::Yellow << i.c_str() << ConsoleColors::DarkGreen << std::endl;
+		project.AddCodeFromFile(filepath);
 	}
 }
 

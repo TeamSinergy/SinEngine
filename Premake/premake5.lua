@@ -42,6 +42,7 @@ solution "SinEngine"
     
     includedirs 
     {
+        "../ExternalDependencies/Include",
         "../ExternalDependencies/Zilch",
         "../Source/**",
 	}
