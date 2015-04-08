@@ -33,7 +33,8 @@ namespace ConsoleColors
 class SinSole
 {
 public:
-
+	static unsigned LastTextColor;
+	static unsigned LastBackgroundColor;
 	static unsigned TextColor;
 	static unsigned BackgroundColor;
 
@@ -60,3 +61,8 @@ private:
 std::ostream& operator<<(std::ostream& os, ConsoleColors::ConsoleColors color);
 
 std::istream& operator>>(std::istream& is, ConsoleColors::ConsoleColors color);
+
+#define SinWrite(String) Console::Write(String)
+#define SinWriteLine(String) Console::WriteLine(String)
+#define SinWriteColor(String, Color) SinSole::SetTextColor(Color); Console::Write(String); SinSole::SetTextColor(SinSole::LastTextColor)
+#define SinWriteLineColor(String, Color) SinSole::SetTextColor(Color); Console::WriteLine(String); SinSole::SetTextColor(SinSole::LastTextColor)

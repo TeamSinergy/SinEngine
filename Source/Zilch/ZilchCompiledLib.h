@@ -59,11 +59,11 @@ private:
 extern ZilchCompiledLib* ZILCH;
 
 //ZilchDefines so we don't need to redo ALL the binding
+#define DefineType(Type, Library) ZilchDefineType(##Library, ##Type, #Type, builder, type)
+
 #define BindConstructor() ZilchBindConstructor(builder, type, ZilchSelf, ZilchNoNames)
 #define BindDestructor() ZilchBindDestructor(builder, type, ZilchSelf)
 #define BindVirtualConstructor(...) ZilchBindConstructorVirtual(builder, type, ZilchSelf, ZilchNoNames, __VA_ARGS__)
-
-#define DefineType(Type, Library) ZilchDefineType(##Library, ##Type, #Type, builder, type)
 
 #define BindMethod(Method) ZilchBindMethod(builder, type, &ZilchSelf::Method, ZilchNoOverload, #Method, ZilchNoNames)
 #define BindMethodAs(Method, Name) ZilchBindMethod(builder, type, &ZilchSelf::Method, ZilchNoOverload, Name, ZilchNoNames)

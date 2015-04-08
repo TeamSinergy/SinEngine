@@ -4,6 +4,8 @@
 
 unsigned SinSole::BackgroundColor = DEFAULTBACKGROUND;
 unsigned SinSole::TextColor = DEFAULTTEXT;
+unsigned SinSole::LastBackgroundColor = DEFAULTBACKGROUND;
+unsigned SinSole::LastTextColor = DEFAULTTEXT;
 HANDLE SinSole::Console = nullptr;
 FILE* SinSole::File = nullptr;
 
@@ -48,7 +50,7 @@ void SinSole::SetTextColor(const unsigned textcolor)
 {
 	if (PROTECTCOLORS && (textcolor == BackgroundColor))
 		return;
-
+	LastTextColor = TextColor;
 	TextColor = textcolor;
 
 	/*! Change _backgroundcolor and _textcolor into wAttributes format*/
@@ -63,7 +65,7 @@ void SinSole::SetBackgroundColor(const unsigned backgroundcolor)
 {
 	if (PROTECTCOLORS && (TextColor == backgroundcolor))
 		return;
-
+	LastBackgroundColor = BackgroundColor;
 	BackgroundColor = backgroundcolor;
 
 	/*! Change _backgroundcolor and _textcolor into wAttributes format*/
