@@ -4,11 +4,14 @@
 #include "SinSole.h"
 #include "ZilchCompiledLib.h"
 
+#include "DataFile.h"
+
 #define SINBUILD
 #ifdef SINBUILD
 
 int main(void)
 {
+	//onexit(OnExit); //Not really needed
 	SinSole::CreateConsole("SinSole");
 	std::cout << "---- SinSole Initialized ----" << std::endl;
 
@@ -23,6 +26,7 @@ int main(void)
 	Handle EngineHandle = state->AllocateDefaultConstructedHeapObject(ZilchTypeId(SinEntity), ZILCH->Report, Zilch::HeapFlags::NonReferenceCounted);
 	SinEntity* Engine = (SinEntity*)EngineHandle.Dereference();
 	
+	DataFile* file = new DataFile("../Settings.data");
 
 	system("pause");
 
