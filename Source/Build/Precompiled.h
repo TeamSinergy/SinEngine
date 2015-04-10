@@ -66,6 +66,7 @@
 #include "SinSole.h"
 #include "SinEntity.h"
 #include "ZilchCompiledLib.h"
+#include "Utility.h"
 
 //////////////////////////////////////////////////////////////////////////
 // NAMESPACES

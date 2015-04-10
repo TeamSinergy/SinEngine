@@ -1,8 +1,8 @@
 class Utility
 {
     [Static]
-	function SayHi()
-	{
-		Console.WriteLine("HelloWorld");
-	}
+    function SayHi()
+    {
+        Console.WriteLine("HelloWorld");
+    }
 }

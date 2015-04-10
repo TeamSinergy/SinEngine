@@ -8,51 +8,51 @@ ZilchStaticLibrary(SinningZilch);
 class ZilchCompiledLib : SinEntity
 {
 public:
-	ZilchCompiledLib() {}
-	ZilchCompiledLib(String systemName);
-	void Serialize(DataNode* node);
-	void Create() override;
-	void Initialize() override;
-	void Uninitialize() override;
-	void Destroy() override;
-	~ZilchCompiledLib() {}
+    ZilchCompiledLib() {}
+    ZilchCompiledLib(String systemName);
+    void Serialize(DataNode* node);
+    void Create() override;
+    void Initialize() override;
+    void Uninitialize() override;
+    void Destroy() override;
+    ~ZilchCompiledLib() {}
 
-	//Returns pointer to the required LibraryRef
-	LibraryRef* GetZilchLib(const char *ScriptName);
+    //Returns pointer to the required LibraryRef
+    LibraryRef* GetZilchLib(const char *ScriptName);
 
-	//Returns pointer to the dependency library
-	ExecutableState* GetDependencies(){ return LinkedLibs; }
+    //Returns pointer to the dependency library
+    ExecutableState* GetDependencies(){ return LinkedLibs; }
 
-	ExceptionReport Report;
-	
-	LibraryRef CompiledLib;
+    ExceptionReport Report;
+    
+    LibraryRef CompiledLib;
 
-	/* This class encompasses all compilation errors that can occur when compiling
-	Zilch code. Its responsibility is to provide friendly error messages,
-	error codes, and callbacks to the user*/
-	CompilationErrors Errors;
+    /* This class encompasses all compilation errors that can occur when compiling
+    Zilch code. Its responsibility is to provide friendly error messages,
+    error codes, and callbacks to the user*/
+    CompilationErrors Errors;
 
-	Project* CompiledProject;
+    Project* CompiledProject;
 
-	EventHandler::Global;
+    EventHandler::Global;
 
 private:
 
-	int ScriptCount;
-	
+    int ScriptCount;
+    
 
-	//Debugger Debugger;    /* Link all the libraries together into one ExecutableState*/
-	ExecutableState* LinkedLibs;
+    //Debugger Debugger;    /* Link all the libraries together into one ExecutableState*/
+    ExecutableState* LinkedLibs;
 
 
 
-	//LoadAllZilchFiles into the static Library
-	void LoadZilchFiles(Zilch::Project & project);
-	//Compile all the scripts
-	void CompileScripts(Zilch::Project& project, Zilch::Module& dependencies);
+    //LoadAllZilchFiles into the static Library
+    void LoadZilchFiles(Zilch::Project & project);
+    //Compile all the scripts
+    void CompileScripts(Zilch::Project& project, Zilch::Module& dependencies);
 
-	//Unordered map of compiled Zilch libraries
-	std::unordered_map<std::string, Zilch::LibraryRef>* LibList;
+    //Unordered map of compiled Zilch libraries
+    std::unordered_map<std::string, Zilch::LibraryRef>* LibList;
 
 };
 
