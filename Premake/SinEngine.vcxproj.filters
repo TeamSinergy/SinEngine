@@ -47,6 +47,9 @@
     <ClInclude Include="..\Source\Build\Serializer\DataFile.h">
       <Filter>Source\Build\Serializer</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Build\Serializer\DataLevel.h">
+      <Filter>Source\Build\Serializer</Filter>
+    </ClInclude>
     <ClInclude Include="..\Source\Build\Serializer\Serializer.h">
       <Filter>Source\Build\Serializer</Filter>
     </ClInclude>
@@ -71,6 +74,9 @@
       <Filter>Source\Build</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Build\Serializer\DataFile.cpp">
+      <Filter>Source\Build\Serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Build\Serializer\DataLevel.cpp">
       <Filter>Source\Build\Serializer</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Build\Serializer\Serializer.cpp">

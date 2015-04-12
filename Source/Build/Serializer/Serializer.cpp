@@ -6,26 +6,6 @@
 //the parent directory ".."
 #define SkippedFiles 2
 
-//Syntax for .data Files
-namespace DataSyntax
-{
-
-    const char* const WhiteSpace = " \r\n\t";    //Remove tabs, spaces, \r, and \n.
-    const char* const Padding = "    ";            //Padding that is added based on how deep we go.
-    const char* const EndName = " = ";                //Everything between last line and this char defines the name.
-    const char* const ObjectStart = "{";            //Defines the start of an object.
-    const char* const ObjectEnd = "}";            //Defines the end of an object.
-    const char* const ContinueSearch = ",";        //Defines the start of an object.
-    const char* const PropertyEnd = ";";            //Defines the end of a property variable.
-    const char* const GroupStart = "[";            //Defines the start of a group of values.
-    const char* const GroupEnd = "]";            //Defines the end of a group of values.
-    const char* const LineCommentStart = "//";    //Defines inline comment style.
-    const char* const BlockCommentStart = "/*"; //Defines block comment style start.
-    const char* const BlockCommentEnd = "*/";    //Defines block comment style end.
-    const char* const Delimiters = "";            //Defines what we seperate into a new line.
-
-};
-
 String Serializer::FindFileInFolder(const String& folderPath, const String& filename, bool checkSubFolders)
 {
     int skippedCount = SkippedFiles;
@@ -113,42 +93,43 @@ void Serializer::FindAllFilesInFolder(const String& folderPath, const String& fi
 
 void Serializer::DelimitDataFile(const std::string& buffer, Array<String>& store)
 {
-    unsigned i;
-    unsigned line = 0;
-    const char* startLine = buffer.c_str();
-    const char* endLine = startLine;
-    bool lookingForName = true;
+    //################   DELETE THIS    ###########
+    //unsigned i;
+    //unsigned line = 0;
+    //const char* startLine = buffer.c_str();
+    //const char* endLine = startLine;
+    //bool lookingForName = true;
 
-    for (i = 0; i < buffer.length(); ++i)
-    {
-        ++endLine;
-        char whitespace = Utility::CharMatchesAny(buffer[i], DataSyntax::WhiteSpace);
-        if (whitespace)
-        {
-            
-            if (lookingForName && whitespace == DataSyntax::EndName[0])
-            {
-                if (Utility::HasCharacters(&buffer[i], DataSyntax::EndName))
-                {
-                    //lookingForName = false;
-                    endLine += strlen(DataSyntax::EndName);
-                    std::string temp = std::string(startLine, endLine - startLine);
-                    store.push_back(temp.c_str());
-                    
-                    SinWriteLine(store[line]);
-                    startLine = endLine;
-                }
-                else
-                {
-                    ++startLine;
-                    continue;
-                }
-            }
-            
-            
-            
-            
-        }
-    }
+    //for (i = 0; i < buffer.length(); ++i)
+    //{
+    //    ++endLine;
+    //    char whitespace = Utility::CharMatchesAny(buffer[i], DataSyntax::WhiteSpace);
+    //    if (whitespace)
+    //    {
+    //        
+    //        if (lookingForName && whitespace == DataSyntax::EndName[0])
+    //        {
+    //            if (Utility::HasCharacters(&buffer[i], DataSyntax::EndName))
+    //            {
+    //                //lookingForName = false;
+    //                endLine += strlen(DataSyntax::EndName);
+    //                std::string temp = std::string(startLine, endLine - startLine);
+    //                store.push_back(temp.c_str());
+    //                
+    //                SinWriteLine(store[line]);
+    //                startLine = endLine;
+    //            }
+    //            else
+    //            {
+    //                ++startLine;
+    //                continue;
+    //            }
+    //        }
+    //        
+    //        
+    //        
+    //        
+    //    }
+    //}
 
 }

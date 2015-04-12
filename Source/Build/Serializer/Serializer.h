@@ -1,6 +1,22 @@
 #pragma once
 #include <Precompiled.h>
 
+//Syntax for .data Files
+namespace DataSyntax
+{
+    const String Padding = "    ";            //Padding that is added based on how deep we go.
+    const String EndName = " = ";                //Everything between last line and this char defines the name.
+    const String ObjectStart = "{";            //Defines the start of an object.
+    const String ObjectEnd = "},";            //Defines the end of an object.
+    const String PropertyEnd = ";";            //Defines the end of a property variable.
+    const String GroupStart = "[";            //Defines the start of a group of values.
+    const String GroupEnd = "]";            //Defines the end of a group of values.
+    const String LineCommentStart = "//";    //Defines inline comment style.
+    const String BlockCommentStart = "/*"; //Defines block comment style start.
+    const String BlockCommentEnd = "*/";    //Defines block comment style end.
+    
+};
+
 class Serializer
 {
 public:
