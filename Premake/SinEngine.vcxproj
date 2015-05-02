@@ -107,11 +107,15 @@
   <ItemGroup>
     <ClInclude Include="..\Source\Build\Console\SinSole.h" />
     <ClInclude Include="..\Source\Build\Precompiled.h" />
+    <ClInclude Include="..\Source\Build\Serializer\DataComponent.h" />
     <ClInclude Include="..\Source\Build\Serializer\DataFile.h" />
     <ClInclude Include="..\Source\Build\Serializer\DataLevel.h" />
+    <ClInclude Include="..\Source\Build\Serializer\DataObject.h" />
+    <ClInclude Include="..\Source\Build\Serializer\DataProperty.h" />
     <ClInclude Include="..\Source\Build\Serializer\Serializer.h" />
     <ClInclude Include="..\Source\Core\Engine.h" />
     <ClInclude Include="..\Source\Core\SinEntity.h" />
+    <ClInclude Include="..\Source\Utilities\ArrayRange.h" />
     <ClInclude Include="..\Source\Utilities\Utility.h" />
     <ClInclude Include="..\Source\Zilch\ZilchCompiledLib.h" />
   </ItemGroup>
@@ -121,11 +125,15 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\Source\Build\Serializer\DataComponent.cpp" />
     <ClCompile Include="..\Source\Build\Serializer\DataFile.cpp" />
     <ClCompile Include="..\Source\Build\Serializer\DataLevel.cpp" />
+    <ClCompile Include="..\Source\Build\Serializer\DataObject.cpp" />
+    <ClCompile Include="..\Source\Build\Serializer\DataProperty.cpp" />
     <ClCompile Include="..\Source\Build\Serializer\Serializer.cpp" />
     <ClCompile Include="..\Source\Core\Engine.cpp" />
     <ClCompile Include="..\Source\Core\SinEntity.cpp" />
+    <ClCompile Include="..\Source\Utilities\ArrayRange.cpp" />
     <ClCompile Include="..\Source\Utilities\Utility.cpp" />
     <ClCompile Include="..\Source\WinMain.cpp" />
     <ClCompile Include="..\Source\Zilch\Zilch.cpp" />

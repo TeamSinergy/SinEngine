@@ -2,12 +2,33 @@
 #include "Serializer.h"
 #include "dirent.h"
 
-//This allows the serializer to skip the pointers to the current directory "." and the pointer to
-//the parent directory ".."
-#define SkippedFiles 2
+//These are all the types that can be serialized in.
+HashMap<String, BoundType* > Serializer::Types = HashMap<String, BoundType* >();
+
+void Serializer::Initialize()
+{
+    Types.insert("String", ZilchTypeId(String));
+    Types.insert("Integer", ZilchTypeId(Integer));
+    Types.insert("Integer2", ZilchTypeId(Integer2));
+    Types.insert("Integer3", ZilchTypeId(Integer3));
+    Types.insert("Integer4", ZilchTypeId(Integer4));
+    Types.insert("Boolean", ZilchTypeId(Boolean));
+    Types.insert("Boolean2", ZilchTypeId(Boolean2));
+    Types.insert("Boolean3", ZilchTypeId(Boolean3));
+    Types.insert("Boolean4", ZilchTypeId(Boolean4));
+    Types.insert("Real", ZilchTypeId(Real));
+    Types.insert("Real2", ZilchTypeId(Real2));
+    Types.insert("Real3", ZilchTypeId(Real3));
+    Types.insert("Real4", ZilchTypeId(Real4));
+    Types.insert("Quaternion", ZilchTypeId(Quaternion));
+}
 
 String Serializer::FindFileInFolder(const String& folderPath, const String& filename, bool checkSubFolders)
 {
+    //This allows the serializer to skip the pointers to the current directory "." and the pointer to
+    //the parent directory ".."
+    #define SkippedFiles 2
+
     int skippedCount = SkippedFiles;
 
     DIR* directory;
@@ -91,45 +112,59 @@ void Serializer::FindAllFilesInFolder(const String& folderPath, const String& fi
     closedir(directory);
 }
 
-void Serializer::DelimitDataFile(const std::string& buffer, Array<String>& store)
+int Serializer::ToInt(const String& input, unsigned line)
 {
-    //################   DELETE THIS    ###########
-    //unsigned i;
-    //unsigned line = 0;
-    //const char* startLine = buffer.c_str();
-    //const char* endLine = startLine;
-    //bool lookingForName = true;
-
-    //for (i = 0; i < buffer.length(); ++i)
-    //{
-    //    ++endLine;
-    //    char whitespace = Utility::CharMatchesAny(buffer[i], DataSyntax::WhiteSpace);
-    //    if (whitespace)
-    //    {
-    //        
-    //        if (lookingForName && whitespace == DataSyntax::EndName[0])
-    //        {
-    //            if (Utility::HasCharacters(&buffer[i], DataSyntax::EndName))
-    //            {
-    //                //lookingForName = false;
-    //                endLine += strlen(DataSyntax::EndName);
-    //                std::string temp = std::string(startLine, endLine - startLine);
-    //                store.push_back(temp.c_str());
-    //                
-    //                SinWriteLine(store[line]);
-    //                startLine = endLine;
-    //            }
-    //            else
-    //            {
-    //                ++startLine;
-    //                continue;
-    //            }
-    //        }
-    //        
-    //        
-    //        
-    //        
-    //    }
-    //}
-
+    int value = 0;
+    if ((input[0] == '\"' || input[0] == '\'') && (input.back() == '\"') || input.back() == ('\''))
+    {
+        String sub = input.sub_string(1, input.size() - 2);
+        
+        for (unsigned i = 0; i < sub.size(); ++i)
+        {
+            value += (unsigned)sub[i];
+        }
+        return value;
+    }
+    else
+    {
+        for (unsigned i = 0; i < input.size(); ++i)
+        {
+            if ((input[i] < '0' || input[i] > '9') && input[i] != '.')
+            {
+                Error("Integer value on line %i must not contain any characters.", line + 1);
+            }
+        }
+        ToValue(input, value);
+        return value;
+    }
+}
+float Serializer::ToFloat(const String& input, unsigned line)
+{
+    float value;
+    for (unsigned i = 0; i < input.size(); ++i)
+    {
+        if ((input[i] < '0' || input[i] > '9') && input[i] != '.')
+        {
+            if (tolower(input[i]) == 'f')
+            {
+                if (i != input.size() - 1)
+                {
+                    Error("Float value on line %i must not contain any characters.", line + 1);
+                }
+            }
+        }
+    }
+    ToValue(input, value);
+    return value;
+}
+bool Serializer::ToBool(String input, unsigned line)
+{
+    bool value;
+    String lower = input.ToLower();
+    if (lower.CompareTo("true") != 0 && lower.CompareTo("false") != 0)
+    {
+        Error("Boolean on line %i must either be |true| or |false|", line + 1);
+    }
+    ToValue(lower, value);
+    return value;
 }

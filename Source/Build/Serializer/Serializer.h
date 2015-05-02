@@ -22,7 +22,13 @@ class Serializer
 public:
     static String FindFileInFolder(const String& folderPath, const String& filename, bool checkSubFolders = false);
     static void FindAllFilesInFolder(const String& folderPath, const String& filetype, Array<String>& container, bool checkSubFolders = false);
-    static void Serializer::DelimitDataFile(const std::string& buffer, Array<String>& store);
+
+    static int ToInt(const String& input, unsigned line = 0);
+    static float ToFloat(const String& input, unsigned line = 0);
+    static bool ToBool(String input, unsigned line = 0);
+
+    static void Initialize();
+    static HashMap<String, BoundType* > Types;
 };
 
 enum DATATYPE

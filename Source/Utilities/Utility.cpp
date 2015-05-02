@@ -38,3 +38,5 @@ void Utility::Strcpy(String& buffer, const char* toCopy, const unsigned size)
     }
     buffer = temp.c_str();
 }
+
+

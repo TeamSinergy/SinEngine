@@ -6,19 +6,32 @@ Game =
         {
             String Name = "SinEngine";
             Real Size = 1.5;
-            
+            Boolean IsOpFag = TRUE;
         },
+        //
         OtherSystem = 
         {
             String Name = "HelloWorld";
-            Integer Guy = 10;
+            Integer Guy = 0;
             Real Size = 1.5;
-            Real2 Tuple = [0, 1];
+            Integer3 Tuple = [0, 1];
             Real3 Position = [3, 10, 16];
             Real4 Color = [10.5, 12.84, 289, 666];
+            Quaternion joe = [9,0.8, 10, 19];
             //Array[Integer] = This is a comment
-            /* This is also comment */
+        },
+    },
+    FaggotEngine = 
+    {
+        FaggotSystem = 
+        {
+            String FAGGOT = "1";
         },
     },
 },
-
+HelloEngine = 
+{
+    Faggot = 
+    {
+    },
+},

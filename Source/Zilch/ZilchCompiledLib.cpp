@@ -7,7 +7,7 @@ ZilchCompiledLib* ZILCH = NULL;
 ZilchCompiledLib::ZilchCompiledLib(String systemName) : SinEntity(systemName)
 {
     ZILCH = this;
-    LibList = new std::unordered_map <std::string, Zilch::LibraryRef >();
+    LibList = HashMap<String, Zilch::LibraryRef >();
 }
 void ZilchCompiledLib::Serialize(DataNode* node)
 {
@@ -65,9 +65,7 @@ void ZilchCompiledLib::Uninitialize()
 void ZilchCompiledLib::Destroy() 
 {
     delete LinkedLibs;
-    delete LibList;
     LinkedLibs = nullptr;
-    LibList = nullptr;
     CompiledProject = nullptr;
     Zilch::ZilchShutdown();
 }
@@ -99,6 +97,7 @@ void ZilchCompiledLib::CompileScripts(Zilch::Project& project, Zilch::Module& de
     //Zilch::EventConnect(&project, Events::TypeParsed, ZilchHandler::TypeParsedCallback);
 
     CompiledLib = project.Compile("LibraryOfSin", dependencies, EvaluationMode::Project);
+    
     ErrorIf(CompiledLib == nullptr, "Failed to compiler library");
 
     // We want to link together all the libraries that we depended upon, along with our own library
@@ -131,7 +130,7 @@ void ZilchCompiledLib::CompileScripts(Zilch::Project& project, Zilch::Module& de
 //    }
 //}
 
-Zilch::LibraryRef* ZilchCompiledLib::GetZilchLib(const char *ScriptName)
+Zilch::LibraryRef* ZilchCompiledLib::GetZilchLib(String& ScriptName)
 {
-    return &(*LibList)[ScriptName];
+    return &LibList[ScriptName];
 }

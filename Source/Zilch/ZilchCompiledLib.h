@@ -5,7 +5,7 @@
 
 ZilchStaticLibrary(SinningZilch);
 
-class ZilchCompiledLib : SinEntity
+class ZilchCompiledLib : public SinEntity
 {
 public:
     ZilchCompiledLib() {}
@@ -18,7 +18,7 @@ public:
     ~ZilchCompiledLib() {}
 
     //Returns pointer to the required LibraryRef
-    LibraryRef* GetZilchLib(const char *ScriptName);
+    LibraryRef* GetZilchLib(String& ScriptName);
 
     //Returns pointer to the dependency library
     ExecutableState* GetDependencies(){ return LinkedLibs; }
@@ -52,7 +52,7 @@ private:
     void CompileScripts(Zilch::Project& project, Zilch::Module& dependencies);
 
     //Unordered map of compiled Zilch libraries
-    std::unordered_map<std::string, Zilch::LibraryRef>* LibList;
+    HashMap<String, Zilch::LibraryRef> LibList;
 
 };
 

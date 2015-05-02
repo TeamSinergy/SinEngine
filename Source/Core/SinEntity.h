@@ -20,7 +20,7 @@ public:
     virtual void Initialize() {}
     virtual void Uninitialize() {}
     virtual void Destroy() {}
-    ~SinEntity() {}
+    virtual ~SinEntity() {}
 private:
 
 };

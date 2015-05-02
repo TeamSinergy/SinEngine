@@ -7,7 +7,8 @@
 
 // Includes
 
-//#define ZilchUnsafeEvents 1
+//#define ZilchUnsafeEvents true
+#define ZilchOutsideStackAllocation true
 
 namespace Zilch
 {
@@ -14278,8 +14279,11 @@ namespace Zilch
   Handle ExecutableState::AllocateStackObject(byte* stackLocation, BoundType* type, ExceptionReport& report)
   {
     // Verify that the given pointer is within our stack
-    ErrorIf(stackLocation < this->Stack || stackLocation > this->Stack + this->StackSize,
-      "The given stack location for allocating a stack object was not within our stack");
+    if (!ZilchOutsideStackAllocation)
+    {
+        ErrorIf(stackLocation < this->Stack || stackLocation > this->Stack + this->StackSize,
+            "The given stack location for allocating a stack object was not within our stack");
+    }
 
     // Clear the memory of the stack location
     memset(stackLocation, 0, type->Size);

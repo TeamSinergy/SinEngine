@@ -19,7 +19,7 @@ namespace ConsoleColors
         DarkYellow = FOREGROUND_RED | FOREGROUND_GREEN,                                    //! 6
         DarkGray = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE,                    //! 7
         Gray = FOREGROUND_INTENSITY,                                                       //! 8
-        Glue = FOREGROUND_INTENSITY | FOREGROUND_BLUE,                                     //! 9
+        Blue = FOREGROUND_INTENSITY | FOREGROUND_BLUE,                                     //! 9
         Green = FOREGROUND_INTENSITY | FOREGROUND_GREEN,                                   //! 10
         Cyan = FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_BLUE,                  //! 11
         Red = FOREGROUND_INTENSITY | FOREGROUND_RED,                                       //! 12

@@ -3,37 +3,41 @@
 #include "Engine.h"
 #include "DataFile.h"
 
-class DataObject
-{
 
-};
 
-class DataFile;
+class DataObject;
 
 class DataLevel
 {
 public:
     ZilchDeclareBaseType(DataLevel, TypeCopyMode::ReferenceType);
-    DataLevel(const DataFile* parent);
-    DataLevel(const DataFile* parent, const StringRange& name, const StringRange& level);
+    DataLevel(DataFile* const parent);
+    DataLevel(DataFile* const parent, String* name, const ArrayRange<String*>& level);
 
-    void LoadLevel(const StringRange& name, const StringRange& level);
+    void LoadLevel(String* name, const ArrayRange<String*>& level);
 
-    const DataLevel* AddObject(const String& Name);
-    void RemoveObject(const String& Name);
+    DataObject* AddObject(const String& Name); //Always modifies the file.
+    DataObject* AddObject(DataObject* Object, bool modifyFile = true);
+    bool RemoveObject(const String& Name);
 
-    const DataLevel* FindObject(const String& Name);
+    DataObject* FindObject(const String& Name);
 
     void SetName(const String& Name);
-    const StringRange& GetName();
+    const StringRange GetName();
 
+    void RemapChild(const String& original, const String& newName);
+    bool HasObject(const String& name);
+
+    void PrintData();
+    Unsigned2 GetRange();
+    void SetRange(Unsigned2& range);
     ~DataLevel();
 
 private:
-    const DataFile* const Parent;
-    StringRange Name;
+    DataFile* const Parent;
+    String* Name;
     Type* Type = ZilchTypeId(SinEntity);
-    Array<String> FileData; //Whole File
-    HashMap<StringRange, DataObject*> SinObjects;
+    ArrayRange<String*> FileData; //Whole Level
+    HashMap<StringRange, DataObject*> DataObjects;
 
 };

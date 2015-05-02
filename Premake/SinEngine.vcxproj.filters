@@ -44,10 +44,19 @@
     <ClInclude Include="..\Source\Build\Precompiled.h">
       <Filter>Source\Build</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Build\Serializer\DataComponent.h">
+      <Filter>Source\Build\Serializer</Filter>
+    </ClInclude>
     <ClInclude Include="..\Source\Build\Serializer\DataFile.h">
       <Filter>Source\Build\Serializer</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Build\Serializer\DataLevel.h">
+      <Filter>Source\Build\Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Build\Serializer\DataObject.h">
+      <Filter>Source\Build\Serializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Build\Serializer\DataProperty.h">
       <Filter>Source\Build\Serializer</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Build\Serializer\Serializer.h">
@@ -58,6 +67,9 @@
     </ClInclude>
     <ClInclude Include="..\Source\Core\SinEntity.h">
       <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Utilities\ArrayRange.h">
+      <Filter>Source\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Utilities\Utility.h">
       <Filter>Source\Utilities</Filter>
@@ -73,10 +85,19 @@
     <ClCompile Include="..\Source\Build\Precompiled.cpp">
       <Filter>Source\Build</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Build\Serializer\DataComponent.cpp">
+      <Filter>Source\Build\Serializer</Filter>
+    </ClCompile>
     <ClCompile Include="..\Source\Build\Serializer\DataFile.cpp">
       <Filter>Source\Build\Serializer</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Build\Serializer\DataLevel.cpp">
+      <Filter>Source\Build\Serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Build\Serializer\DataObject.cpp">
+      <Filter>Source\Build\Serializer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Build\Serializer\DataProperty.cpp">
       <Filter>Source\Build\Serializer</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Build\Serializer\Serializer.cpp">
@@ -87,6 +108,9 @@
     </ClCompile>
     <ClCompile Include="..\Source\Core\SinEntity.cpp">
       <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Utilities\ArrayRange.cpp">
+      <Filter>Source\Utilities</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Utilities\Utility.cpp">
       <Filter>Source\Utilities</Filter>
