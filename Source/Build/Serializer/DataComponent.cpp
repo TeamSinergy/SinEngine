@@ -27,7 +27,7 @@ void DataComponent::LoadLevel(String* name, const ArrayRange<String*>& level)
 }
 
 //Always modifes the file.
-DataProperty* DataComponent::AddProperty(const String& name, const String& type, const String& value)
+DataProperty* DataComponent::AddProperty(const String& type, const String& name, const String& value)
 {
     if (DataProperties.containsKey(name))
     {
@@ -35,8 +35,8 @@ DataProperty* DataComponent::AddProperty(const String& name, const String& type,
         return nullptr;
     }
     String Padding = String::Join("", DataSyntax::Padding, DataSyntax::Padding, DataSyntax::Padding);
-    String Content = String::Join("", type, name, DataSyntax::EndName, value);
-    FileData.insertAt(new String(String::Join("", Padding, Content, DataSyntax::PropertyEnd)), FileData.size());
+    String Content = String::Join("", type," ", name, DataSyntax::EndName);
+    FileData.insertAt(new String(String::Join("", Padding, Content, value, DataSyntax::PropertyEnd)), FileData.size());
 
     DataProperty* obj = new DataProperty(this, FileData[FileData.size() - 1], FileData.range().y - 1);
     MemCheck(obj, obj->GetName());
@@ -76,10 +76,9 @@ bool DataComponent::RemoveProperty(const String& name)
     {
         DataProperty* obj = FindProperty(name);
         unsigned index = obj->GetIndex();
-        FileData.eraseAt(index - FileData.range().x);
-
-
         delete DataProperties[name];
+        FileData.eraseAt(index - FileData.range().x);
+        
         DataProperties.erase(name);
         return true;
     }
@@ -160,7 +159,19 @@ void DataComponent::SetRange(Unsigned2& range)
     FileData.SetRange(range);
 }
 
+unsigned DataComponent::FindFirstGlobalIndexOfProperty(String* input)
+{
+    return FileData.FindFirstGlobalIndexOf(input);
+}
+
 DataComponent::~DataComponent()
 {
+    for (unsigned i = 0; i < DataProperties.values().size(); ++i)
+    {
+        delete DataProperties.values().front();
+        DataProperties.values().front() = nullptr;
+        DataProperties.values().popFront();
+       
+    }
     DataProperties.deallocate();
 }

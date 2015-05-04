@@ -16,11 +16,16 @@ DataProperty::DataProperty(DataComponent* const parent, String* data, unsigned i
 {
     LoadProperty(data);
 }
-DataProperty::DataProperty(DataComponent* const parent, String* source, unsigned index, String& name, Type* type, byte* value) : Parent(parent), Name(name), rawValue(value), Index(index)
+DataProperty::DataProperty(DataComponent* const parent, String* source, unsigned index, const String& name, const Handle& store) : 
+Parent(parent), 
+Name(name), 
+Index(index)
 {
-
-    SinWrite("Creating Property: ");
-    SinWriteLineColor(name, ConsoleColors::Red);
+    SetHandle(store);
+    /*SinWrite("Creating ");
+    SinWriteColor(store.Type->ToString(), ConsoleColors::Cyan);
+    SinWrite(" Property: ");
+    SinWriteColor(Name, ConsoleColors::Red);*/
 }
 
 void DataProperty::LoadProperty(String* data)
@@ -35,35 +40,34 @@ void DataProperty::LoadProperty(String* data)
     unsigned nameStart = typeName.FindFirstOf(" ");
     
     Name = typeName.sub_string(nameStart + 1, end - start - nameStart);
-    String typeString = typeName.sub_string(0, nameStart);
+    TypeString = typeName.sub_string(0, nameStart);
     
     unsigned valueStart = end + DataSyntax::EndName.size();
-    String valueString = data->sub_string(valueStart, data->size() - valueStart - DataSyntax::PropertyEnd.size());
+    ValueString = data->sub_string(valueStart, data->size() - valueStart - DataSyntax::PropertyEnd.size());
     
-    SinWrite("Creating ");
-    SinWriteColor(typeString, ConsoleColors::Cyan);
+    /*SinWrite("Creating ");
+    SinWriteColor(TypeString, ConsoleColors::Cyan);
     SinWrite(" Property: ");
-    SinWriteLineColor(Name, ConsoleColors::Red);
+    SinWriteColor(Name, ConsoleColors::Red);*/
 
-    if (!Serializer::Types.containsKey(typeString))
+    if (!Serializer::Types.containsKey(TypeString))
     {
-        Error("Undefined type |%s| of property |%s| on line %i", typeString.c_str(), Name.c_str(), Index);
+        Error("Undefined type |%s| of property |%s| on line %i", TypeString.c_str(), Name.c_str(), Index);
     }
     
-    BoundType* type = Serializer::Types[typeString];
+    BoundType* type = Serializer::Types[TypeString];
     ExecutableState* state = ZILCH->GetDependencies();
     
-    //Zilch::StackManager::
     //Set the value to a handle to the type loaded in.
+    //Screw da police
     Value = state->AllocateStackObject((byte*)&Value, type, ZILCH->Report);
-    
-    //Array<Type*> args;
-    //args.push_back(type);
-    
-    //Value.Manager->Allocate(type, Value, 0);
-    //a = (int)Value.Data;
-    //Call call(Value.Type.Set, state);
-    //a = (int*)Value.Dereference();
+
+    ParseValue(ValueString, type);
+    //PrintData();
+}
+
+void DataProperty::ParseValue(String& valueString, BoundType* type)
+{
     //Most common types first. Wish I could of used a Switch :(
     if (type == ZilchTypeId(String))
     {
@@ -71,365 +75,333 @@ void DataProperty::LoadProperty(String* data)
         {
             Error("String on line %i must start and end with |\"\"|.\n\tExample: |\"\"Hello World\"\"|", Index + 1);
         }
-        *(String**)Value.Data = new String(valueString.sub_string(1, valueString.size() - 2));
-        SinWriteLine(**(String**)Value.Data);
+        *(String**)Value.Data = new String(valueString.sub_string(1, valueString.size() - DataSyntax::GroupEnd.size() - 1));
+        MemCheck(*(String**)Value.Data, "String in Propery.cpp");
+        //SinWriteLine(**(String**)Value.Data);
     }
     else if (type == ZilchTypeId(Integer))
     {
-        *(int*)Value.Data = Serializer::ToInt(valueString, Index);
-        SinWriteLine(*(int*)Value.Data);
+        Serializer::ToValueFromString(valueString, *(int*)Value.Data, Index);
+        //SinWriteLine(*(int*)Value.Data);
     }
     else if (type == ZilchTypeId(Boolean))
     {
-        *(bool*)Value.Data = Serializer::ToBool(valueString, Index);
-        SinWriteLine(*(bool*)Value.Data);
+        Serializer::ToValueFromString(valueString, *(bool*)Value.Data, Index);
+        //SinWriteLine(*(bool*)Value.Data);
     }
     else if (type == ZilchTypeId(Real))
     {
-        *(float*)Value.Data = Serializer::ToFloat(valueString, Index);
-        SinWriteLine(*(float*)Value.Data);
+        Serializer::ToValueFromString(valueString, *(float*)Value.Data, Index);
+        //SinWriteLine(*(float*)Value.Data);
     }
     else if (type == ZilchTypeId(Integer2))
     {
-        unsigned end = valueString.size() - DataSyntax::GroupEnd.size();
-        StringRange endString = valueString.sub_string(end, DataSyntax::GroupEnd.size());
-        //if it does not start with [ and end with ]
-        if (valueString.sub_string(0, DataSyntax::GroupEnd.size()).CompareTo(DataSyntax::GroupStart) != 0 || endString.CompareTo(DataSyntax::GroupEnd) != 0)
-        {
-            Error("Integer2 on line %i must start with |%s| and end with |%s|.", Index + 1, DataSyntax::GroupStart, DataSyntax::GroupEnd);
-        }
-        endString = valueString.sub_string(DataSyntax::GroupEnd.size(), valueString.size() - 2 * DataSyntax::GroupEnd.size());
-        Zero::StringSplitRange data = endString.Split(",");
-
-        Integer2 value = Integer2(0, 0);
-
-        unsigned i = 0;
-        while (!data.empty() && i < 2)
-        {
-            value[i] = Serializer::ToInt(data.front().TrimStart().TrimEnd());
-            data.popFront();
-            ++i;
-        }
-        if (!data.empty())
-        {
-            Error("Integer2 on line %i cannot be more than 2 elements long.", Index + 1);
-        }
-        *(Integer2*)Value.Data = value;
-        SinWriteLine(*(Integer2*)Value.Data);
+        Array<int> store = Array<int>(2);
+        FillArray<int>(store, valueString, Index, "Integer2");
+        *(Integer2*)Value.Data = Integer2(store[0], store[1]);
+        //SinWriteLine(*(Integer2*)Value.Data);
     }
     else if (type == ZilchTypeId(Integer3))
     {
-        unsigned end = valueString.size() - DataSyntax::GroupEnd.size();
-        StringRange endString = valueString.sub_string(end, DataSyntax::GroupEnd.size());
-        //if it does not start with [ and end with ]
-        if (valueString.sub_string(0, DataSyntax::GroupEnd.size()).CompareTo(DataSyntax::GroupStart) != 0 || endString.CompareTo(DataSyntax::GroupEnd) != 0)
-        {
-            Error("Integer3 on line %i must start with |%s| and end with |%s|.", Index + 1, DataSyntax::GroupStart, DataSyntax::GroupEnd);
-        }
-        endString = valueString.sub_string(DataSyntax::GroupEnd.size(), valueString.size() - 2 * DataSyntax::GroupEnd.size());
-        Zero::StringSplitRange data = endString.Split(",");
-
-        Integer3 value = Integer3(0, 0, 0);
-
-        unsigned i = 0;
-        while (!data.empty() && i < 3)
-        {
-            value[i] = Serializer::ToInt(data.front().TrimStart().TrimEnd());
-            data.popFront();
-            ++i;
-        }
-        if (!data.empty())
-        {
-            Error("Integer3 on line %i cannot be more than 3 elements long.", Index + 1);
-        }
-        *(Integer3*)Value.Data = value;
-        SinWriteLine(*(Integer3*)Value.Data);
+        Array<int> store = Array<int>(3);
+        FillArray<int>(store, valueString, Index, "Integer3");
+        *(Integer3*)Value.Data = Integer3(store[0], store[1], store[2]);
+        //SinWriteLine(*(Integer3*)Value.Data);
     }
     else if (type == ZilchTypeId(Integer4))
     {
-        unsigned end = valueString.size() - DataSyntax::GroupEnd.size();
-        StringRange endString = valueString.sub_string(end, DataSyntax::GroupEnd.size());
-        //if it does not start with [ and end with ]
-        if (valueString.sub_string(0, DataSyntax::GroupEnd.size()).CompareTo(DataSyntax::GroupStart) != 0 || endString.CompareTo(DataSyntax::GroupEnd) != 0)
-        {
-            Error("Integer4 on line %i must start with |%s| and end with |%s|.", Index + 1, DataSyntax::GroupStart, DataSyntax::GroupEnd);
-        }
-        endString = valueString.sub_string(DataSyntax::GroupEnd.size(), valueString.size() - 2 * DataSyntax::GroupEnd.size());
-        Zero::StringSplitRange data = endString.Split(",");
-
-        Integer4 value = Integer4(0, 0, 0, 0);
-
-        unsigned i = 0;
-        while (!data.empty() && i < 4)
-        {
-            value[i] = Serializer::ToInt(data.front().TrimStart().TrimEnd());
-            data.popFront();
-            ++i;
-        }
-        if (!data.empty())
-        {
-            Error("Integer4 on line %i cannot be more than 4 elements long.", Index + 1);
-        }
-        *(Integer4*)Value.Data = value;
-        SinWriteLine(*(Integer4*)Value.Data);
+        Array<int> store = Array<int>(4);
+        FillArray<int>(store, valueString, Index, "Integer4");
+        *(Integer4*)Value.Data = Integer4(store[0], store[1], store[2], store[3]);
+        //SinWriteLine(*(Integer4*)Value.Data);
     }
     else if (type == ZilchTypeId(Boolean2))
     {
-        unsigned end = valueString.size() - DataSyntax::GroupEnd.size();
-        StringRange endString = valueString.sub_string(end, DataSyntax::GroupEnd.size());
-        //if it does not start with [ and end with ]
-        if (valueString.sub_string(0, DataSyntax::GroupEnd.size()).CompareTo(DataSyntax::GroupStart) != 0 || endString.CompareTo(DataSyntax::GroupEnd) != 0)
-        {
-            Error("Boolean2 on line %i must start with |%s| and end with |%s|.", Index + 1, DataSyntax::GroupStart, DataSyntax::GroupEnd);
-        }
-        endString = valueString.sub_string(DataSyntax::GroupEnd.size(), valueString.size() - 2 * DataSyntax::GroupEnd.size());
-        Zero::StringSplitRange data = endString.Split(",");
-
-        Boolean2 value = Boolean2(0, 0);
-
-        unsigned i = 0;
-        while (!data.empty() && i < 2)
-        {
-            value[i] = Serializer::ToBool(data.front().TrimStart().TrimEnd());
-            data.popFront();
-            ++i;
-        }
-        if (!data.empty())
-        {
-            Error("Boolean2 on line %i cannot be more than 2 elements long.", Index + 1);
-        }
-        *(Boolean2*)Value.Data = value;
-        SinWriteLine(*(Boolean2*)Value.Data);
+        Array<bool> store = Array<bool>(2);
+        FillArray<bool>(store, valueString, Index, "Boolean2");
+        *(Boolean2*)Value.Data = Boolean2(store[0], store[1]);
+        //SinWriteLine(*(Boolean2*)Value.Data);
     }
     else if (type == ZilchTypeId(Boolean3))
     {
-        unsigned end = valueString.size() - DataSyntax::GroupEnd.size();
-        StringRange endString = valueString.sub_string(end, DataSyntax::GroupEnd.size());
-        //if it does not start with [ and end with ]
-        if (valueString.sub_string(0, DataSyntax::GroupEnd.size()).CompareTo(DataSyntax::GroupStart) != 0 || endString.CompareTo(DataSyntax::GroupEnd) != 0)
-        {
-            Error("Boolean3 on line %i must start with |%s| and end with |%s|.", Index + 1, DataSyntax::GroupStart, DataSyntax::GroupEnd);
-        }
-        endString = valueString.sub_string(DataSyntax::GroupEnd.size(), valueString.size() - 2 * DataSyntax::GroupEnd.size());
-        Zero::StringSplitRange data = endString.Split(",");
-
-        Boolean3 value = Boolean3(0, 0, 0);
-
-        unsigned i = 0;
-        while (!data.empty() && i < 3)
-        {
-            value[i] = Serializer::ToBool(data.front().TrimStart().TrimEnd());
-            data.popFront();
-            ++i;
-        }
-        if (!data.empty())
-        {
-            Error("Boolean3 on line %i cannot be more than 3 elements long.", Index + 1);
-        }
-        *(Boolean3*)Value.Data = value;
-        SinWriteLine(*(Boolean3*)Value.Data);
+        Array<bool> store = Array<bool>(3);
+        FillArray<bool>(store, valueString, Index, "Boolean3");
+        *(Boolean3*)Value.Data = Boolean3(store[0], store[1], store[2]);
+        //SinWriteLine(*(Boolean3*)Value.Data);
     }
     else if (type == ZilchTypeId(Boolean4))
     {
-        unsigned end = valueString.size() - DataSyntax::GroupEnd.size();
-        StringRange endString = valueString.sub_string(end, DataSyntax::GroupEnd.size());
-        //if it does not start with [ and end with ]
-        if (valueString.sub_string(0, DataSyntax::GroupEnd.size()).CompareTo(DataSyntax::GroupStart) != 0 || endString.CompareTo(DataSyntax::GroupEnd) != 0)
-        {
-            Error("Boolean4 on line %i must start with |%s| and end with |%s|.", Index + 1, DataSyntax::GroupStart, DataSyntax::GroupEnd);
-        }
-        endString = valueString.sub_string(DataSyntax::GroupEnd.size(), valueString.size() - 2 * DataSyntax::GroupEnd.size());
-        Zero::StringSplitRange data = endString.Split(",");
-
-        Boolean4 value = Boolean4(0, 0, 0, 0);
-
-        unsigned i = 0;
-        while (!data.empty() && i < 4)
-        {
-            value[i] = Serializer::ToBool(data.front().TrimStart().TrimEnd());
-            data.popFront();
-            ++i;
-        }
-        if (!data.empty())
-        {
-            Error("Boolean4 on line %i cannot be more than 4 elements long.", Index + 1);
-        }
-        *(Boolean4*)Value.Data = value;
-        SinWriteLine(*(Boolean4*)Value.Data);
+        Array<bool> store = Array<bool>(4);
+        FillArray<bool>(store, valueString, Index, "Boolean4");
+        *(Boolean4*)Value.Data = Boolean4(store[0], store[1], store[2], store[3]);
+        //SinWriteLine(*(Boolean4*)Value.Data);
     }
     else if (type == ZilchTypeId(Real2))
     {
-        unsigned end = valueString.size() - DataSyntax::GroupEnd.size();
-        StringRange endString = valueString.sub_string(end, DataSyntax::GroupEnd.size());
-        //if it does not start with [ and end with ]
-        if (valueString.sub_string(0, DataSyntax::GroupEnd.size()).CompareTo(DataSyntax::GroupStart) != 0 || endString.CompareTo(DataSyntax::GroupEnd) != 0)
-        {
-            Error("Real2 on line %i must start with |%s| and end with |%s|.", Index + 1, DataSyntax::GroupStart, DataSyntax::GroupEnd);
-        }
-        endString = valueString.sub_string(DataSyntax::GroupEnd.size(), valueString.size() - 2 * DataSyntax::GroupEnd.size());
-        Zero::StringSplitRange data = endString.Split(",");
-
-        Real2 value = Real2(0, 0);
-
-        unsigned i = 0;
-        while (!data.empty() && i < 2)
-        {
-            value[i] = Serializer::ToFloat(data.front().TrimStart().TrimEnd());
-            data.popFront();
-            ++i;
-        }
-        if (!data.empty())
-        {
-            Error("Real2 on line %i cannot be more than 2 elements long.", Index + 1);
-        }
-        *(Real2*)Value.Data = value;
-        SinWriteLine(*(Real2*)Value.Data);
+        Array<float> store = Array<float>(2);
+        FillArray<float>(store, valueString, Index, "Real2");
+        *(Real2*)Value.Data = Real2(store[0], store[1]);
+        //SinWriteLine(*(Real2*)Value.Data);
     }
     else if (type == ZilchTypeId(Real3))
     {
-        unsigned end = valueString.size() - DataSyntax::GroupEnd.size();
-        StringRange endString = valueString.sub_string(end, DataSyntax::GroupEnd.size());
-        //if it does not start with [ and end with ]
-        if (valueString.sub_string(0, DataSyntax::GroupEnd.size()).CompareTo(DataSyntax::GroupStart) != 0 || endString.CompareTo(DataSyntax::GroupEnd) != 0)
-        {
-            Error("Real3 on line %i must start with |%s| and end with |%s|.", Index + 1, DataSyntax::GroupStart, DataSyntax::GroupEnd);
-        }
-        endString = valueString.sub_string(DataSyntax::GroupEnd.size(), valueString.size() - 2 * DataSyntax::GroupEnd.size());
-        Zero::StringSplitRange data = endString.Split(",");
-
-        Real3 value = Real3(0, 0, 0);
-
-        unsigned i = 0;
-        while (!data.empty() && i < 3)
-        {
-            value[i] = Serializer::ToFloat(data.front().TrimStart().TrimEnd());
-            data.popFront();
-            ++i;
-        }
-        if (!data.empty())
-        {
-            Error("Real3 on line %i cannot be more than 3 elements long.", Index + 1);
-        }
-        *(Real3*)Value.Data = value;
-        SinWriteLine(*(Real3*)Value.Data);
+        Array<float> store = Array<float>(3);
+        FillArray<float>(store, valueString, Index, "Real3");
+        *(Real3*)Value.Data = Real3(store[0], store[1], store[2]);
+        //SinWriteLine(*(Real3*)Value.Data);
     }
     else if (type == ZilchTypeId(Real4))
     {
-        unsigned end = valueString.size() - DataSyntax::GroupEnd.size();
-        StringRange endString = valueString.sub_string(end, DataSyntax::GroupEnd.size());
-        //if it does not start with [ and end with ]
-        if (valueString.sub_string(0, DataSyntax::GroupEnd.size()).CompareTo(DataSyntax::GroupStart) != 0 || endString.CompareTo(DataSyntax::GroupEnd) != 0)
-        {
-            Error("Real4 on line %i must start with |%s| and end with |%s|.", Index + 1, DataSyntax::GroupStart, DataSyntax::GroupEnd);
-        }
-        endString = valueString.sub_string(DataSyntax::GroupEnd.size(), valueString.size() - 2 * DataSyntax::GroupEnd.size());
-        Zero::StringSplitRange data = endString.Split(",");
-
-        Real4 value = Real4(0, 0, 0, 0);
-
-        unsigned i = 0;
-        while (!data.empty() && i < 4)
-        {
-            value[i] = Serializer::ToFloat(data.front().TrimStart().TrimEnd());
-            data.popFront();
-            ++i;
-        }
-        if (!data.empty())
-        {
-            Error("Real4 on line %i cannot be more than 4 elements long.", Index + 1);
-        }
-        *(Real4*)Value.Data = value;
-        SinWriteLine(*(Real4*)Value.Data);
+        Array<float> store = Array<float>(4);
+        FillArray<float>(store, valueString, Index, "Real4");
+        *(Real4*)Value.Data = Real4(store[0], store[1], store[2], store[3]);
+        //SinWriteLine(*(Real4*)Value.Data);
     }
     else if (type == ZilchTypeId(Quaternion))
     {
-        unsigned end = valueString.size() - DataSyntax::GroupEnd.size();
-        StringRange endString = valueString.sub_string(end, DataSyntax::GroupEnd.size());
-        //if it does not start with [ and end with ]
-        if (valueString.sub_string(0, DataSyntax::GroupEnd.size()).CompareTo(DataSyntax::GroupStart) != 0 || endString.CompareTo(DataSyntax::GroupEnd) != 0)
-        {
-            Error("Quaternion on line %i must start with |%s| and end with |%s|.", Index + 1, DataSyntax::GroupStart, DataSyntax::GroupEnd);
-        }
-        endString = valueString.sub_string(DataSyntax::GroupEnd.size(), valueString.size() - 2 * DataSyntax::GroupEnd.size());
-        Zero::StringSplitRange data = endString.Split(",");
-
-        Quaternion value = Quaternion(0, 0, 0, 0);
-
-        unsigned i = 0;
-        while (!data.empty() && i < 4)
-        {
-            value[i] = Serializer::ToFloat(data.front().TrimStart().TrimEnd());
-            data.popFront();
-            ++i;
-        }
-        if (!data.empty())
-        {
-            Error("Quaternion on line %i cannot be more than 4 elements long.", Index + 1);
-        }
-        *(Quaternion*)Value.Data = value;
-        SinWriteLine(*(Quaternion*)Value.Data);
+        Array<float> store = Array<float>(4);
+        FillArray<float>(store, valueString, Index, "Quaternion");
+        *(Quaternion*)Value.Data = Quaternion(store[0], store[1], store[2], store[3]);
+        //SinWriteLine(*(Quaternion*)Value.Data);
     }
 }
 
 String DataProperty::GetValueString()
 {
-    return String();
+    return ValueString;
 }
 
-void DataProperty::SetValueString(const String& value, Type* type)
+void DataProperty::SetValueString(const String& value)
 {
-
-}
-
-const byte* DataProperty::GetRawValue()
-{
-    return rawValue;
-}
-void DataProperty::SetRawValue(const byte* Value)
-{
-
+    *FileData = FileData->Replace(ValueString, value);
+    ValueString = value;
+    ParseValue(ValueString, Value.Type);
 }
 
 const Handle& DataProperty::GetHandle()
 {
     return Value;
 }
-void DataProperty::SetHandle(const Handle& Value)
+void DataProperty::SetHandle(const Handle& value)
 {
+    Value = value;
+    TypeString = value.Type->ToString();
+    Type* type = value.Type;
 
+    if (type == ZilchTypeId(String))
+    {
+        FileData->Replace(ValueString, **(String**)Value.Data);
+        ValueString = **(String**)Value.Data;
+    }
+    else if (type == ZilchTypeId(Integer))
+    {
+        String newString = std::to_string(**(Integer**)Value.Data).c_str();
+        FileData->Replace(ValueString, newString);
+        ValueString = newString;
+    }
+    else if (type == ZilchTypeId(Boolean))
+    {
+        String newString = std::to_string(**(Boolean**)Value.Data).c_str();
+        FileData->Replace(ValueString, newString);
+        ValueString = newString;
+    }
+    else if (type == ZilchTypeId(Real))
+    {
+        String newString = std::to_string(**(Real**)Value.Data).c_str();
+        FileData->Replace(ValueString, newString);
+        ValueString = newString;
+    }
+    else if (type == ZilchTypeId(Integer2))
+    {
+        String newString = String::Join("", DataSyntax::ObjectStart, std::to_string((**(Integer2**)Value.Data).x).c_str(), ", ");
+        newString = String::Join("", newString, std::to_string((**(Integer2**)Value.Data).y).c_str(), DataSyntax::ObjectEnd);
+        FileData->Replace(ValueString, newString);
+        ValueString = newString;
+    }
+    else if (type == ZilchTypeId(Integer3))
+    {
+        String newString = String::Join("", DataSyntax::ObjectStart, std::to_string((**(Integer3**)Value.Data).x).c_str(), ", ");
+        newString = String::Join("", newString, std::to_string((**(Integer3**)Value.Data).y).c_str(), ", ");
+        newString = String::Join("", newString, std::to_string((**(Integer3**)Value.Data).z).c_str(), DataSyntax::ObjectEnd);
+        FileData->Replace(ValueString, newString);
+        ValueString = newString;
+    }
+    else if (type == ZilchTypeId(Integer4))
+    {
+        String newString = String::Join("", DataSyntax::ObjectStart, std::to_string((**(Integer4**)Value.Data).x).c_str(), ", ");
+        newString = String::Join("", newString, std::to_string((**(Integer4**)Value.Data).y).c_str(), ", ");
+        newString = String::Join("", newString, std::to_string((**(Integer4**)Value.Data).z).c_str(), ", ");
+        newString = String::Join("", newString, std::to_string((**(Integer4**)Value.Data).w).c_str(), DataSyntax::ObjectEnd);
+        FileData->Replace(ValueString, newString);
+        ValueString = newString;
+    }
+    else if (type == ZilchTypeId(Boolean2))
+    {
+        String newString = String::Join("", DataSyntax::ObjectStart, std::to_string((**(Boolean2**)Value.Data).x).c_str(), ", ");
+        newString = String::Join("", newString, std::to_string((**(Boolean2**)Value.Data).y).c_str(), DataSyntax::ObjectEnd);
+        FileData->Replace(ValueString, newString);
+        ValueString = newString;
+    }
+    else if (type == ZilchTypeId(Boolean3))
+    {
+        String newString = String::Join("", DataSyntax::ObjectStart, std::to_string((**(Boolean3**)Value.Data).x).c_str(), ", ");
+        newString = String::Join("", newString, std::to_string((**(Boolean3**)Value.Data).y).c_str(), ", ");
+        newString = String::Join("", newString, std::to_string((**(Boolean3**)Value.Data).z).c_str(), DataSyntax::ObjectEnd);
+        FileData->Replace(ValueString, newString);
+        ValueString = newString;
+    }
+    else if (type == ZilchTypeId(Boolean4))
+    {
+        String newString = String::Join("", DataSyntax::ObjectStart, std::to_string((**(Boolean4**)Value.Data).x).c_str(), ", ");
+        newString = String::Join("", newString, std::to_string((**(Boolean4**)Value.Data).y).c_str(), ", ");
+        newString = String::Join("", newString, std::to_string((**(Boolean4**)Value.Data).z).c_str(), ", ");
+        newString = String::Join("", newString, std::to_string((**(Boolean4**)Value.Data).w).c_str(), DataSyntax::ObjectEnd);
+        FileData->Replace(ValueString, newString);
+        ValueString = newString;
+    }
+    else if (type == ZilchTypeId(Real2))
+    {
+        String newString = String::Join("", DataSyntax::ObjectStart, std::to_string((**(Real2**)Value.Data).x).c_str(), ", ");
+        newString = String::Join("", newString, std::to_string((**(Real2**)Value.Data).y).c_str(), DataSyntax::ObjectEnd);
+        FileData->Replace(ValueString, newString);
+        ValueString = newString;
+    }
+    else if (type == ZilchTypeId(Real3))
+    {
+        String newString = String::Join("", DataSyntax::ObjectStart, std::to_string((**(Real3**)Value.Data).x).c_str(), ", ");
+        newString = String::Join("", newString, std::to_string((**(Real3**)Value.Data).y).c_str(), ", ");
+        newString = String::Join("", newString, std::to_string((**(Real3**)Value.Data).z).c_str(), DataSyntax::ObjectEnd);
+        FileData->Replace(ValueString, newString);
+        ValueString = newString;
+    }
+    else if (type == ZilchTypeId(Real4))
+    {
+        String newString = String::Join("", DataSyntax::ObjectStart, std::to_string((**(Real4**)Value.Data).x).c_str(), ", ");
+        newString = String::Join("", newString, std::to_string((**(Real4**)Value.Data).y).c_str(), ", ");
+        newString = String::Join("", newString, std::to_string((**(Real4**)Value.Data).z).c_str(), ", ");
+        newString = String::Join("", newString, std::to_string((**(Real4**)Value.Data).w).c_str(), DataSyntax::ObjectEnd);
+        FileData->Replace(ValueString, newString);
+        ValueString = newString;
+    }
+    else if (type == ZilchTypeId(Quaternion))
+    {
+        String newString = String::Join("", DataSyntax::ObjectStart, std::to_string((**(Quaternion**)Value.Data).x).c_str(), ", ");
+        newString = String::Join("", newString, std::to_string((**(Quaternion**)Value.Data).y).c_str(), ", ");
+        newString = String::Join("", newString, std::to_string((**(Quaternion**)Value.Data).z).c_str(), ", ");
+        newString = String::Join("", newString, std::to_string((**(Quaternion**)Value.Data).w).c_str(), DataSyntax::ObjectEnd);
+        FileData->Replace(ValueString, newString);
+        ValueString = newString;
+    }
 }
 
 const String& DataProperty::GetName()
 {
     return Name;
 }
-void DataProperty::SetName(const String& Name)
+void DataProperty::SetName(const String& name)
 {
-
+    Parent->RemapChild(Name, name);
+    *FileData = FileData->Replace(Name, name);
+    Name = name;
+    
 }
 
-const Type* DataProperty::GetType()
+const BoundType* DataProperty::GetType()
 {
-    return ZilchTypeId(int);
+    return Value.Type;
 }
-void DataProperty::SetType(const Type& Type)
+void DataProperty::SetType(BoundType* type)
 {
-
+    if (Value.Type == ZilchTypeId(String))
+    {
+        delete *(String**)Value.Data;
+        *(String**)Value.Data = nullptr;
+    }
+    *FileData = FileData->Replace(TypeString, type->ToString());
+    Value.Type = type;
+    ParseValue(ValueString, Value.Type);
 }
 
 void DataProperty::PrintData()
 {
-
+    SinWrite(" = ");
+    SinSole::SetTextColor(ConsoleColors::DarkGray);
+    BoundType* type = Value.Type;
+    //Most common types first. Wish I could of used a Switch :(
+    if (type == ZilchTypeId(String))
+    {
+        SinWriteLine(**(String**)Value.Data);
+    }
+    else if (type == ZilchTypeId(Integer))
+    {
+        SinWriteLine(*(int*)Value.Data);
+    }
+    else if (type == ZilchTypeId(Boolean))
+    {
+        SinWriteLine(*(bool*)Value.Data);
+    }
+    else if (type == ZilchTypeId(Real))
+    {
+        SinWriteLine(*(float*)Value.Data);
+    }
+    else if (type == ZilchTypeId(Integer2))
+    {
+        SinWriteLine(*(Integer2*)Value.Data);
+    }
+    else if (type == ZilchTypeId(Integer3))
+    {
+        SinWriteLine(*(Integer3*)Value.Data);
+    }
+    else if (type == ZilchTypeId(Integer4))
+    {
+        SinWriteLine(*(Integer4*)Value.Data);
+    }
+    else if (type == ZilchTypeId(Boolean2))
+    {
+        SinWriteLine(*(Boolean2*)Value.Data);
+    }
+    else if (type == ZilchTypeId(Boolean3))
+    {
+        SinWriteLine(*(Boolean3*)Value.Data);
+    }
+    else if (type == ZilchTypeId(Boolean4))
+    {
+        SinWriteLine(*(Boolean4*)Value.Data);
+    }
+    else if (type == ZilchTypeId(Real2))
+    {
+        SinWriteLine(*(Real2*)Value.Data);
+    }
+    else if (type == ZilchTypeId(Real3))
+    {
+        SinWriteLine(*(Real3*)Value.Data);
+    }
+    else if (type == ZilchTypeId(Real4))
+    {
+        SinWriteLine(*(Real4*)Value.Data);
+    }
+    else if (type == ZilchTypeId(Quaternion))
+    {
+        SinWriteLine(*(Quaternion*)Value.Data);
+    }
+    SinSole::SetTextColor(SinSole::LastTextColor);
 }
 unsigned DataProperty::GetIndex()
 {
-    return 0;
+    Index = Parent->FindFirstGlobalIndexOfProperty(FileData);
+    return Index;
 }
 void DataProperty::SetIndex(unsigned& range)
 {
-
+    Index = range;
 }
 
 DataProperty::~DataProperty()
 {
+    if (Value.Type == ZilchTypeId(String))
+    {
+        delete *(String**)Value.Data;
+        *(String**)Value.Data = nullptr;
+    }
+    Value.Delete();
 }

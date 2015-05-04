@@ -12,15 +12,15 @@ DefineType(DataFile, SinningZilch)
 
 }
 
-DataFile::DataFile(const String& fileName)
+DataFile::DataFile(const String& fileName) : Name(fileName)
 {
-    LoadFile(fileName);
+    
 }
 
-void DataFile::LoadFile(const String& fileName)
+void DataFile::Initialize()
 {
-    Name = fileName;
     String path = String::Join("/", DataFilePath, Name);
+    std::ifstream buffer;
     buffer.open(path.c_str());
 
     std::string lineString;
@@ -33,6 +33,7 @@ void DataFile::LoadFile(const String& fileName)
         {
             //SinWriteLine(line.c_str());
             FileData.push_back(new String(lineString.c_str()));
+            MemCheck(FileData.back(), "String in DataFile.cpp");
         }
         if (FileData.size())
         {
@@ -180,11 +181,13 @@ void DataFile::LoadFile(const String& fileName)
                 for (unsigned k = currentObject; k < levels[i].Children + currentObject; ++k)
                 {
                     DataObject* dataObject = new DataObject(dataLevel, objects[k].Name, objects[k].StringRange);
+                    MemCheck(dataObject, "DataObject in DataFile.cpp");
                     dataLevel->AddObject(dataObject, false);
                     //Create that object's components
                     for (unsigned j = currentComponent; j < objects[k].Children + currentComponent; ++j)
                     {
                         DataComponent* dataComponent = new DataComponent(dataObject, components[j].Name, components[j].StringRange);
+                        MemCheck(dataComponent, "DataComponent in DataFile.cpp");
                         dataObject->AddComponent(dataComponent, false);
                         //Create that component's properties
                         Unsigned2 range = components[j].StringRange.range();
@@ -199,6 +202,7 @@ void DataFile::LoadFile(const String& fileName)
                                 continue;
                             }
                             DataProperty* dataProperty = new DataProperty(dataComponent, FileData[range.x + w], range.x + w);
+                            MemCheck(dataComponent, "DataProperty in DataFile.cpp");
                             dataComponent->AddProperty(dataProperty, false);
                         }
                     }
@@ -208,28 +212,6 @@ void DataFile::LoadFile(const String& fileName)
 
                 DataLevels.insert(dataLevel->GetName(), dataLevel);
             }
-            FindLevel("Game")->FindObject("SinEngine")->AddComponent("Wet");
-            FindLevel("Game")->FindObject("SinEngine")->AddComponent("Slimy");
-            //FindLevel("Game")->FindObject("SinEngine")->RemoveComponent("Wet");
-
-            //FindLevel("Game")->FindObject("SinEngine")->RemoveComponent("Settings");
-            //FindLevel("Game")->FindObject("SinEngine")->AddComponent("Wet");
-            //FindLevel("Game")->AddObject("Faggot")->AddComponent("GAY");
-            //FindLevel("Game")->FindObject("FaggotEngine")->RemoveComponent("FaggotSystem");
-            //FindLevel("Game")->RemoveObject("FaggotEngine");
-            //FindLevel("Game")->FindObject("SinEngine")->AddComponent("Settings");
-            //FindLevel("Game")->FindObject("SinEngine")->RemoveComponent("OtherSystem");
-            //FindLevel("Game")->FindObject("SinEngine")->RemoveComponent("Slimy");
-            //FindLevel("Game")->RemoveObject("SinEngine");
-            ////FindLevel("Game")->FindObject("SinEngine")->RemoveComponent("Settings");
-            //FindLevel("Game")->AddObject("Unbrella")->AddComponent("Wet");
-
-            DataLevel* lvl = AddLevel("FaggotLevel");
-            lvl->AddObject("Balls")->AddComponent("Sweaty");
-            //lvl->AddObject("Diggernicks");
-            //lvl->RemoveObject("Balls");
-            //lvl->AddObject("Balls");// ->AddComponent("Sweaty");
-            PrintData();
             
             buffer.close();
         }
@@ -252,7 +234,9 @@ DataLevel* DataFile::AddLevel(const String& name)
     FileData.push_back(new String(String::Join("", name, DataSyntax::EndName)));
     FileData.push_back(new String(DataSyntax::ObjectStart));
     FileData.push_back(new String(DataSyntax::ObjectEnd));
-
+    MemCheck(FileData[FileData.size() - 2], "String in DataFile.cpp");
+    MemCheck(FileData[FileData.size() - 1], "String in DataFile.cpp");
+    MemCheck(FileData[FileData.size()], "String in DataFile.cpp");
     DataLevel* obj = new DataLevel(this, FileData[FileData.size() - 3], ArrayRange<String*>(&FileData, Unsigned2(FileData.size() - 3, FileData.size()-1)));
     MemCheck(obj, name);
     DataLevels.insert(name, obj);
@@ -287,11 +271,16 @@ void DataFile::RemoveLevel(const String& name)
 
 DataLevel* DataFile::FindLevel(const String& name)
 {
-    return DataLevels[name];
+    if (DataLevels.containsKey(name))
+    {
+        return DataLevels[name];
+    }
+    return nullptr;
 }
 
 void DataFile::SetName(const String& name)
 {
+    ResourceManager::RemapChild < DataFile >(Name, name);
     Name = name;
 }
 const String& DataFile::GetName()
@@ -305,7 +294,7 @@ void DataFile::RemapChild(const String& original, const String& newName)
     {
         if (DataLevels.containsKey(newName))
         {
-            Error("File %s already has a level named %s", GetName(), newName);
+            Error("File %s already has a level named %s", GetName().c_str(), newName.c_str());
         }
         else
         {
@@ -315,7 +304,7 @@ void DataFile::RemapChild(const String& original, const String& newName)
     }
     else
     {
-        Error("File %s has no level called %s", GetName(), original);
+        Error("File %s has no level called %s", GetName().c_str(), original.c_str());
     }
 }
 
@@ -329,6 +318,30 @@ void DataFile::PrintData()
 
 void DataFile::Serialize()
 {
+    String path = String::Join("/", DataFilePath, Name);
+    std::ofstream buffer;
+    buffer.open(path.c_str());
+    if (buffer.is_open())
+    {
+        SinWrite("Writing to file: ");
+        SinWriteLineColor(path, ConsoleColors::Yellow);
+        for (unsigned i = 0; i < FileData.size(); ++i)
+        {
+            String output = String::Join("", *FileData[i], "\n");
+            buffer.write(output.c_str(), output.size());
+        }
+        buffer.close();
+    }
+    else
+    {
+        Error("Failed to write to file: %s", path.c_str());
+    }
+    SinWriteLine("Done.");
+}
+
+bool DataFile::HasLevel(const String& name)
+{
+    return DataLevels.containsKey(name);
 }
 
 DataFile::~DataFile()

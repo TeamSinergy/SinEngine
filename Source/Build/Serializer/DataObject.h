@@ -6,7 +6,7 @@
 
 class DataComponent;
 
-class DataObject
+class DataObject : public DataNode
 {
 public:
     ZilchDeclareBaseType(DataObject, TypeCopyMode::ReferenceType);

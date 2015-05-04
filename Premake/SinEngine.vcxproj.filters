@@ -4,6 +4,9 @@
     <Filter Include="Assets">
       <UniqueIdentifier>{3824E0A7-24C6-0A7E-0D81-1ED2F9C191CE}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets\DataFiles">
+      <UniqueIdentifier>{34296B32-2022-8A84-4954-6F0935AC6990}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Assets\ZilchScripts">
       <UniqueIdentifier>{4964BD8C-B5C5-9A9A-3E33-E14CAA93D159}</UniqueIdentifier>
     </Filter>
@@ -16,11 +19,23 @@
     <Filter Include="Source\Build\Console">
       <UniqueIdentifier>{178C380D-031B-C2D6-AC39-D6D198A7D27C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Build\MemoryManager">
+      <UniqueIdentifier>{F8113485-E421-E055-4DDB-4474390ACFEE}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Build\Serializer">
       <UniqueIdentifier>{DE517331-4A89-BBC8-5393-1FECBF49E2C1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Components">
+      <UniqueIdentifier>{AB4E1BC0-1765-1956-60DC-A477CC31EADD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Components\Systems">
+      <UniqueIdentifier>{B21F83DC-1EE2-B666-6792-45F3D3938F44}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Core">
       <UniqueIdentifier>{6E95150F-DA4A-8E04-633F-88DBCFF38408}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Core\Managers">
+      <UniqueIdentifier>{0B53DB5E-F7E1-6428-A000-79238C6E75CE}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Utilities">
       <UniqueIdentifier>{41B3B086-2DAC-CFD8-56DE-B45D4236AFE4}</UniqueIdentifier>
@@ -30,6 +45,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Assets\DataFiles\ZilchDataStyler.txt">
+      <Filter>Assets\DataFiles</Filter>
+    </None>
     <None Include="..\Assets\Settings.data">
       <Filter>Assets</Filter>
     </None>
@@ -40,6 +58,9 @@
   <ItemGroup>
     <ClInclude Include="..\Source\Build\Console\SinSole.h">
       <Filter>Source\Build\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Build\MemoryManager\MemoryManager.h">
+      <Filter>Source\Build\MemoryManager</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Build\Precompiled.h">
       <Filter>Source\Build</Filter>
@@ -62,8 +83,29 @@
     <ClInclude Include="..\Source\Build\Serializer\Serializer.h">
       <Filter>Source\Build\Serializer</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Components\Systems\Game.h">
+      <Filter>Source\Components\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Components\Systems\GraphicsSystem.h">
+      <Filter>Source\Components\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Components\Systems\SoundSystem.h">
+      <Filter>Source\Components\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Components\Systems\Space.h">
+      <Filter>Source\Components\Systems</Filter>
+    </ClInclude>
     <ClInclude Include="..\Source\Core\Engine.h">
       <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Managers\GraphicsManager.h">
+      <Filter>Source\Core\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Managers\ResourceManager.h">
+      <Filter>Source\Core\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Managers\SoundManager.h">
+      <Filter>Source\Core\Managers</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Core\SinEntity.h">
       <Filter>Source\Core</Filter>
@@ -81,6 +123,9 @@
   <ItemGroup>
     <ClCompile Include="..\Source\Build\Console\SinSole.cpp">
       <Filter>Source\Build\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Build\MemoryManager\MemoryManager.cpp">
+      <Filter>Source\Build\MemoryManager</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Build\Precompiled.cpp">
       <Filter>Source\Build</Filter>
@@ -103,8 +148,29 @@
     <ClCompile Include="..\Source\Build\Serializer\Serializer.cpp">
       <Filter>Source\Build\Serializer</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Components\Systems\Game.cpp">
+      <Filter>Source\Components\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Components\Systems\GraphicsSystem.cpp">
+      <Filter>Source\Components\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Components\Systems\SoundSystem.cpp">
+      <Filter>Source\Components\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Components\Systems\Space.cpp">
+      <Filter>Source\Components\Systems</Filter>
+    </ClCompile>
     <ClCompile Include="..\Source\Core\Engine.cpp">
       <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\Managers\GraphicsManager.cpp">
+      <Filter>Source\Core\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\Managers\ResourceManager.cpp">
+      <Filter>Source\Core\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\Managers\SoundManager.cpp">
+      <Filter>Source\Core\Managers</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Core\SinEntity.cpp">
       <Filter>Source\Core</Filter>

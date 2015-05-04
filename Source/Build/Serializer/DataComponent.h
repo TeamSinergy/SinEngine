@@ -15,7 +15,7 @@ public:
 
     void LoadLevel(String* name, const ArrayRange<String*>& level);
 
-    DataProperty* AddProperty(const String& Name, const String& type, const String& value); //Always modifs the file.
+    DataProperty* AddProperty(const String& type, const String& Name, const String& value); //Always modifs the file.
     DataProperty* AddProperty(DataProperty* Property, bool modifyFile = true);
     bool RemoveProperty(const String& Name);
 
@@ -31,6 +31,9 @@ public:
     void PrintData();
     Unsigned2 GetRange();
     void SetRange(Unsigned2& range);
+
+    unsigned FindFirstGlobalIndexOfProperty(String* input);
+
     ~DataComponent();
 
 private:

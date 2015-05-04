@@ -39,6 +39,9 @@ DataObject* DataLevel::AddObject(const String& name)
     FileData.insertAt(new String(String::Join("", DataSyntax::Padding, name, DataSyntax::EndName)), FileData.size());
     FileData.insertAt(new String(String::Join("", DataSyntax::Padding, DataSyntax::ObjectStart)), FileData.size());
     FileData.insertAt(new String(String::Join("", DataSyntax::Padding, DataSyntax::ObjectEnd)), FileData.size());
+    MemCheck(FileData[FileData.size() - 2], "String in DataLevel.cpp");
+    MemCheck(FileData[FileData.size() - 1], "String in DataLevel.cpp");
+    MemCheck(FileData[FileData.size()], "String in DataLevel.cpp");
 
     DataObject* obj = new DataObject(this, FileData[FileData.size() - 3], ArrayRange<String*>(FileData, Unsigned2(FileData.range().y - 1, FileData.range().y - 1)));
     MemCheck(obj, name);
@@ -63,6 +66,9 @@ DataObject* DataLevel::AddObject(DataObject* Object, bool modifyFile)
         FileData.insertAt(new String(String::Join("", DataSyntax::Padding, Object->GetName(), DataSyntax::EndName)), FileData.size());
         FileData.insertAt(new String(String::Join("", DataSyntax::Padding, DataSyntax::ObjectStart)), FileData.size());
         FileData.insertAt(new String(String::Join("", DataSyntax::Padding, DataSyntax::ObjectEnd)), FileData.size());
+        MemCheck(FileData[FileData.size() - 2], "String in DataLevel.cpp");
+        MemCheck(FileData[FileData.size() - 1], "String in DataLevel.cpp");
+        MemCheck(FileData[FileData.size()], "String in DataLevel.cpp");
     
     }
     return Object;
@@ -168,5 +174,11 @@ void DataLevel::SetRange(Unsigned2& range)
 
 DataLevel::~DataLevel()
 {
+    for (unsigned i = 0; i < DataObjects.values().size(); ++i)
+    {
+        delete DataObjects.values().front();
+        DataObjects.values().front() = nullptr;
+        DataObjects.values().popFront();
+    }
     DataObjects.deallocate();
 }

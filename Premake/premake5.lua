@@ -49,7 +49,7 @@ solution "SinEngine"
     
     libdirs 
     {
-        "../ExternalDependencies/Zilch"
+        "../ExternalDependencies/Zilch",
     }
 
 

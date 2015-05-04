@@ -37,6 +37,9 @@ DataComponent* DataObject::AddComponent(const String& name)
     FileData.insertAt(new String(String::Join("", DataSyntax::Padding, DataSyntax::Padding, name, DataSyntax::EndName)), FileData.size());
     FileData.insertAt(new String(String::Join("", DataSyntax::Padding, DataSyntax::Padding, DataSyntax::ObjectStart)), FileData.size());
     FileData.insertAt(new String(String::Join("", DataSyntax::Padding, DataSyntax::Padding, DataSyntax::ObjectEnd)), FileData.size());
+    MemCheck(FileData[FileData.size() - 3], "String in DataObject.cpp");
+    MemCheck(FileData[FileData.size() - 2], "String in DataObject.cpp");
+    MemCheck(FileData[FileData.size() - 1], "String in DataObject.cpp");
 
     DataComponent* obj = new DataComponent(this, FileData[FileData.size() - 3], ArrayRange<String*>(FileData, Unsigned2(FileData.range().y - 1, FileData.range().y - 1)));
     MemCheck(obj, obj->GetName());
@@ -65,7 +68,10 @@ DataComponent* DataObject::AddComponent(DataComponent* Object, bool modifyFile)
         FileData.insertAt(new String(String::Join("", DataSyntax::Padding, DataSyntax::Padding, Object->GetName(), DataSyntax::EndName)), FileData.size() - 1);
         FileData.insertAt(new String(String::Join("", DataSyntax::Padding, DataSyntax::Padding, DataSyntax::ObjectStart)), FileData.size() - 1);
         FileData.insertAt(new String(String::Join("", DataSyntax::Padding, DataSyntax::Padding, DataSyntax::ObjectEnd)), FileData.size() - 1);
-        
+        MemCheck(FileData[FileData.size() - 3], "String in DataObject.cpp");
+        MemCheck(FileData[FileData.size() - 2], "String in DataObject.cpp");
+        MemCheck(FileData[FileData.size() - 1], "String in DataObject.cpp");
+
         Unsigned2 newParentRange = Parent->GetRange();
         newParentRange.y += 1;
         Parent->SetRange(newParentRange);
@@ -179,5 +185,11 @@ void DataObject::SetRange(Unsigned2& range)
 
 DataObject::~DataObject()
 {
+    for (unsigned i = 0; i < DataComponents.values().size(); ++i)
+    {
+        delete DataComponents.values().front();
+        DataComponents.values().front() = nullptr;
+        DataComponents.values().popFront();
+    }
     DataComponents.deallocate();
 }

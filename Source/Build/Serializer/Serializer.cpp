@@ -112,7 +112,7 @@ void Serializer::FindAllFilesInFolder(const String& folderPath, const String& fi
     closedir(directory);
 }
 
-int Serializer::ToInt(const String& input, unsigned line)
+void Serializer::ToValueFromString(const String& input, int& store, unsigned line)
 {
     int value = 0;
     if ((input[0] == '\"' || input[0] == '\'') && (input.back() == '\"') || input.back() == ('\''))
@@ -123,7 +123,7 @@ int Serializer::ToInt(const String& input, unsigned line)
         {
             value += (unsigned)sub[i];
         }
-        return value;
+        store = value;
     }
     else
     {
@@ -135,10 +135,10 @@ int Serializer::ToInt(const String& input, unsigned line)
             }
         }
         ToValue(input, value);
-        return value;
+        store = value;
     }
 }
-float Serializer::ToFloat(const String& input, unsigned line)
+void Serializer::ToValueFromString(const String& input, float& store, unsigned line)
 {
     float value;
     for (unsigned i = 0; i < input.size(); ++i)
@@ -155,16 +155,16 @@ float Serializer::ToFloat(const String& input, unsigned line)
         }
     }
     ToValue(input, value);
-    return value;
+    store = value;
 }
-bool Serializer::ToBool(String input, unsigned line)
+void Serializer::ToValueFromString(const String& input, bool& store, unsigned line)
 {
     bool value;
-    String lower = input.ToLower();
+    String lower = const_cast<String&>(input).ToLower();
     if (lower.CompareTo("true") != 0 && lower.CompareTo("false") != 0)
     {
         Error("Boolean on line %i must either be |true| or |false|", line + 1);
     }
     ToValue(lower, value);
-    return value;
+    store = value;
 }

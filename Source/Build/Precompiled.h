@@ -28,6 +28,8 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include <memory>
+#include <crtdbg.h>
+#include <stdlib.h>
 
 //////////////////////////////////////////////////////////////////////////
 // HELPERS
@@ -68,10 +70,17 @@ using namespace Zilch;
 // SINENGINE
 //////////////////////////////////////////////////////////////////////////
 #include "SinSole.h"
+#include "MemoryManager.h"
 #include "SinEntity.h"
 #include "ZilchCompiledLib.h"
 #include "Utility.h"
 #include "ArrayRange.h"
-
+#include "Serializer.h"
+#include "DataComponent.h"
+#include "DataProperty.h"
+#include "DataObject.h"
+#include "DataLevel.h"
+#include "DataFile.h"
+#include "ResourceManager.h"
 
 #pragma hdrstop

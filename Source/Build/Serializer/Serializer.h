@@ -1,6 +1,11 @@
 #pragma once
 #include <Precompiled.h>
+#include "DataComponent.h"
 
+#define SerializeVarFromType(dataComponent, type, variable, name) if(dataComponent->HasProperty(name)) \
+                                                      { variable = dataComponent->FindProperty(name)->GetValue<type>();}
+#define SerializeValue(dataComponent, variable) Serializer::SerializeVariable(dataComponent, variable, #variable)
+#define SerializeValueName(dataComponent, variable, name) Serializer::SerializeVariable(dataComponent, variable, name)
 //Syntax for .data Files
 namespace DataSyntax
 {
@@ -23,34 +28,25 @@ public:
     static String FindFileInFolder(const String& folderPath, const String& filename, bool checkSubFolders = false);
     static void FindAllFilesInFolder(const String& folderPath, const String& filetype, Array<String>& container, bool checkSubFolders = false);
 
-    static int ToInt(const String& input, unsigned line = 0);
-    static float ToFloat(const String& input, unsigned line = 0);
-    static bool ToBool(String input, unsigned line = 0);
+    static void ToValueFromString(const String& input, int&, unsigned line = 0);
+    static void ToValueFromString(const String& input, float&, unsigned line = 0);
+    static void ToValueFromString(const String& input, bool&, unsigned line = 0);
+
+    template<typename T>
+    static void SerializeVariable(DataComponent* comp, T& store, const String& name)
+    {
+        SerializeVarFromType(comp, T, store, name);
+    }
+    
+    //static void Serialize(DataComponent* comp, Integer2& store);
+    //static void Serialize(DataComponent* comp, Integer2& store);
+    //template<typename TYPE>
+    //static void ToValueFromString(String& input, TYPE&, unsigned line = 0) { Error("Cannot convert string to this type."); }
+
 
     static void Initialize();
     static HashMap<String, BoundType* > Types;
 };
 
-enum DATATYPE
-{
-    TYPE_OBJECT,
-    TYPE_INT,
-    TYPE_LONG,
-    TYPE_FLOAT,
-    TYPE_DOUBLE,
-    TYPE_BOOL,
-    TYPE_STRING,
-    TYPE_REAL2,
-    TYPE_REAL3,
-    TYPE_REAL4,
-    TYPE_INT2,
-    TYPE_INT3,
-    TYPE_INT4,
-    TYPE_BOOL2,
-    TYPE_BOOL3,
-    TYPE_BOOL4,
-    TYPE_QUAT,
-    TYPE_ARRAY,
-    TYPE_ENUM,
-    TYPE_CUSTOM
-};
+//extern template void Serializer::Serialize < Integer >(DataComponent* comp, Integer& store);
+//extern template void Serializer::Serialize < Real >(DataComponent* comp, Real& store);

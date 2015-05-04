@@ -7,7 +7,7 @@
 
 class DataObject;
 
-class DataLevel
+class DataLevel : public DataNode
 {
 public:
     ZilchDeclareBaseType(DataLevel, TypeCopyMode::ReferenceType);

@@ -4,34 +4,29 @@ Game =
     {
         Settings = 
         {
-            String Name = "SinEngine";
-            Real Size = 1.5;
-            Boolean IsOpFag = TRUE;
+            String Name = "MyGameName";
+            String WindowClassName = "Window1";
+            Boolean Visible = true;
+            //Integer xPosition = 350;
+            //Integer yPosition = 350;
+            Integer Width = 1024;
+            Integer Height = 800;
+            String IconPath = "icon.ico";
+            Integer ScreenMode = 'W';
+            Boolean Resizable = false;
+            Boolean CursorVisible = true;
         },
-        //
+        //This is a harmless comment
         OtherSystem = 
         {
             String Name = "HelloWorld";
             Integer Guy = 0;
             Real Size = 1.5;
-            Integer3 Tuple = [0, 1];
+            Integer3 Tuple = [0, 1, 3];
             Real3 Position = [3, 10, 16];
             Real4 Color = [10.5, 12.84, 289, 666];
             Quaternion joe = [9,0.8, 10, 19];
             //Array[Integer] = This is a comment
         },
-    },
-    FaggotEngine = 
-    {
-        FaggotSystem = 
-        {
-            String FAGGOT = "1";
-        },
-    },
-},
-HelloEngine = 
-{
-    Faggot = 
-    {
     },
 },

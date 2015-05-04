@@ -28,19 +28,20 @@ enum Depth
     Property = 3
 };
 
-class DataFile
+class DataFile : public DataNode
 {
 public:
     ZilchDeclareBaseType(DataFile, TypeCopyMode::ReferenceType);
     DataFile() = default;
     DataFile(const String& Name);
 
-    void LoadFile(const String& Name);
+    void Initialize();
 
     DataLevel* AddLevel(const String& Name);
     void RemoveLevel(const String& Name);
 
     DataLevel* FindLevel(const String& Name);
+    bool HasLevel(const String& name);
 
     void SetName(const String& Name);
     const String& GetName();
@@ -60,5 +61,5 @@ private:
     Array<String*> FileData; //Whole File
     HashMap<String, DataLevel*> DataLevels;
 
-    std::ifstream buffer;
+    
 };
