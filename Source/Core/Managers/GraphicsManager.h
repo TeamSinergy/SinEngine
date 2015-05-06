@@ -2,7 +2,6 @@
 #include <Precompiled.h>
 #include <windowsx.h> 
 
-
 typedef HWND WindowRef;
 typedef WNDCLASSEX WindowInfo;
 typedef HINSTANCE EngineInstance;
@@ -17,9 +16,10 @@ enum WindowStyles
 };
 
 
+
 enum ScreenMode
 {
-    Fullscreen = 'F',
+    Fullscreen = 'F',//ConstantHash("Fullscreen") ,
     Windowed = 'W',
     BorderlessWindow = 'B',
     BorderedWindow = 'N',

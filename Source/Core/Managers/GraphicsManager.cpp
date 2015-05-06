@@ -2,10 +2,12 @@
 #include "GraphicsManager.h"
 #include "ResourceManager.h"
 
+
+
 Window* GraphicsManager::CreateGameWindow(EngineInstance instance, DataComponent* settings, WindowStyles style)
 {
     Window* window = new Window(instance, settings, style);
-    
+    ScreenMode::Fullscreen;
     return window;
 }
 
@@ -206,6 +208,7 @@ void Window::SetFullscreen(int newScreenMode)
             info.style = style;
             SetWindowLongPtr(handle, GWL_STYLE, style);
             SetPosition(GraphicsManager::GetDesktopOrigin(handle));
+
             ShowWindow(handle, Visible);
             
         }break;
@@ -221,7 +224,7 @@ void Window::SetFullscreen(int newScreenMode)
             SetWindowLongPtr(handle, GWL_STYLE, style);
             SetDimensions(resolution);
             SetPosition(GraphicsManager::GetDesktopOrigin(handle));
-            ShowWindow(handle, Visible);
+            ShowWindow(handle, SW_MAXIMIZE);
         }break;
     }
     

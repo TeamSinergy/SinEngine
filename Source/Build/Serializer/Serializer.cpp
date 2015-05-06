@@ -115,7 +115,7 @@ void Serializer::FindAllFilesInFolder(const String& folderPath, const String& fi
 void Serializer::ToValueFromString(const String& input, int& store, unsigned line)
 {
     int value = 0;
-    if ((input[0] == '\"' || input[0] == '\'') && (input.back() == '\"') || input.back() == ('\''))
+    if (input[0] == '\'' && input.back() == ('\''))
     {
         String sub = input.sub_string(1, input.size() - 2);
         
@@ -123,6 +123,13 @@ void Serializer::ToValueFromString(const String& input, int& store, unsigned lin
         {
             value += (unsigned)sub[i];
         }
+        store = value;
+    }
+    else if (input[0] == '\"' && input.back() == '\"')
+    {
+        String sub = input.sub_string(1, input.size() - 2);
+
+        value = sub.hash();
         store = value;
     }
     else

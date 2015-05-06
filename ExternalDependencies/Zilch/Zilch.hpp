@@ -1678,6 +1678,7 @@ union{ \
 class LinkBase
 {
 public:
+  LinkBase() {};
   IntrusiveLink(LinkBase, link);
 };
 
