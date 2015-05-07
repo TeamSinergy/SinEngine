@@ -234,9 +234,9 @@ DataLevel* DataFile::AddLevel(const String& name)
     FileData.push_back(new String(String::Join("", name, DataSyntax::EndName)));
     FileData.push_back(new String(DataSyntax::ObjectStart));
     FileData.push_back(new String(DataSyntax::ObjectEnd));
+    MemCheck(FileData[FileData.size() - 3], "String in DataFile.cpp");
     MemCheck(FileData[FileData.size() - 2], "String in DataFile.cpp");
     MemCheck(FileData[FileData.size() - 1], "String in DataFile.cpp");
-    MemCheck(FileData[FileData.size()], "String in DataFile.cpp");
     DataLevel* obj = new DataLevel(this, FileData[FileData.size() - 3], ArrayRange<String*>(&FileData, Unsigned2(FileData.size() - 3, FileData.size()-1)));
     MemCheck(obj, name);
     DataLevels.insert(name, obj);

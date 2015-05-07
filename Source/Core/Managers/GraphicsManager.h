@@ -16,7 +16,6 @@ enum WindowStyles
     BorderlessWindowStyle = WS_POPUP,
 };
 
-
 enum ScreenMode
 {
     Fullscreen = 'F',

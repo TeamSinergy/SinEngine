@@ -1,4 +1,4 @@
-Game = 
+Level = 
 {
     SinEngine = 
     {
@@ -27,6 +27,19 @@ Game =
             Real4 Color = [10.5, 12.84, 289, 666];
             Quaternion joe = [9,0.8, 10, 19];
             //Array[Integer] = This is a comment
+        },
+    },
+    OtherObject = 
+    {
+    },
+},
+Level2 = 
+{
+    HelloObject = 
+    {
+        Comp = 
+        {
+            String Jason = "Hi";
         },
     },
 },

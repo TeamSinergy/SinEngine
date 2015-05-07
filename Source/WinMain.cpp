@@ -41,7 +41,10 @@ int main(void)
     ResourceManager::Initialize();
 
     DataComponent* settings = ResourceManager::FindResourceType<DataFile>(SettingsPath)->FindLevel("Game")->FindObject("SinEngine")->FindComponent("Settings");
-    
+	DataFile* file = ResourceManager::FindResourceType<DataFile>(SettingsPath);
+	//file->RemoveLevel("Level3");// ->AddObject("TestObject")->AddComponent("HelloWorld")->AddProperty("Real2", "Words", "[0.5, 18]");
+	//file->Serialize();
+
     Window* window = GraphicsManager::CreateGameWindow(program, settings, WindowStyles::BorderedWindowStyle);
 
     ExecutableState* state = ZILCH->GetDependencies();
