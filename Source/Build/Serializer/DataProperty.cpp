@@ -60,8 +60,9 @@ void DataProperty::LoadProperty(String* data)
     
     //Set the value to a handle to the type loaded in.
     //Screw da police
-    Value = state->AllocateStackObject((byte*)&Value, type, ZILCH->Report);
-
+    Value = Handle();//state->AllocateStackObject((byte*)&Value, type, ZILCH->Report);
+    Value.Type = type;
+    Value.Manager = state->GetHandleManager(type->HandleManager);
     ParseValue(ValueString, type);
     //PrintData();
 }

@@ -37,14 +37,14 @@ void ZilchCompiledLib::Initialize()
     SinSole::SetTextColor(ConsoleColors::DarkGreen);
     std::cout << "========= Initializing Zilch ==========" << std::endl;
 
-    LoadZilchFiles(*CompiledProject);
+    LoadZilchFiles(CompiledProject);
 
     // Create a list of dependent libraries, in our case we're really not adding anything to this
     // A side note: the Core library in Zilch is always added as a dependency, because Core includes
     // things like Integer, Boolean, Real, the basic vector types, String, etc
     Module dependencies;
     dependencies.push_back(SinningZilch::GetInstance().GetLibrary());
-    CompileScripts(*CompiledProject, dependencies);
+    CompileScripts(CompiledProject, dependencies);
 
     LinkedLibs = dependencies.Link();
     ErrorIf(LinkedLibs == nullptr, "Failed to link libraries together");
@@ -66,7 +66,6 @@ void ZilchCompiledLib::Destroy()
 {
     delete LinkedLibs;
     LinkedLibs = nullptr;
-    CompiledProject = nullptr;
     Zilch::ZilchShutdown();
 }
 

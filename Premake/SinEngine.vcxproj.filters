@@ -45,6 +45,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Assets\DataFiles\Test.data">
+      <Filter>Assets\DataFiles</Filter>
+    </None>
     <None Include="..\Assets\DataFiles\ZilchDataStyler.txt">
       <Filter>Assets\DataFiles</Filter>
     </None>
