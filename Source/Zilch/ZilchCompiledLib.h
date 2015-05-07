@@ -32,7 +32,7 @@ public:
     error codes, and callbacks to the user*/
     CompilationErrors Errors;
 
-    Project* CompiledProject;
+    Project CompiledProject;
 
     EventHandler::Global;
 

@@ -1,11 +1,17 @@
 #pragma once
 #include <Precompiled.h>
-#include <windowsx.h> 
+#include <windowsx.h>  //For creating a window
+
 
 typedef HWND WindowRef;
 typedef WNDCLASSEX WindowInfo;
 typedef HINSTANCE EngineInstance;
 typedef WPARAM WindowParams;
+
+//GraphicsTypedefs
+typedef IDXGISwapChain DXSwapChain;
+typedef ID3D11Device DXDeviceInterface;
+typedef ID3D11DeviceContext DXDeviceContext;
 
 LRESULT CALLBACK WindowProc(WindowRef window, UINT message, WPARAM  windowParams, LPARAM  longParams);
 
@@ -38,6 +44,8 @@ public:
 
     void SetFullscreen(int screenMode);
 
+    WindowRef GetHandle();
+
     ~Window(){};
 private:
     String Name;
@@ -68,4 +76,10 @@ public:
     static Integer2 GetDesktopCenter(WindowRef window);
     static Integer2 GetDesktopOrigin(WindowRef window);
 
+    static void InitializeDX11(Window* window);
+    static void UninitializeDX11(Window* window);
+private:
+    static DXSwapChain* SwapChain;
+    static DXDeviceInterface* DeviceInterface;
+    static DXDeviceContext* DeviceContext;
 };

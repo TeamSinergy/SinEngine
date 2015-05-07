@@ -4,7 +4,6 @@
 
 DefineType(SinEntity, SinningZilch)
 {
-    type->HandleManager = ZilchManagerId(Zilch::PointerManager);
     BindFieldGetSet(Name);
 
     BindConstructor();

@@ -30,10 +30,9 @@ int main(void)
     std::cout << "---- SinSole Initialized ----" << std::endl;
 
     //A static initialization of the Zilch Project for the debugger.
-    ZilchStartup(Debugging::UseZilchErrorHandler);
+    ZilchStartup(StartupFlags::None);
     ZilchCompiledLib* ZilchLibrary = new ZilchCompiledLib("ZilchCompiledLib");
     ZilchLibrary->Create();
-    ZilchLibrary->CompiledProject = &Project(ZilchLibrary->Errors);
     ZilchLibrary->Initialize();
     
     //Static Initializations
@@ -43,6 +42,7 @@ int main(void)
     DataComponent* settings = ResourceManager::FindResourceType<DataFile>(SettingsPath)->FindLevel("Game")->FindObject("SinEngine")->FindComponent("Settings");
     
     Window* window = GraphicsManager::CreateGameWindow(program, settings, WindowStyles::BorderedWindowStyle);
+    GraphicsManager::InitializeDX11(window);
 
     ExecutableState* state = ZILCH->GetDependencies();
     Handle EngineHandle = state->AllocateDefaultConstructedHeapObject(ZilchTypeId(SinEntity), ZILCH->Report, Zilch::HeapFlags::NonReferenceCounted);
@@ -72,6 +72,8 @@ int main(void)
             //Update
         }
     }
+
+    GraphicsManager::UninitializeDX11(window);
     delete window;
     //system("pause");
     //delete settings;

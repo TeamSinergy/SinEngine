@@ -45,11 +45,13 @@ solution "SinEngine"
         "../ExternalDependencies/Include",
         "../ExternalDependencies/Zilch",
         "../Source/**",
+        
 	}
     
     libdirs 
     {
         "../ExternalDependencies/Zilch",
+        
     }
 
 
