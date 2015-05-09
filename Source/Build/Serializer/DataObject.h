@@ -31,6 +31,9 @@ public:
     void PrintData();
     Unsigned2 GetRange();
     void SetRange(Unsigned2& range);
+
+    const Array<DataComponent*>&  AllComponents() { return DataComponentArray; }
+
     ~DataObject();
 
 private:
@@ -38,5 +41,6 @@ private:
     String* Name;
     Type* Type = ZilchTypeId(SinEntity);
     ArrayRange<String*> FileData; //Whole Level
+    Array<DataComponent*> DataComponentArray;
     HashMap<StringRange, DataComponent*> DataComponents;
 };

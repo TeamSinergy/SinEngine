@@ -1,19 +1,16 @@
 #pragma once
 #include "SinEntity.h"
-#include "GameObject.h"
-#include "WindowSystem.h"
-class Game : public GameObject
+
+class GameObject : public SinEntity
 {
 public:
-    ZilchDeclareDerivedType(Game, SinEntity);
+    ZilchDeclareDerivedType(GameObject, SinEntity);
     void Serialize(DataNode* node) override; //DataLevel
     void Create() override;
-    void Update();
-
-    ComponentPointer(WindowSystem);
-
     void Initialize() override;
     void Uninitialize() override;
     void Destroy() override;
-private:
+protected:
+    Array<Handle> Components;
+    GameObject* Parent;
 };

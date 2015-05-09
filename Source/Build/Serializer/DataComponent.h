@@ -6,7 +6,7 @@
 
 class DataProperty;
 
-class DataComponent
+class DataComponent : public DataNode
 {
 public:
     ZilchDeclareBaseType(DataComponent, TypeCopyMode::ReferenceType);
@@ -33,6 +33,7 @@ public:
     void SetRange(Unsigned2& range);
 
     unsigned FindFirstGlobalIndexOfProperty(String* input);
+    const Array<DataProperty*>&  AllProperties() { return DataPropertyArray; }
 
     ~DataComponent();
 
@@ -41,5 +42,6 @@ private:
     String* Name;
     Type* Type = ZilchTypeId(SinEntity);
     ArrayRange<String*> FileData; //Whole Level
+    Array<DataProperty*> DataPropertyArray;
     HashMap<StringRange, DataProperty*> DataProperties;
 };

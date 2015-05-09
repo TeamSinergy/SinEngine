@@ -1,4 +1,5 @@
 #pragma once
+#include <Precompiled.h>
 
 #define ComponentPointer(Name) Name* Name = nullptr
 

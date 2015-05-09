@@ -1,6 +1,5 @@
 #pragma once
 #include "Precompiled.h"
-
 #define ScriptFilePath "../Assets/ZilchScripts"
 
 ZilchStaticLibrary(SinningZilch);
@@ -36,6 +35,7 @@ public:
 
     EventHandler::Global;
 
+    HashMap<String, ComponentCreator> Components;
 private:
 
     int ScriptCount;
@@ -59,8 +59,7 @@ private:
 extern ZilchCompiledLib* ZILCH;
 
 //ZilchDefines so we don't need to redo ALL the binding
-#define DefineType(Type, Library) ZilchDefineType(##Library, ##Type, #Type, builder, type)
-
+#define DefineType(Type, Library) ZilchDefineType(##Library, ##Type, #Type, builder, Type)
 #define BindConstructor() ZilchBindConstructor(builder, type, ZilchSelf, ZilchNoNames)
 #define BindDestructor() ZilchBindDestructor(builder, type, ZilchSelf)
 #define BindVirtualConstructor(...) ZilchBindConstructorVirtual(builder, type, ZilchSelf, ZilchNoNames, __VA_ARGS__)

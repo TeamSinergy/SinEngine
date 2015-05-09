@@ -1,9 +1,10 @@
-Level = 
+SinEngine = 
 {
-    SinEngine = 
+    Game = 
     {
-        Settings = 
+        WindowSystem = 
         {
+            Integer ColorMode = 0;
             String Name = "MyGameName";
             String WindowClassName = "Window1";
             Boolean Visible = true;
@@ -15,31 +16,16 @@ Level =
             Integer ScreenMode = 'W';
             Boolean Resizable = false;
             Boolean CursorVisible = true;
-        },
-        //This is a harmless comment
-        OtherSystem = 
-        {
-            String Name = "HelloWorld";
-            Integer Guy = 0;
-            Real Size = 1.5;
-            Integer3 Tuple = [0, 1, 3];
-            Real3 Position = [3, 10, 16];
-            Real4 Color = [10.5, 12.84, 289, 666];
-            Quaternion joe = [9,0.8, 10, 19];
-            //Array[Integer] = This is a comment
-        },
-    },
-    OtherObject = 
-    {
-    },
-},
-Level2 = 
-{
-    HelloObject = 
-    {
-        Comp = 
-        {
-            String Jason = "Hi";
+            //
+            //DirectX
+            Real4 ClearColor = [0, 126, 130, 1.0];
+            Integer AntiAliasing = 4;
+            Integer SampleRate = 4;
+            Boolean DebugMode = true;
+            Integer FieldOfView = 90;
+            Real NearPlane = 0.1;
+            Real FarPlane = 1000;
+            Boolean AntiAliasedLines = true;
         },
     },
 },

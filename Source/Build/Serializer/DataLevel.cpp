@@ -46,7 +46,7 @@ DataObject* DataLevel::AddObject(const String& name)
     DataObject* obj = new DataObject(this, FileData[FileData.size() - 3], ArrayRange<String*>(FileData, Unsigned2(FileData.range().y - 1, FileData.range().y - 1)));
     MemCheck(obj, name);
     DataObjects.insert(name, obj);
-    
+    DataObjectArray.push_back(obj);
 
     return obj;
 }
@@ -60,7 +60,7 @@ DataObject* DataLevel::AddObject(DataObject* Object, bool modifyFile)
     }
 
     DataObjects.insert(Object->GetName(), Object);
-
+    DataObjectArray.push_back(Object);
     if (modifyFile)
     {
         FileData.insertAt(new String(String::Join("", DataSyntax::Padding, Object->GetName(), DataSyntax::EndName)), FileData.size());
@@ -91,11 +91,12 @@ bool DataLevel::RemoveObject(const String& name)
         FileData.eraseAt(range.x - FileData.range().x - 2);
         FileData.eraseAt(range.x - FileData.range().x - 2);
         FileData.eraseAt(range.x - FileData.range().x - 2);
-
+        DataObjectArray.erase_value(DataObjects[name]);
         delete DataObjects[name];
         DataObjects.erase(name);
         return true;
     }
+    
     Error("Could not find object %s in level %s", name.c_str(), String(GetName()).c_str());
     return false;
 }

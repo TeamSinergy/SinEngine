@@ -44,8 +44,6 @@
     <IntDir>..\Solution\ObjectFiles\Debug\</IntDir>
     <TargetName>SinEngine</TargetName>
     <TargetExt>.exe</TargetExt>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -60,20 +58,20 @@
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\GamePlay;..\Source\Components\Systems;..\Source\Core\Managers;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\GamePlay;..\Source\Components\Systems;..\Source\Core\Managers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <ProgramDataBaseFileName>$(OutDir)SinEngine.pdb</ProgramDataBaseFileName>
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\GamePlay;..\Source\Components\Systems;..\Source\Core\Managers;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\GamePlay;..\Source\Components\Systems;..\Source\Core\Managers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Zilch.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\ExternalDependencies\Zilch;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\ExternalDependencies\Zilch;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
@@ -83,7 +81,7 @@
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\GamePlay;..\Source\Components\Systems;..\Source\Core\Managers;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\GamePlay;..\Source\Components\Systems;..\Source\Core\Managers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ProgramDataBaseFileName>$(OutDir)SinEngine.pdb</ProgramDataBaseFileName>
       <Optimization>Full</Optimization>
@@ -94,7 +92,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\GamePlay;..\Source\Components\Systems;..\Source\Core\Managers;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\GamePlay;..\Source\Components\Systems;..\Source\Core\Managers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -102,7 +100,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>Zilch.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\ExternalDependencies\Zilch;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\ExternalDependencies\Zilch;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
@@ -116,10 +114,13 @@
     <ClInclude Include="..\Source\Build\Serializer\DataObject.h" />
     <ClInclude Include="..\Source\Build\Serializer\DataProperty.h" />
     <ClInclude Include="..\Source\Build\Serializer\Serializer.h" />
+    <ClInclude Include="..\Source\Components\Systems\Component.h" />
     <ClInclude Include="..\Source\Components\Systems\Game.h" />
+    <ClInclude Include="..\Source\Components\Systems\GameObject.h" />
     <ClInclude Include="..\Source\Components\Systems\GraphicsSystem.h" />
     <ClInclude Include="..\Source\Components\Systems\SoundSystem.h" />
     <ClInclude Include="..\Source\Components\Systems\Space.h" />
+    <ClInclude Include="..\Source\Components\Systems\WindowSystem.h" />
     <ClInclude Include="..\Source\Core\Engine.h" />
     <ClInclude Include="..\Source\Core\Managers\GraphicsManager.h" />
     <ClInclude Include="..\Source\Core\Managers\ResourceManager.h" />
@@ -142,10 +143,13 @@
     <ClCompile Include="..\Source\Build\Serializer\DataObject.cpp" />
     <ClCompile Include="..\Source\Build\Serializer\DataProperty.cpp" />
     <ClCompile Include="..\Source\Build\Serializer\Serializer.cpp" />
+    <ClCompile Include="..\Source\Components\Systems\Component.cpp" />
     <ClCompile Include="..\Source\Components\Systems\Game.cpp" />
+    <ClCompile Include="..\Source\Components\Systems\GameObject.cpp" />
     <ClCompile Include="..\Source\Components\Systems\GraphicsSystem.cpp" />
     <ClCompile Include="..\Source\Components\Systems\SoundSystem.cpp" />
     <ClCompile Include="..\Source\Components\Systems\Space.cpp" />
+    <ClCompile Include="..\Source\Components\Systems\WindowSystem.cpp" />
     <ClCompile Include="..\Source\Core\Engine.cpp" />
     <ClCompile Include="..\Source\Core\Managers\GraphicsManager.cpp" />
     <ClCompile Include="..\Source\Core\Managers\ResourceManager.cpp" />
@@ -159,7 +163,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Assets\DataFiles\Test.data" />
-    <None Include="..\Assets\DataFiles\ZilchDataStyler.txt" />
     <None Include="..\Assets\Settings.data" />
     <None Include="..\Assets\ZilchScripts\ScriptTest.z" />
   </ItemGroup>

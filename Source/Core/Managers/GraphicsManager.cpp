@@ -1,34 +1,24 @@
 #include <Precompiled.h>
 #include "GraphicsManager.h"
 #include "ResourceManager.h"
-
-DXSwapChain* GraphicsManager::SwapChain = nullptr;
-DXDeviceInterface* GraphicsManager::DeviceInterface = nullptr;
-DXDeviceContext* GraphicsManager::DeviceContext = nullptr;
-
-Window* GraphicsManager::CreateGameWindow(EngineInstance instance, DataComponent* settings, WindowStyles style)
-{
-    Window* window = new Window(instance, settings, style);
-    ScreenMode::Fullscreen;
-    return window;
-}
+#include "WindowSystem.h"
 
 LRESULT CALLBACK WindowProc(WindowRef window, UINT message, WPARAM  windowParams, LPARAM  longParams)
 {
-    // sort through and find what code to run for the message given
-    switch (message)
-    {
-        // this message is read when the window is closed
-        case WM_DESTROY:
-        {
-            // close the application entirely
-            PostQuitMessage(0);
-            return 0;
-        } break;
-    }
+// sort through and find what code to run for the message given
+switch (message)
+{
+    // this message is read when the window is closed
+case WM_DESTROY:
+{
+    // close the application entirely
+    PostQuitMessage(0);
+    return 0;
+} break;
+}
 
-    // Handle any messages the switch statement didn't
-    return DefWindowProc(window, message, windowParams, longParams);
+// Handle any messages the switch statement didn't
+return DefWindowProc(window, message, windowParams, longParams);
 }
 
 Integer2 GraphicsManager::GetDesktopResolution(WindowRef window)
@@ -39,7 +29,7 @@ Integer2 GraphicsManager::GetDesktopResolution(WindowRef window)
     MONITORINFO info;
     info.cbSize = sizeof(MONITORINFO);
     GetMonitorInfo(actualDesktop, &info);
-    
+
     return Integer2(info.rcMonitor.right - info.rcMonitor.left, info.rcMonitor.bottom - info.rcMonitor.top);
 }
 
@@ -52,7 +42,7 @@ Integer2 GraphicsManager::GetDesktopCenter(WindowRef window)
     info.cbSize = sizeof(MONITORINFO);
     GetMonitorInfo(actualDesktop, &info);
 
-    return Integer2(info.rcMonitor.left + (info.rcMonitor.right / 2), info.rcMonitor.top + (info.rcMonitor.bottom/2));
+    return Integer2(info.rcMonitor.left + (info.rcMonitor.right / 2), info.rcMonitor.top + (info.rcMonitor.bottom / 2));
 }
 
 Integer2 GraphicsManager::GetDesktopOrigin(WindowRef window)
@@ -67,207 +57,30 @@ Integer2 GraphicsManager::GetDesktopOrigin(WindowRef window)
     return Integer2(info.rcMonitor.left, info.rcMonitor.top);
 }
 
-void GraphicsManager::InitializeDX11(Window* window)
+void GraphicsManager::NormalizeColor(Real4& color)
 {
-    // create a struct to hold information about the swap chain
-    DXGI_SWAP_CHAIN_DESC scd;
-
-    // clear out the struct for use
-    ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC));
-
-    // fill the swap chain description struct
-    scd.BufferCount = 1;                                    // one back buffer
-    scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;     // use 32-bit color
-    scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;      // how swap chain is to be used
-    scd.OutputWindow = window->GetHandle();                 // the window to be used
-    scd.SampleDesc.Count = 4;                               // how many multisamples
-    scd.Windowed = TRUE;                                    // windowed/full-screen mode
-
-    // create a device, device context and swap chain using the information in the scd struct
-    D3D11CreateDeviceAndSwapChain(NULL,
-        D3D_DRIVER_TYPE_HARDWARE,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        D3D11_SDK_VERSION,
-        &scd,
-        &SwapChain,
-        &DeviceInterface,
-        NULL,
-        &DeviceContext);
-}
-void GraphicsManager::UninitializeDX11(Window* window)
-{
-
-}
-
-Window::Window(EngineInstance instance, DataComponent* settings, WindowStyles style)
-{
-
-    Name = "SinEngine";
-    SerializeValueName(settings, Name, "Name");
-    WindowClassName = "Window1";
-    SerializeValue(settings, WindowClassName);
-    Visible = true;
-    SerializeValue(settings, Visible);
-    int xPosition = CW_USEDEFAULT;
-    SerializeValue(settings, xPosition);
-    int yPosition = CW_USEDEFAULT;
-    SerializeValue(settings, yPosition);
-    Position = Integer2(xPosition, yPosition);
-    int Width = 500;
-    SerializeValue(settings, Width);
-    int Height = 400;
-    SerializeValue(settings, Height);
-    Dimensions = Integer2(Width, Height);
-    defaultSize = Dimensions;
-    IconPath = "icon.ico";
-    SerializeValue(settings, IconPath);
-    Resizable = true;
-    SerializeValue(settings, Resizable);
-    int fullscreen = Windowed;
-    SerializeValueName(settings, fullscreen, "ScreenMode");
-    CursorVisible = true;
-    SerializeValue(settings, CursorVisible);
-
-    ShowCursor(CursorVisible);
-        
-    unsigned winStyle = style;
-    if (!Resizable)
-    {
-        winStyle = style ^ WS_THICKFRAME;
-    }
-
-    Icon* icon = ResourceManager::FindResourceType<Icon>(IconPath);
-
-    ZeroMemory(&info, sizeof(info));
-    
-    info.cbSize = sizeof(WindowInfo);
-    info.style = CS_HREDRAW | CS_VREDRAW; //Redraw the window if it is resized
-    info.lpfnWndProc = WindowProc;
-    info.hInstance = instance;
-    info.hCursor = LoadCursor(NULL, IDC_ARROW);
-    info.hbrBackground = (HBRUSH)COLOR_WINDOW; //The background style and color
-    info.lpszClassName = WindowClassName.c_str();
-    info.hIcon = icon->StoredIcon;
-    
-    RECT wr = { 0, 0, Dimensions.x, Dimensions.y };
-    AdjustWindowRect(&wr, info.style, false);
-
-    // register the window class
-    RegisterClassEx(&info);
-
-    handle = CreateWindowEx(NULL,
-        WindowClassName.c_str(),    // name of the window class
-        Name.c_str(),   // title of the window
-        winStyle,    // window style
-        xPosition,    // x-position of the window
-        yPosition,    // y-position of the window
-        wr.right - wr.left,    // width of the window
-        wr.bottom - wr.top,    // height of the window
-        NULL,    // we have no parent window, NULL
-        NULL,    // we aren't using menus, NULL
-        instance,    // application handle
-        NULL);    // used with multiple windows, NULL
-
-    ErrorIf(handle == nullptr, "Failed to create window %s", Name.c_str());
-    //GetClassInfoEx(instance, WindowClassName.c_str(), handle);
-    // display the window on the screen
-    ShowWindow(handle, Visible);
-    SetFullscreen(fullscreen);
-
-    //EnableWindow(handle, true);
-    //SetFocus(handle);
-    //SetCapture(handle);
+    color.x /= 255;
+    color.y /= 255;
+    color.z /= 255;
+    //ALPHA STAYS AS 0 to 1 BECAUSE USABILITY
     
 }
 
-void Window::SetWidth(int width)
+void GraphicsManager::NormalizeColor(Real4& color, int colorMode)
 {
-    RECT wr = { 0, 0, width, Dimensions.y };
-    AdjustWindowRect(&wr, info.style, false);
-    SetWindowPos(handle, 0, 0, 0, wr.right - wr.left, wr.bottom - wr.top, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
-    Dimensions.x = width;
-}
-void Window::SetHeight(int height)
-{
-    RECT wr = { 0, 0, Dimensions.x, height };
-    AdjustWindowRect(&wr, info.style, false);
-    SetWindowPos(handle, 0, 0, 0, wr.right - wr.left, wr.bottom - wr.top, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
-    Dimensions.y = height;
-}
-
-void Window::SetDimensions(Integer2 dimensions)
-{
-    RECT wr = { 0, 0, dimensions.x, dimensions.y };
-    AdjustWindowRect(&wr, info.style, false);
-    SetWindowPos(handle, 0, 0, 0, wr.right - wr.left, wr.bottom - wr.top, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
-    Dimensions = dimensions;
-}
-
-void Window::SetPosition(Integer2 position)
-{
-    SetWindowPos(handle, 0, position.x, position.y, Dimensions.x, Dimensions.y, SWP_NOSIZE | SWP_NOOWNERZORDER | SWP_NOZORDER);
-}
-
-void Window::SetFullscreen(int newScreenMode)
-{
-    if (screenMode == newScreenMode)
+    if (colorMode == ColorMode::rgba)
     {
         return;
     }
-    int style;
-    
-    switch (newScreenMode)
+    color.x /= 255;
+    color.y /= 255;
+    color.z /= 255;
+    //ALPHA STAYS AS 0 to 1 BECAUSE USABILITY
+    if (colorMode == ColorMode::RGBA)
     {
-        case Windowed:
-        {
-            SetDimensions(defaultSize);
-            style = BorderedWindowStyle;
-            if (!Resizable)
-            {
-                style = style ^ WS_THICKFRAME;
-            }
-            info.style = style;
-            SetWindowLongPtr(handle, GWL_STYLE, style);
-            ShowWindow(handle, Visible);
-        }break;
-        case Fullscreen:
-        {
-            //graphics card stuff
-        }break;
-        case BorderlessWindow:
-        {
-            Integer2 resolution = GraphicsManager::GetDesktopResolution(handle);
-            SetDimensions(resolution);
-            style = BorderlessWindowStyle;
-            info.style = style;
-            SetWindowLongPtr(handle, GWL_STYLE, style);
-            SetPosition(GraphicsManager::GetDesktopOrigin(handle));
-
-            ShowWindow(handle, Visible);
-            
-        }break;
-        case BorderedWindow:
-        {
-            Integer2 resolution = GraphicsManager::GetDesktopResolution(handle);
-            style = BorderedWindowStyle;
-            if (!Resizable)
-            {
-                style = style ^ WS_THICKFRAME;
-            }
-            info.style = style;
-            SetWindowLongPtr(handle, GWL_STYLE, style);
-            SetDimensions(resolution);
-            SetPosition(GraphicsManager::GetDesktopOrigin(handle));
-            ShowWindow(handle, SW_MAXIMIZE);
-        }break;
+        color.w /= 255;
     }
-    
+
 }
 
-WindowRef Window::GetHandle()
-{
-    return handle;
-}
+

@@ -47,7 +47,7 @@ DataComponent* DataObject::AddComponent(const String& name)
     newParentRange.y += 3;
     Parent->SetRange(newParentRange);
     DataComponents.insert(obj->GetName(), obj);
-
+    DataComponentArray.push_back(obj);
 
 
 
@@ -63,6 +63,7 @@ DataComponent* DataObject::AddComponent(DataComponent* Object, bool modifyFile)
     }
 
     DataComponents.insert(Object->GetName(), Object);
+    DataComponentArray.push_back(Object);
     if (modifyFile)
     {
         FileData.insertAt(new String(String::Join("", DataSyntax::Padding, DataSyntax::Padding, Object->GetName(), DataSyntax::EndName)), FileData.size() - 1);
@@ -100,7 +101,7 @@ bool DataObject::RemoveComponent(const String& name)
         FileData.eraseAt(range.x - FileData.range().x - 2);
         FileData.eraseAt(range.x - FileData.range().x - 2);
         
-        
+        DataComponentArray.erase_value(DataComponents[name]);
 
         delete DataComponents[name];
         DataComponents.erase(name);

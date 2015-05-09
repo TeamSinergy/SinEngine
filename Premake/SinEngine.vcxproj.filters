@@ -48,9 +48,6 @@
     <None Include="..\Assets\DataFiles\Test.data">
       <Filter>Assets\DataFiles</Filter>
     </None>
-    <None Include="..\Assets\DataFiles\ZilchDataStyler.txt">
-      <Filter>Assets\DataFiles</Filter>
-    </None>
     <None Include="..\Assets\Settings.data">
       <Filter>Assets</Filter>
     </None>
@@ -86,7 +83,13 @@
     <ClInclude Include="..\Source\Build\Serializer\Serializer.h">
       <Filter>Source\Build\Serializer</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Components\Systems\Component.h">
+      <Filter>Source\Components\Systems</Filter>
+    </ClInclude>
     <ClInclude Include="..\Source\Components\Systems\Game.h">
+      <Filter>Source\Components\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Components\Systems\GameObject.h">
       <Filter>Source\Components\Systems</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Components\Systems\GraphicsSystem.h">
@@ -96,6 +99,9 @@
       <Filter>Source\Components\Systems</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Components\Systems\Space.h">
+      <Filter>Source\Components\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Components\Systems\WindowSystem.h">
       <Filter>Source\Components\Systems</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Core\Engine.h">
@@ -151,7 +157,13 @@
     <ClCompile Include="..\Source\Build\Serializer\Serializer.cpp">
       <Filter>Source\Build\Serializer</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Components\Systems\Component.cpp">
+      <Filter>Source\Components\Systems</Filter>
+    </ClCompile>
     <ClCompile Include="..\Source\Components\Systems\Game.cpp">
+      <Filter>Source\Components\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Components\Systems\GameObject.cpp">
       <Filter>Source\Components\Systems</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Components\Systems\GraphicsSystem.cpp">
@@ -161,6 +173,9 @@
       <Filter>Source\Components\Systems</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Components\Systems\Space.cpp">
+      <Filter>Source\Components\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Components\Systems\WindowSystem.cpp">
       <Filter>Source\Components\Systems</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Core\Engine.cpp">

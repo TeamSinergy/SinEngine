@@ -21369,7 +21369,7 @@ virtual size_t Get1000()
     ZilchDeclareHelper(SelfType, BaseType, BaseType::ZilchCopyMode)
 
   // (Helper) Define a type
-  #define ZilchDefineType(Library, SelfType, Name, builder, type)                       \
+  #define ZilchDefineType(Library, SelfType, Name, builder, Type)                       \
     /* We store the Zilch type, but ideally this would be not accessible */             \
     Zilch::BoundType* __##SelfType##Type = nullptr;                                     \
     /* Implementation of the get derived type function */                               \

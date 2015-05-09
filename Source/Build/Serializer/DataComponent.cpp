@@ -8,11 +8,11 @@ DefineType(DataComponent, SinningZilch)
     BindMethod(SetName);
 }
 
-DataComponent::DataComponent(DataObject* const parent) : Parent(parent)
+DataComponent::DataComponent(DataObject* const parent) : Parent(parent), DataNode()
 {
 }
 
-DataComponent::DataComponent(DataObject* const parent, String* name, const ArrayRange<String*>& level) : Parent(parent)
+DataComponent::DataComponent(DataObject* const parent, String* name, const ArrayRange<String*>& level) : Parent(parent), DataNode()
 {
     LoadLevel(name, level);
 }
@@ -44,6 +44,7 @@ DataProperty* DataComponent::AddProperty(const String& type, const String& name,
     newParentRange.y += 1;
     Parent->SetRange(newParentRange);
     DataProperties.insert(obj->GetName(), obj);
+    DataPropertyArray.push_back(obj);
 
     return nullptr;
 }
@@ -57,6 +58,7 @@ DataProperty* DataComponent::AddProperty(DataProperty* Object, bool modifyFile)
     }
 
     DataProperties.insert(Object->GetName(), Object);
+    DataPropertyArray.push_back(Object);
     if (modifyFile)
     {
         String Padding = String::Join("", DataSyntax::Padding, DataSyntax::Padding, DataSyntax::Padding);
@@ -76,6 +78,7 @@ bool DataComponent::RemoveProperty(const String& name)
     {
         DataProperty* obj = FindProperty(name);
         unsigned index = obj->GetIndex();
+        DataPropertyArray.erase_value(DataProperties[name]);
         delete DataProperties[name];
         FileData.eraseAt(index - FileData.range().x);
         

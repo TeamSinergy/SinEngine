@@ -1,4 +1,5 @@
 #pragma once
+#include <Precompiled.h>
 #include "DataFile.h" 
 
 class Icon
@@ -9,6 +10,42 @@ public:
     Icon(String& name) : Name(name) {};
     void Initialize();
     HICON StoredIcon;
+
+    String Name;
+};
+
+class FragmentShader
+{
+public:
+    ZilchDeclareBaseType(FragmentShader, TypeCopyMode::ReferenceType);
+    FragmentShader() {};
+    FragmentShader(String& name) : Name(name) {};
+    void Initialize();
+    ID3DBlob* StoredShader;
+
+    String Name;
+};
+
+class VertexShader
+{
+public:
+    ZilchDeclareBaseType(VertexShader, TypeCopyMode::ReferenceType);
+    VertexShader() {};
+    VertexShader(String& name) : Name(name) {};
+    void Initialize();
+    ID3DBlob* StoredShader;
+
+    String Name;
+};
+
+class PixelShader
+{
+public:
+    ZilchDeclareBaseType(PixelShader, TypeCopyMode::ReferenceType);
+    PixelShader() {};
+    PixelShader(String& name) : Name(name) {};
+    void Initialize();
+    ID3DBlob* StoredShader;
 
     String Name;
 };
@@ -30,7 +67,7 @@ public:
         {
             return (*objects)[name];
         }
-        Error("Vector of %s's already has no resource named %s", ZilchTypeId(T)->ToString().c_str(), name.c_str());
+        Error("Vector of %s's has no resource named %s", ZilchTypeId(T)->ToString().c_str(), name.c_str());
         return nullptr;
     };
     template<typename T>
@@ -108,5 +145,8 @@ private:
     
     static HashMap<String, DataFile*> DataFiles;
     static HashMap<String, Icon*> Icons;
+    static HashMap<String, FragmentShader*> FragmentShaders;
+    static HashMap<String, VertexShader*> VertexShaders;
+    static HashMap<String, PixelShader*> PixelShaders;
 };
 

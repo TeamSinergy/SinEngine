@@ -24,7 +24,7 @@ enum Depth
 {
     Level = 0,
     Object = 1,
-    Component = 2,
+    DepthComponent = 2,
     Property = 3
 };
 
@@ -52,6 +52,8 @@ public:
 
     void Serialize();
 
+    const Array<DataLevel*>&  AllLevels();
+
     ~DataFile();
 
 private:
@@ -60,6 +62,7 @@ private:
     Type* Type = ZilchTypeId(DataFile);
     Array<String*> FileData; //Whole File
     HashMap<String, DataLevel*> DataLevels;
+    Array<DataLevel*> DataLevelArray;
 
     
 };

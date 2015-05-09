@@ -4,7 +4,7 @@
 #include "SinSole.h"
 #include "ZilchCompiledLib.h"
 #include "GraphicsManager.h"
-
+#include "WindowSystem.h"
 #include "DataFile.h"
 
 #define SINBUILD
@@ -23,7 +23,7 @@ int OnExit(void)
 
 int main(void)
 {
-    EngineInstance program = GetModuleHandle(0);
+    //EngineInstance program = GetModuleHandle(0);
 
     onexit(OnExit); //Not really needed
     SinSole::CreateConsole("SinSole");
@@ -39,48 +39,22 @@ int main(void)
     Serializer::Initialize();
     ResourceManager::Initialize();
 
-    DataComponent* settings = ResourceManager::FindResourceType<DataFile>(SettingsPath)->FindLevel("Game")->FindObject("SinEngine")->FindComponent("Settings");
-	DataFile* file = ResourceManager::FindResourceType<DataFile>(SettingsPath);
-	//file->RemoveLevel("Level3");// ->AddObject("TestObject")->AddComponent("HelloWorld")->AddProperty("Real2", "Words", "[0.5, 18]");
-	//file->Serialize();
-
-    Window* window = GraphicsManager::CreateGameWindow(program, settings, WindowStyles::BorderedWindowStyle);
-    GraphicsManager::InitializeDX11(window);
+    DataFile* settingsFile = ResourceManager::FindResourceType<DataFile>(SettingsPath);
+	
 
     ExecutableState* state = ZILCH->GetDependencies();
-    Handle EngineHandle = state->AllocateDefaultConstructedHeapObject(ZilchTypeId(SinEntity), ZILCH->Report, Zilch::HeapFlags::NonReferenceCounted);
-    SinEntity* Engine = (SinEntity*)EngineHandle.Dereference();
+    Handle EngineHandle = state->AllocateDefaultConstructedHeapObject(ZilchTypeId(Engine), ZILCH->Report, Zilch::HeapFlags::NonReferenceCounted);
+    Engine* SinEngine = (Engine*)EngineHandle.Dereference();
+    SinEngine->Serialize(settingsFile->FindLevel("SinEngine"));
+    SinEngine->Create();
+    SinEngine->Initialize();
+    SinEngine->Uninitialize();
+    SinEngine->Destroy();
+    EngineHandle.Delete();
     
-
-    // this struct holds Windows event messages
-    MSG msg;
-
-    // wait for the next message in the queue, store the result in 'msg'
-    while (true)
-    {
-        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-        {
-            // translate keystroke messages into the right format
-            TranslateMessage(&msg);
-
-            // send the message to the WindowProc function
-            DispatchMessage(&msg);
-
-            // check to see if it's time to quit
-            if (msg.message == WM_QUIT)
-                break;
-        }
-        else
-        {
-            //Update
-        }
-    }
-
-    GraphicsManager::UninitializeDX11(window);
-    delete window;
+    //delete window;
     //system("pause");
     //delete settings;
-    EngineHandle.Delete();
 
     ZilchLibrary->Uninitialize();
     ZilchLibrary->Destroy();

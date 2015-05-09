@@ -70,7 +70,14 @@ using namespace Zilch;
 // GRAPHICS
 //////////////////////////////////////////////////////////////////////////
 #include <d3d11.h>
+#pragma comment (lib, "D3DCompiler.lib")
+#include <D3Dcompiler.h>
 #pragma comment (lib, "d3d11.lib")
+#include <DirectXMath.h>
+#pragma comment (lib, "DXGI.lib")
+#include <DXGI1_2.h>
+#pragma comment (lib, "Dxgi.lib")
+
 
 //////////////////////////////////////////////////////////////////////////
 // SINENGINE
@@ -78,8 +85,8 @@ using namespace Zilch;
 #include "SinSole.h"
 #include "MemoryManager.h"
 #include "SinEntity.h"
-#include "ZilchCompiledLib.h"
 #include "Utility.h"
+#include "ZilchCompiledLib.h"
 #include "ArrayRange.h"
 #include "Serializer.h"
 #include "DataComponent.h"

@@ -31,6 +31,9 @@ public:
     void PrintData();
     Unsigned2 GetRange();
     void SetRange(Unsigned2& range);
+
+    const Array<DataObject*>&  AllObjects() { return DataObjectArray; }
+
     ~DataLevel();
 
 private:
@@ -38,6 +41,7 @@ private:
     String* Name;
     Type* Type = ZilchTypeId(SinEntity);
     ArrayRange<String*> FileData; //Whole Level
+    Array<DataObject*> DataObjectArray;
     HashMap<StringRange, DataObject*> DataObjects;
 
 };

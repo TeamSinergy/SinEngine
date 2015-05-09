@@ -58,6 +58,10 @@ void DataFile::Initialize()
                 {
                     continue;
                 }
+                else if (start == String::InvalidIndex)
+                {
+                    continue;
+                }
                 if (lookingForName)
                 {
                     
@@ -94,7 +98,7 @@ void DataFile::Initialize()
                     DataRange range = DataRange(FileData[line], &FileData, Unsigned2(0, FileData.size()));
                     switch (depth)
                     {
-                    case Depth::Component:
+                    case Depth::DepthComponent:
                     {
                         range.StringRange.SetRangeX(line + 2); //safe because it won't compile otherwise
                         components.push_back(range);
@@ -177,6 +181,7 @@ void DataFile::Initialize()
             for (unsigned i = 0; i < levels.size(); ++i)
             {
                 DataLevel* dataLevel = new DataLevel(this, levels[i].Name, levels[i].StringRange);
+                DataLevelArray.push_back(dataLevel);
                 //Create that level's objects
                 for (unsigned k = currentObject; k < levels[i].Children + currentObject; ++k)
                 {
@@ -240,7 +245,7 @@ DataLevel* DataFile::AddLevel(const String& name)
     DataLevel* obj = new DataLevel(this, FileData[FileData.size() - 3], ArrayRange<String*>(&FileData, Unsigned2(FileData.size() - 3, FileData.size()-1)));
     MemCheck(obj, name);
     DataLevels.insert(name, obj);
-    
+    DataLevelArray.push_back(obj);
 
     return obj;
 }
@@ -254,6 +259,7 @@ void DataFile::RemoveLevel(const String& name)
     }
 
     DataLevel* lvl = FindLevel(name);
+    DataLevelArray.erase_value(lvl);
     Unsigned2 range = lvl->GetRange();
     unsigned size = range.y - range.x;
 
@@ -342,6 +348,11 @@ void DataFile::Serialize()
 bool DataFile::HasLevel(const String& name)
 {
     return DataLevels.containsKey(name);
+}
+
+const Array<DataLevel*>& DataFile::AllLevels()
+{
+    return DataLevelArray;
 }
 
 DataFile::~DataFile()

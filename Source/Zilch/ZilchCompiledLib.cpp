@@ -64,7 +64,6 @@ void ZilchCompiledLib::Uninitialize()
 }
 void ZilchCompiledLib::Destroy() 
 {
-    delete LinkedLibs;
     LinkedLibs = nullptr;
     Zilch::ZilchShutdown();
 }
