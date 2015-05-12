@@ -73,7 +73,7 @@ public:
     //DX11 functions
     void InitializeDX11();
     //TO BE CHANGED
-    void SetRenderTarget(DXTexture2D* target = nullptr);
+    void SetRenderTargetView(DXTexture2D* target = nullptr);
     //TO BE CHANGED
     void SetWindowAsViewport(WindowSystem* window);
 
@@ -84,6 +84,8 @@ public:
 
     void RenderFrame();
     void UninitializeDX11();
+    
+
 
     ~WindowSystem(){};
 private:
@@ -142,27 +144,32 @@ private:
 	//void InitializePipeline();
 	//DrawTriangle
 	//RenderFrame
-    DXDeviceInterface* DeviceInterface;//
-    DXDeviceContext* DeviceContext;//
+    DXDeviceInterface* DeviceInterface;
+    DXDeviceContext* DeviceContext;
     DXFeatureLevel FeatureLevel;
-    DXSwapChain* SwapChain;//
+    DXSwapChain* SwapChain;
     
-    DXRenderTargetView* RenderTarget;//
+    DXRenderTargetView* RenderTarget;
 
-    DXVertexBuffer* VertexBuffer;//
+    DXVertexBuffer* VertexBuffer;
     DXInputLayout* InputLayout;
 
-    DXTexture2D* DepthStencilBuffer;//
-    DXDepthStencilState* DepthStencilState;//
-    DXDepthStencilView* DepthStencilView;//
-    DXRasterizerState* RasterState;//
+    DXTexture2D* DepthStencilBuffer;
+    DXDepthStencilState* DepthStencilState;
+    DXDepthStencilView* DepthStencilView;
+    DXRasterizerState* RasterState;
     DXMatrix ProjectionMatrix;
     DXMatrix WorldMatrix;
     DXMatrix OrthographicMatrix;
 	DXMatrix ViewMatrix;
-	DXBuffer* MatrixBuffer;//
+	DXBuffer* MatrixBuffer;
     //MAKE A HASHMAP
     ID3D11VertexShader *pVS;    // the vertex shader
     ID3D11PixelShader *pPS;     // the pixel shader
+
+
+
+
+
 
 };

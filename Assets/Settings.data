@@ -20,7 +20,7 @@ SinEngine =
             //DirectX
             Real4 ClearColor = [0, 126, 130, 1.0];
             Integer AntiAliasing = 4;
-            Integer SampleRate = 4;
+            Integer SampleRate = 1;
             Integer QualityLevel = 30;
             //Unspecified = 0, Centered = 1, Stretched = 2
             Integer ScalingMode = 0;

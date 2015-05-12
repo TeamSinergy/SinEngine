@@ -35,8 +35,8 @@ void WindowSystem::Serialize(DataNode* data)
     SerializeValue(settings, IconPath);
     Resizable = true;
     SerializeValue(settings, Resizable);
-    int fullscreen = Windowed;
-    SerializeValueName(settings, fullscreen, "ScreenMode");
+    screenMode = Windowed;
+    SerializeValueName(settings, screenMode, "ScreenMode");
     CursorVisible = true;
     SerializeValue(settings, CursorVisible);
     ColorMode = 0;
@@ -109,7 +109,9 @@ void WindowSystem::Create()
     //GetClassInfoEx(instance, WindowClassName.c_str(), handle);
     // display the window on the screen
     ShowWindow(handle, Visible);
-    SetFullscreen(screenMode);
+    int currentMode = screenMode;
+    screenMode = 0;
+    SetFullscreen(currentMode);
     DesktopResolution = GraphicsManager::GetDesktopResolution(handle);
 }
 
@@ -216,26 +218,25 @@ WindowRef WindowSystem::GetHandle()
 //////////////////////////////////
 ////        DIRECTX11         ////
 //////////////////////////////////
-
 void WindowSystem::InitializeDX11()
 {
-    
     GetDeviceInformation();
     CreateDeviceAndSwapChain();
-    //CreateVertexBuffer();
-    SetRenderTarget();
-    CreateDepthStencilBuffer();
-    //CreateDepthStencilState();
-    CreateDepthStencilView();
-    //CreateRasterState();
+    SetRenderTargetView();
     SetWindowAsViewport(this);
-    
-    
-    //CalculateProjectionMatrix();
-    //CalculateWorldMatrix();
-    //CalculateOrthographicMatrix();
-    //CalculateViewMatrix();
-      InitializePipeline();
+
+    CreateDepthStencilBuffer();
+    CreateDepthStencilState();
+    //CreateDepthStencilView();
+    CreateRasterState();
+
+    InitializePipeline();
+    CreateVertexBuffer();
+    ////CalculateProjectionMatrix();
+    ////CalculateWorldMatrix();
+    ////CalculateOrthographicMatrix();
+    ////CalculateViewMatrix();
+    DrawDebugTriangle();
 }
 
 void WindowSystem::GetDeviceInformation()
@@ -388,6 +389,8 @@ void WindowSystem::CreateDeviceAndSwapChain()
     }
     scd.Flags = flags;
 
+
+
     HRESULT hr;
     IDXGIDevice* dxgiDevice = nullptr;
     ErrorIf(FAILED(hr = DeviceInterface->QueryInterface(__uuidof(IDXGIDevice), reinterpret_cast<void**>(&dxgiDevice))));
@@ -399,11 +402,7 @@ void WindowSystem::CreateDeviceAndSwapChain()
     ErrorIf(FAILED(hr = dxgiAdapter->GetParent(__uuidof(IDXGIFactory2), reinterpret_cast<void**>(&dxgiFactory))));
     
     ErrorIf(FAILED(hr = dxgiFactory->CreateSwapChainForHwnd(dxgiDevice, handle, &scd, &fullScreenDesc, nullptr, &SwapChain)));
-
-    //WOn't release for some reason
-    /*ID3D11Debug* md3dDebug = nullptr;
-    ErrorIf(FAILED(hr = dxgiDevice->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&md3dDebug))));
-    md3dDebug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);*/
+    
     
     ReleaseCOM(dxgiDevice);
     ReleaseCOM(dxgiAdapter);
@@ -411,31 +410,20 @@ void WindowSystem::CreateDeviceAndSwapChain()
     //ReleaseCOM(md3dDebug);
     
     
-    
-    
 }
 
 void WindowSystem::CreateVertexBuffer()
 {
+    // create the vertex buffer
     D3D11_BUFFER_DESC bd;
     ZeroMemory(&bd, sizeof(bd));
 
-    //bd.Usage = D3D11_USAGE_DYNAMIC;                // write access access by CPU and GPU
+    bd.Usage = D3D11_USAGE_DYNAMIC;                // write access access by CPU and GPU
     bd.ByteWidth = sizeof(Vertex) * 3;             // size is the VERTEX struct * 3
     bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;       // use as a vertex buffer
-    //bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;    // allow CPU to write in buffer
+    bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;    // allow CPU to write in buffer
 
-    Vertex OurVertices[] =
-    {
-        { Real3(0.0f, 0.5f, 1.0f), Real4(1.0f, 0.0f, 0.0f, 1.0f) },
-        { Real3(0.45f, -0.5, 1.0f), Real4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { Real3(-0.45f, -0.5f, 1.0f), Real4(0.0f, 0.0f, 1.0f, 1.0f) }
-    };
-
-    D3D11_SUBRESOURCE_DATA subResourceData = {OurVertices, 0, 0};
-
-    DeviceInterface->CreateBuffer(&bd, &subResourceData, &VertexBuffer);       // create the buffer
-    
+    DeviceInterface->CreateBuffer(&bd, NULL, &VertexBuffer);       // create the buffer
 }
 
 void WindowSystem::CreateDepthStencilBuffer()
@@ -538,7 +526,7 @@ void WindowSystem::CreateRasterState()
     DeviceContext->RSSetState(RasterState);
 }
 
-void WindowSystem::SetRenderTarget(DXTexture2D* target)
+void WindowSystem::SetRenderTargetView(DXTexture2D* target)
 {
     HRESULT result;
     if (target == nullptr) //Set the render target to the back buffer
@@ -559,7 +547,11 @@ void WindowSystem::SetRenderTarget(DXTexture2D* target)
     target->Release();
     // Initailze the depth stencil view.
     // Bind the render target view and depth stencil buffer to the output render pipeline.
-    //
+
+    // set the render target as the back buffer
+    DeviceContext->OMSetRenderTargets(1, &RenderTarget, NULL);
+
+    
 }
 
 void WindowSystem::SetWindowAsViewport(WindowSystem* window)
@@ -708,19 +700,20 @@ void WindowSystem::DrawDebugTriangle()
     {
         { Real3(0.0f, 0.5f, 1.0f), Real4(1.0f, 0.0f, 0.0f, 1.0f) },
         { Real3(0.45f, -0.5, 1.0f), Real4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { Real3(-0.45f, -0.5f, 1.0f), Real4(0.0f, 0.0f, 1.0f, 1.0f) }
+        { Real3(-0.45f, -0.5f, 1.0f), Real4(0.0f, 0.0f, 1.0f, 1.0f) },
     };
 
-
+    // copy the vertices into the buffer
     D3D11_MAPPED_SUBRESOURCE ms;
-    DeviceContext->Map(VertexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);   // map the buffer
-    memcpy(ms.pData, OurVertices, sizeof(OurVertices));                           // copy the data
-    DeviceContext->Unmap(VertexBuffer, NULL);                                     // unmap the buffer
+    DeviceContext->Map(VertexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);    // map the buffer
+    memcpy(ms.pData, OurVertices, sizeof(OurVertices));                 // copy the data
+    DeviceContext->Unmap(VertexBuffer, NULL);                                      // unmap the buffer
     
 }
 
 void WindowSystem::RenderFrame()
 {
+
     // clear the back buffer to the clearcolor
     float color[4] = { ClearColor.x, ClearColor.y, ClearColor.z, ClearColor.w };
     DeviceContext->ClearRenderTargetView(RenderTarget, color);
@@ -732,8 +725,8 @@ void WindowSystem::RenderFrame()
     unsigned stride = sizeof(Vertex);
     unsigned offset = 0;
     DeviceContext->IASetVertexBuffers(0, 1, &VertexBuffer, &stride, &offset);
-    //DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    //DeviceContext->Draw(3, 0);
+    DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    DeviceContext->Draw(3, 0);
 
     // Present the back buffer to the screen since rendering is complete.
     if (VSync)
@@ -779,8 +772,6 @@ void WindowSystem::UninitializeDX11()
         ReleaseCOM(VertexBuffer);
         ReleaseCOM(MatrixBuffer);
         ReleaseCOM(InputLayout);
-
-    
 }
 
 
