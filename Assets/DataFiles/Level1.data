@@ -1,0 +1,16 @@
+Level1 = 
+{
+    Camera = 
+    {
+        Transform = 
+        {
+        },
+        Camera = 
+        {
+            Integer FieldOfView = 90;
+            Real NearPlane = 0.1;
+            Real FarPlane = 1000;
+            Boolean AntiAliasedLines = true;
+        },
+    },
+},

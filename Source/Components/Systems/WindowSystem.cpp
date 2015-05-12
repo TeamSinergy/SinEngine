@@ -1,6 +1,8 @@
 #include <Precompiled.h>
 #include "WindowSystem.h"
 
+#define ReleaseCOM(obj) if(obj != nullptr){obj->Release(); obj = nullptr;}
+
 DefineType(WindowSystem, SinningZilch)
 {
     BindConstructor();
@@ -44,6 +46,8 @@ void WindowSystem::Serialize(DataNode* data)
     GraphicsManager::NormalizeColor(ClearColor, ColorMode);
     SampleRate = 4;
     SerializeValue(settings, SampleRate);
+    QualityLevel = 30;
+    SerializeValue(settings, QualityLevel);
     DebugMode = false;
     SerializeValue(settings, DebugMode);
     VSync = true;
@@ -52,14 +56,17 @@ void WindowSystem::Serialize(DataNode* data)
     SerializeValue(settings, NearPlane);
     FarPlane = 1000;
     SerializeValue(settings, FarPlane);
+    FieldOfView = 3.14f / 4;
+    SerializeValue(settings, FieldOfView);
     AntiAliasedLines = true;
     SerializeValue(settings, AntiAliasedLines);
+    ScalingMode = 0;
+    SerializeValue(settings, ScalingMode);
 }
 
 void WindowSystem::Create()
 {
     ShowCursor(CursorVisible);
-
     unsigned winStyle = WindowStyles::BorderedWindowStyle;
     if (!Resizable)
     {
@@ -103,21 +110,17 @@ void WindowSystem::Create()
     // display the window on the screen
     ShowWindow(handle, Visible);
     SetFullscreen(screenMode);
+    DesktopResolution = GraphicsManager::GetDesktopResolution(handle);
 }
 
 void WindowSystem::Initialize()
 {
     InitializeDX11();
-    SetRenderTarget();
 }
 
 void WindowSystem::Uninitialize()
 {
     UninitializeDX11();
-}
-
-void WindowSystem::Destroy()
-{
 }
 
 void WindowSystem::SetWidth(int width)
@@ -216,74 +219,96 @@ WindowRef WindowSystem::GetHandle()
 
 void WindowSystem::InitializeDX11()
 {
+    
+    GetDeviceInformation();
+    CreateDeviceAndSwapChain();
+    //CreateVertexBuffer();
+    SetRenderTarget();
+    CreateDepthStencilBuffer();
+    //CreateDepthStencilState();
+    CreateDepthStencilView();
+    //CreateRasterState();
+    SetWindowAsViewport(this);
+    
+    
+    //CalculateProjectionMatrix();
+    //CalculateWorldMatrix();
+    //CalculateOrthographicMatrix();
+    //CalculateViewMatrix();
+      InitializePipeline();
+}
+
+void WindowSystem::GetDeviceInformation()
+{
     HRESULT result;
-    IDXGIFactory* factory;
+    IDXGIFactory2* factory;
     IDXGIAdapter* adapter;
     IDXGIOutput* adapterOutput;
-    unsigned int numModes, i, numerator, denominator, stringLength;
+    unsigned int numModes, i, stringLength;
     DXGI_MODE_DESC* displayModeList;
     DXGI_ADAPTER_DESC adapterDesc;
     int error;
     
-    D3D_FEATURE_LEVEL featureLevel;
-    
-
     // Create a DirectX graphics interface factory.
-    result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
+    result = CreateDXGIFactory(__uuidof(IDXGIFactory2), (void**)&factory);
     ErrorIf(FAILED(result), "Failed to Initialize DirectX11");
-
     // Use the factory to create an adapter for the primary graphics interface (video card).
     result = factory->EnumAdapters(0, &adapter);
     ErrorIf(FAILED(result), "Failed to Initialize DirectX11");
-
     // Enumerate the primary adapter output (monitor).
     result = adapter->EnumOutputs(0, &adapterOutput);
     ErrorIf(FAILED(result), "Failed to Initialize DirectX11"); //May need to be changed?
-
     // Get the number of modes that fit the DXGI_FORMAT_R8G8B8A8_UNORM display format for the adapter output (monitor).
     result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL);
     ErrorIf(FAILED(result), "Failed to Initialize DirectX11");
-
     // Create a list to hold all the possible display modes for this monitor/video card combination.
     displayModeList = new DXGI_MODE_DESC[numModes];
     MemCheck(displayModeList, "DirectX11 DisplayModeList");
-
     // Now fill the display mode list structures.
     result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
     ErrorIf(FAILED(result), "Failed to Initialize DirectX11");
-
     // Now go through all the display modes and find the one that matches the screen width and height.
     // When a match is found store the numerator and denominator of the refresh rate for that monitor.
     for (i = 0; i<numModes; i++)
     {
-        if (displayModeList[i].Width == (unsigned int)Dimensions.x)
+        if (displayModeList[i].Width == (unsigned int)DesktopResolution.x)
         {
-            if (displayModeList[i].Height == (unsigned int)Dimensions.y)
+            if (displayModeList[i].Height == (unsigned int)DesktopResolution.y)
             {
-                numerator = displayModeList[i].RefreshRate.Numerator;
-                denominator = displayModeList[i].RefreshRate.Denominator;
+                RefreshRate.x = displayModeList[i].RefreshRate.Numerator;
+                RefreshRate.y = displayModeList[i].RefreshRate.Denominator;
             }
         }
     }
-
     // Get the adapter (video card) description.
     result = adapter->GetDesc(&adapterDesc);
     ErrorIf(FAILED(result), "Failed to Initialize DirectX11");
-
     // Store the dedicated video card memory in megabytes.
     VideoCardMemory = (int)(adapterDesc.DedicatedVideoMemory / 1024 / 1024);
-
     char m_videoCardDescription[128];
     // Convert the name of the video card to a character array and store it.
     error = wcstombs_s(&stringLength, m_videoCardDescription, 128, adapterDesc.Description, 128);
     ErrorIf(error != 0, "Failed to Initialize DirectX11");
-
     VideoCardDescription = String(m_videoCardDescription);
 
+    // Release the display mode list.
+    delete[] displayModeList;
+    displayModeList = nullptr;
+    // Release the adapter output.
+    ReleaseCOM(adapterOutput);
+    // Release the adapter.
+    ReleaseCOM(adapter);
+    // Release the factory.
+    ReleaseCOM(factory);
+}
+
+void WindowSystem::CreateDeviceAndSwapChain()
+{
+    D3D_FEATURE_LEVEL featureLevels[] = {
+        D3D_FEATURE_LEVEL_11_0,
+        D3D_FEATURE_LEVEL_10_1,
+        D3D_FEATURE_LEVEL_10_0 };
     // create a struct to hold information about the swap chain
-    DXGI_SWAP_CHAIN_DESC scd; //SwapChainDescription
-    // clear out the struct for use
-    ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC));
     bool fullscreen = false;
     if (GetScreenMode() == ScreenMode::Fullscreen)
     {
@@ -295,51 +320,66 @@ void WindowSystem::InitializeDX11()
     {
         flags = flags | D3D11_CREATE_DEVICE_DEBUG;
     }
-    // Release the display mode list.
-    delete[] displayModeList;
-    displayModeList = nullptr;
 
-    // Release the adapter output.
-    adapterOutput->Release();
-    adapterOutput = nullptr;
+    D3D11CreateDevice(
+        NULL,
+        D3D_DRIVER_TYPE_HARDWARE,
+        NULL,
+        flags,
+        featureLevels,
+        ARRAYSIZE(featureLevels),
+        D3D11_SDK_VERSION,
+        &DeviceInterface,
+        &FeatureLevel,
+        &DeviceContext);
 
-    // Release the adapter.
-    adapter->Release();
-    adapter = nullptr;
-    
-    // Release the factory.
-    factory->Release();
-    factory = nullptr;
-
+    DXGI_SWAP_CHAIN_DESC1 scd; //SwapChainDescription
+    // clear out the struct for use
+    ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC1));
     // fill the swap chain description struct
+    scd.Width = Dimensions.x;
+    scd.Height = Dimensions.y;
     scd.BufferCount = 1;                                    // one back buffer
-    scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;     // use 32-bit color
+    scd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;     // use 32-bit color
     scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;      // how swap chain is to be used
-    scd.OutputWindow = handle;                 // the window to be used
-    scd.Windowed = !fullscreen;                                    // windowed/full-screen mode
-
-    scd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-    scd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-    // Discard the back buffer contents after presenting.
     scd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+    
+    DXGI_SWAP_CHAIN_FULLSCREEN_DESC fullScreenDesc; //SwapChainDescription
+    // clear out the struct for use
+    ZeroMemory(&fullScreenDesc, sizeof(DXGI_SWAP_CHAIN_FULLSCREEN_DESC));
+    fullScreenDesc.Windowed = !fullscreen;                                    // windowed/full-screen mode    
+    fullScreenDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+    // Discard the back buffer contents after presenting.
+    fullScreenDesc.Scaling = (DXGI_MODE_SCALING)ScalingMode; //Unspecified = 0, Centered = 1, Stretched = 2
 
     // Set the refresh rate of the back buffer.
     if (VSync)
     {
-        scd.BufferDesc.RefreshRate.Numerator = numerator;
-        scd.BufferDesc.RefreshRate.Denominator = denominator;
+        fullScreenDesc.RefreshRate.Numerator = RefreshRate.x;
+        fullScreenDesc.RefreshRate.Denominator = RefreshRate.y;
     }
     else
     {
-        scd.BufferDesc.RefreshRate.Numerator = 0;
-        scd.BufferDesc.RefreshRate.Denominator = 1;
+        fullScreenDesc.RefreshRate.Numerator = 0;
+        fullScreenDesc.RefreshRate.Denominator = 1;
     }
     //Set the MSAA settings
+    //if MSAA is enabled
     if (SampleRate >= AntiAiliasingModes::MSAA && SampleRate <= AntiAiliasingModes::MSAAx4)
     {
         // how many multisamples
         scd.SampleDesc.Count = SampleRate;
-        scd.SampleDesc.Quality = D3D11_STANDARD_MULTISAMPLE_PATTERN;
+        unsigned qualityLevel;
+        DeviceInterface->CheckMultisampleQualityLevels(scd.Format, SampleRate, &qualityLevel);
+        if (QualityLevel > static_cast<int>(qualityLevel))
+        {
+            QualityLevel = qualityLevel;
+        }
+        else if (QualityLevel < 0)
+        {
+            QualityLevel = 0;
+        }
+        scd.SampleDesc.Quality = QualityLevel - 1;
     }
     else
     {
@@ -348,68 +388,61 @@ void WindowSystem::InitializeDX11()
     }
     scd.Flags = flags;
 
-    // Set the feature level to DirectX 11.
-    featureLevel = D3D_FEATURE_LEVEL_11_0;
-    // create a device, device context and swap chain using the information in the scd struct
-    result = D3D11CreateDeviceAndSwapChain(NULL,
-        D3D_DRIVER_TYPE_HARDWARE,
-        NULL,
-        NULL,
-        &featureLevel,
-        1,
-        D3D11_SDK_VERSION,
-        &scd,
-        &SwapChain,
-        &DeviceInterface,
-        NULL,
-        &DeviceContext);
-    ErrorIf(FAILED(result), "Failed to Initialize DirectX11");
-    //unsigned qualityLevel = 0;
-    //DeviceInterface->CheckMultisampleQualityLevels(scd.BufferDesc.Format, scd.SampleDesc.Count, &qualityLevel);
-    //if (MSQualityLevel > qualityLevel)
-    //{
-    //    MSQualityLevel = static_cast<int>(qualityLevel);
-    //}
-    //SwapChain->GetDesc(&scd);
-    //scd.SampleDesc.Quality = static_cast<unsigned>(MSQualityLevel);
-    //SwapChain->GetDesc(&scd);
+    HRESULT hr;
+    IDXGIDevice* dxgiDevice = nullptr;
+    ErrorIf(FAILED(hr = DeviceInterface->QueryInterface(__uuidof(IDXGIDevice), reinterpret_cast<void**>(&dxgiDevice))));
 
+    IDXGIAdapter* dxgiAdapter = nullptr;
+    ErrorIf(FAILED(hr = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), reinterpret_cast<void**>(&dxgiAdapter))));
+
+    IDXGIFactory2* dxgiFactory = nullptr;
+    ErrorIf(FAILED(hr = dxgiAdapter->GetParent(__uuidof(IDXGIFactory2), reinterpret_cast<void**>(&dxgiFactory))));
+    
+    ErrorIf(FAILED(hr = dxgiFactory->CreateSwapChainForHwnd(dxgiDevice, handle, &scd, &fullScreenDesc, nullptr, &SwapChain)));
+
+    //WOn't release for some reason
+    /*ID3D11Debug* md3dDebug = nullptr;
+    ErrorIf(FAILED(hr = dxgiDevice->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&md3dDebug))));
+    md3dDebug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);*/
+    
+    ReleaseCOM(dxgiDevice);
+    ReleaseCOM(dxgiAdapter);
+    ReleaseCOM(dxgiFactory);
+    //ReleaseCOM(md3dDebug);
+    
+    
+    
+    
+}
+
+void WindowSystem::CreateVertexBuffer()
+{
     D3D11_BUFFER_DESC bd;
     ZeroMemory(&bd, sizeof(bd));
 
-    bd.Usage = D3D11_USAGE_DYNAMIC;                // write access access by CPU and GPU
+    //bd.Usage = D3D11_USAGE_DYNAMIC;                // write access access by CPU and GPU
     bd.ByteWidth = sizeof(Vertex) * 3;             // size is the VERTEX struct * 3
     bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;       // use as a vertex buffer
-    bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;    // allow CPU to write in buffer
+    //bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;    // allow CPU to write in buffer
 
-    DeviceInterface->CreateBuffer(&bd, NULL, &VertexBuffer);       // create the buffer
+    Vertex OurVertices[] =
+    {
+        { Real3(0.0f, 0.5f, 1.0f), Real4(1.0f, 0.0f, 0.0f, 1.0f) },
+        { Real3(0.45f, -0.5, 1.0f), Real4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { Real3(-0.45f, -0.5f, 1.0f), Real4(0.0f, 0.0f, 1.0f, 1.0f) }
+    };
+
+    D3D11_SUBRESOURCE_DATA subResourceData = {OurVertices, 0, 0};
+
+    DeviceInterface->CreateBuffer(&bd, &subResourceData, &VertexBuffer);       // create the buffer
+    
 }
-void WindowSystem::SetRenderTarget(DXTexture2D* target)
+
+void WindowSystem::CreateDepthStencilBuffer()
 {
     HRESULT result;
     D3D11_TEXTURE2D_DESC depthBufferDesc;
-    D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
-    D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
-    D3D11_RASTERIZER_DESC rasterDesc;
     
-
-    if (target == nullptr) //Set the render target to the back buffer
-    {
-        //The index of the back buffer we are rendering to, 
-        //the unique id of the Texture2D type, 
-        //and a void* to the where the object will be stored.
-        result = SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&target);
-        ErrorIf(FAILED(result), "Failed to Initialize DirectX11");
-    }
-    // use the buffer address to create the render target
-    result = DeviceInterface->CreateRenderTargetView(target, NULL, &RenderTarget);
-    ErrorIf(FAILED(result), "Failed to Initialize DirectX11");
-    
-    // set the render target as the buffer
-    //Number of render targets
-    //Pointer to an array of render targets
-    target->Release();
-
     //Depth buffer
     // Initialize the description of the depth buffer.
     ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
@@ -420,8 +453,8 @@ void WindowSystem::SetRenderTarget(DXTexture2D* target)
     depthBufferDesc.MipLevels = 1;
     depthBufferDesc.ArraySize = 1;
     depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    depthBufferDesc.SampleDesc.Count = 1;
-    depthBufferDesc.SampleDesc.Quality = 0;
+    depthBufferDesc.SampleDesc.Count = SampleRate;
+    depthBufferDesc.SampleDesc.Quality = QualityLevel - 1;
     depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
     depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
     depthBufferDesc.CPUAccessFlags = 0;
@@ -430,9 +463,11 @@ void WindowSystem::SetRenderTarget(DXTexture2D* target)
     // Create the texture for the depth buffer using the filled out description.
     result = DeviceInterface->CreateTexture2D(&depthBufferDesc, NULL, &DepthStencilBuffer);
     ErrorIf(FAILED(result), "Failed to Initialize DirectX11");
-    
-
-
+}
+void WindowSystem::CreateDepthStencilState()
+{
+    HRESULT result;
+    D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
     // Initialize the description of the stencil state.
     ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
 
@@ -463,21 +498,27 @@ void WindowSystem::SetRenderTarget(DXTexture2D* target)
 
     // Set the depth stencil state.
     DeviceContext->OMSetDepthStencilState(DepthStencilState, 1);
-
-    // Initailze the depth stencil view.
+}
+void WindowSystem::CreateDepthStencilView()
+{
+    HRESULT result;
+    D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
     ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
 
     // Set up the depth stencil view description.
     depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
     depthStencilViewDesc.Texture2D.MipSlice = 0;
 
     // Create the depth stencil view.
     result = DeviceInterface->CreateDepthStencilView(DepthStencilBuffer, &depthStencilViewDesc, &DepthStencilView);
 
-    // Bind the render target view and depth stencil buffer to the output render pipeline.
     DeviceContext->OMSetRenderTargets(1, &RenderTarget, DepthStencilView);
-
+}
+void WindowSystem::CreateRasterState()
+{
+    HRESULT result;
+    D3D11_RASTERIZER_DESC rasterDesc;
     // Setup the raster description which will determine how and what polygons will be drawn.
     rasterDesc.AntialiasedLineEnable = AntiAliasedLines;
     rasterDesc.CullMode = D3D11_CULL_BACK;
@@ -493,9 +534,32 @@ void WindowSystem::SetRenderTarget(DXTexture2D* target)
     // Create the rasterizer state from the description we just filled out.
     result = DeviceInterface->CreateRasterizerState(&rasterDesc, &RasterState);
     ErrorIf(FAILED(result), "Failed to Initialize DirectX11");
-
     // Now set the rasterizer state.
     DeviceContext->RSSetState(RasterState);
+}
+
+void WindowSystem::SetRenderTarget(DXTexture2D* target)
+{
+    HRESULT result;
+    if (target == nullptr) //Set the render target to the back buffer
+    {
+        //The index of the back buffer we are rendering to, 
+        //the unique id of the Texture2D type, 
+        //and a void* to the where the object will be stored.
+        result = SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&target);
+        ErrorIf(FAILED(result), "Failed to Initialize DirectX11");
+    }
+    // use the buffer address to create the render target
+    result = DeviceInterface->CreateRenderTargetView(target, NULL, &RenderTarget);
+    ErrorIf(FAILED(result), "Failed to Initialize DirectX11");
+
+    // set the render target as the buffer
+    //Number of render targets
+    //Pointer to an array of render targets
+    target->Release();
+    // Initailze the depth stencil view.
+    // Bind the render target view and depth stencil buffer to the output render pipeline.
+    //
 }
 
 void WindowSystem::SetWindowAsViewport(WindowSystem* window)
@@ -503,7 +567,7 @@ void WindowSystem::SetWindowAsViewport(WindowSystem* window)
     // Set the viewport to the size of the window
     D3D11_VIEWPORT viewport;
     ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
-
+    
     Integer2 Dimensions = GetDimensions();
 
     viewport.TopLeftX = 0;
@@ -516,32 +580,78 @@ void WindowSystem::SetWindowAsViewport(WindowSystem* window)
     //number of viewports being used,
     //pointer to array of vieports.
     DeviceContext->RSSetViewports(1, &viewport);
+}
 
-    float fieldOfView, screenAspect;
-    // Setup the projection matrix.
-    fieldOfView = (float)XM_PI / 4.0f;
-    screenAspect = (float)Dimensions.x / (float)Dimensions.y;
-
+void WindowSystem::CalculateProjectionMatrix()
+{
     // Create the projection matrix for 3D rendering.
-    ProjectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, NearPlane, FarPlane);
-    
+    ProjectionMatrix = XMMatrixPerspectiveFovLH(FieldOfView, static_cast<float>(Dimensions.x) / static_cast<float>(Dimensions.y), NearPlane, FarPlane);
+}
+void WindowSystem::CalculateWorldMatrix()
+{
     // Initialize the world matrix to the identity matrix.
     WorldMatrix = XMMatrixIdentity();
-
+}
+void WindowSystem::CalculateOrthographicMatrix()
+{
     // Create an orthographic projection matrix for 2D rendering.
     OrthographicMatrix = XMMatrixOrthographicLH((float)Dimensions.x, (float)Dimensions.y, NearPlane, FarPlane);
+}
+void WindowSystem::CalculateViewMatrix()
+{
+    XMFLOAT3 up, position, lookAt;
+    float yaw, pitch, roll;
+    DXMatrix rotationMatrix;
+    XMVECTOR Up, Position, LookAt;
+
+    // Setup the vector that points upwards.
+    up.x = 0.0f;
+    up.y = 1.0f;
+    up.z = 0.0f;
+
+    Up = XMLoadFloat3(&up);
+
+    // Setup the position of the camera in the world.
+    position.x = 0;
+    position.y = 0;
+    position.z = -10;
+    Position = XMLoadFloat3(&position);
+    // Setup where the camera is looking by default.
+    lookAt.x = 0.0f;
+    lookAt.y = 0.0f;
+    lookAt.z = 1.0f;
+    LookAt = XMLoadFloat3(&lookAt);
+    // Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in radians.
+    pitch = 0 * 0.0174532925f;
+    yaw = 0 * 0.0174532925f;
+    roll = 0 * 0.0174532925f;
+
+    // Create the rotation matrix from the yaw, pitch, and roll values.
+    rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+
+    // Transform the lookAt and up vector by the rotation matrix so the view is correctly rotated at the origin.
+    LookAt = XMVector3TransformCoord(LookAt, rotationMatrix);
+    Up = XMVector3TransformCoord(Up, rotationMatrix);
+
+    // Translate the rotated camera position to the location of the viewer.
+    LookAt = Position + LookAt;
+
+    // Finally create the view matrix from the three updated vectors.
+    ViewMatrix = XMMatrixLookAtLH(Position, LookAt, Up);
 }
 
 void WindowSystem::InitializePipeline()
 {
+    
+
     VertexShader* VS = ResourceManager::FindResourceType<VertexShader>("VertexTest.vert");
     PixelShader* PS = ResourceManager::FindResourceType<PixelShader>("PixelTest.pix");
     DeviceInterface->CreateVertexShader(VS->StoredShader->GetBufferPointer(), VS->StoredShader->GetBufferSize(), NULL, &pVS);
     DeviceInterface->CreatePixelShader(PS->StoredShader->GetBufferPointer(), PS->StoredShader->GetBufferSize(), NULL, &pPS);
 
     // set the shader objects
-    DeviceContext->VSSetShader(pVS, 0, 0);
-    DeviceContext->PSSetShader(pPS, 0, 0);
+    DeviceContext->VSSetShader(pVS, nullptr, 0);
+    DeviceContext->PSSetShader(pPS, nullptr, 0);
 
     //The element description
     D3D11_INPUT_ELEMENT_DESC inputLayout[] =
@@ -550,17 +660,55 @@ void WindowSystem::InitializePipeline()
         { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
     
-    DeviceInterface->CreateInputLayout(inputLayout, 2, VS->StoredShader->GetBufferPointer(), VS->StoredShader->GetBufferSize(), &InputLayout);
+    DeviceInterface->CreateInputLayout(inputLayout, ARRAYSIZE(inputLayout), VS->StoredShader->GetBufferPointer(), VS->StoredShader->GetBufferSize(), &InputLayout);
     DeviceContext->IASetInputLayout(InputLayout);
+
+    
+
+    //WorldMatrix = XMMatrixTranspose(WorldMatrix);
+    //ViewMatrix = XMMatrixTranspose(ViewMatrix);
+    //ProjectionMatrix = XMMatrixTranspose(ProjectionMatrix);
+
+    //HRESULT result;
+    //D3D11_MAPPED_SUBRESOURCE mappedResource;
+    //MatrixBufferType* dataPtr;
+    //unsigned int bufferNumber;
+
+    //DeviceContext->Map(MatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    //// Get a pointer to the data in the constant buffer.
+    //dataPtr = (MatrixBufferType*)mappedResource.pData;
+
+    //// Copy the matrices into the constant buffer.
+    //dataPtr->world = WorldMatrix;
+    //dataPtr->view = ViewMatrix;
+    //dataPtr->projection = ProjectionMatrix;
+
+    //// Unlock the constant buffer.
+    //DeviceContext->Unmap(MatrixBuffer, 0);
+
+    //// Set the position of the constant buffer in the vertex shader.
+    //bufferNumber = 0;
+
+    //// Finanly set the constant buffer in the vertex shader with the updated values.
+    //DeviceContext->VSSetConstantBuffers(bufferNumber, 1, &MatrixBuffer);
+
+    //// Set the vertex input layout.
+    //DeviceContext->IASetInputLayout(InputLayout);
+
+
+    // Set the vertex and pixel shaders that will be used to render this triangle.
+
+    // Render the triangle.
+    //DeviceContext->DrawIndexed(3, 0, 0);
 }
 
 void WindowSystem::DrawDebugTriangle()
 {
     Vertex OurVertices[] =
     {
-        { Real3(0.0f, 0.5f, 0.0f), Real4(1.0f, 0.0f, 0.0f, 1.0f) },
-        { Real3(0.45f, -0.5, 0.0f), Real4(0.0f, 1.0f, 0.0f, 1.0f) },
-        { Real3(-0.45f, -0.5f, 0.0f), Real4(0.0f, 0.0f, 1.0f, 1.0f) }
+        { Real3(0.0f, 0.5f, 1.0f), Real4(1.0f, 0.0f, 0.0f, 1.0f) },
+        { Real3(0.45f, -0.5, 1.0f), Real4(0.0f, 1.0f, 0.0f, 1.0f) },
+        { Real3(-0.45f, -0.5f, 1.0f), Real4(0.0f, 0.0f, 1.0f, 1.0f) }
     };
 
 
@@ -578,14 +726,14 @@ void WindowSystem::RenderFrame()
     DeviceContext->ClearRenderTargetView(RenderTarget, color);
 
     // Clear the depth buffer.
-    DeviceContext->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+    //DeviceContext->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
     // do 3D rendering on the back buffer here
     unsigned stride = sizeof(Vertex);
     unsigned offset = 0;
     DeviceContext->IASetVertexBuffers(0, 1, &VertexBuffer, &stride, &offset);
-    DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    DeviceContext->Draw(3, 0);
+    //DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    //DeviceContext->Draw(3, 0);
 
     // Present the back buffer to the screen since rendering is complete.
     if (VSync)
@@ -603,12 +751,10 @@ void WindowSystem::RenderFrame()
 
 void WindowSystem::UninitializeDX11()
 {
-    SwapChain->SetFullscreenState(FALSE, NULL);    // switch to windowed mode
 
     // close and release all existing COM objects
-
-    pVS->Release();
-    pPS->Release(); //TO BE MADE HASMAPS
+    ReleaseCOM(pVS);
+    ReleaseCOM(pPS) //TO BE MADE HASMAPS
     
    /* VertexBuffer->Release();
     InputLayout->Release();
@@ -622,52 +768,22 @@ void WindowSystem::UninitializeDX11()
     {
         SwapChain->SetFullscreenState(false, NULL);
     }
+        ReleaseCOM(RasterState);
+        ReleaseCOM(DepthStencilView);
+        ReleaseCOM(DepthStencilState);
+        ReleaseCOM(DepthStencilBuffer);
+        ReleaseCOM(RenderTarget);
+        ReleaseCOM(DeviceContext);
+        ReleaseCOM(DeviceInterface);
+        ReleaseCOM(SwapChain);
+        ReleaseCOM(VertexBuffer);
+        ReleaseCOM(MatrixBuffer);
+        ReleaseCOM(InputLayout);
 
-    if (RasterState)
-    {
-        RasterState->Release();
-        RasterState = nullptr;
-    }
+    
+}
 
-    if (DepthStencilView)
-    {
-        DepthStencilView->Release();
-        DepthStencilView = nullptr;
-    }
 
-    if (DepthStencilState)
-    {
-        DepthStencilState->Release();
-        DepthStencilState = nullptr;
-    }
-
-    if (DepthStencilBuffer)
-    {
-        DepthStencilBuffer->Release();
-        DepthStencilBuffer = nullptr;
-    }
-
-    if (RenderTarget)
-    {
-        RenderTarget->Release();
-        RenderTarget = nullptr;
-    }
-
-    if (DeviceContext)
-    {
-        DeviceContext->Release();
-        DeviceContext = nullptr;
-    }
-
-    if (DeviceInterface)
-    {
-        DeviceInterface->Release();
-        DeviceInterface = nullptr;
-    }
-
-    if (SwapChain)
-    {
-        SwapChain->Release();
-        SwapChain = 0;
-    }
+void WindowSystem::Destroy()
+{
 }

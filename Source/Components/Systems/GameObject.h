@@ -4,6 +4,9 @@
 class GameObject : public SinEntity
 {
 public:
+    GameObject() :GameObject(){};
+    GameObject(const String& name) : GameObject(name){}
+
     ZilchDeclareDerivedType(GameObject, SinEntity);
     void Serialize(DataNode* node) override; //DataLevel
     void Create() override;

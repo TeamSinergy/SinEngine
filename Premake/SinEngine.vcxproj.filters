@@ -83,6 +83,9 @@
     <ClInclude Include="..\Source\Build\Serializer\Serializer.h">
       <Filter>Source\Build\Serializer</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Components\Camera.h">
+      <Filter>Source\Components</Filter>
+    </ClInclude>
     <ClInclude Include="..\Source\Components\Systems\Component.h">
       <Filter>Source\Components\Systems</Filter>
     </ClInclude>
@@ -103,6 +106,9 @@
     </ClInclude>
     <ClInclude Include="..\Source\Components\Systems\WindowSystem.h">
       <Filter>Source\Components\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Components\Transform.h">
+      <Filter>Source\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Core\Engine.h">
       <Filter>Source\Core</Filter>
@@ -157,6 +163,9 @@
     <ClCompile Include="..\Source\Build\Serializer\Serializer.cpp">
       <Filter>Source\Build\Serializer</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Components\Camera.cpp">
+      <Filter>Source\Components</Filter>
+    </ClCompile>
     <ClCompile Include="..\Source\Components\Systems\Component.cpp">
       <Filter>Source\Components\Systems</Filter>
     </ClCompile>
@@ -177,6 +186,9 @@
     </ClCompile>
     <ClCompile Include="..\Source\Components\Systems\WindowSystem.cpp">
       <Filter>Source\Components\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Components\Transform.cpp">
+      <Filter>Source\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Core\Engine.cpp">
       <Filter>Source\Core</Filter>

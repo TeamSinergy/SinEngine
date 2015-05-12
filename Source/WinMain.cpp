@@ -40,7 +40,9 @@ int main(void)
     ResourceManager::Initialize();
 
     DataFile* settingsFile = ResourceManager::FindResourceType<DataFile>(SettingsPath);
-	
+    //settingsFile->AddLevel("Level6")->AddObject("Object10")->AddComponent("_Movement")->AddProperty("Integer", "Speed", "10");
+    //settingsFile->RemoveLevel("Level6");
+    //settingsFile->Serialize();
 
     ExecutableState* state = ZILCH->GetDependencies();
     Handle EngineHandle = state->AllocateDefaultConstructedHeapObject(ZilchTypeId(Engine), ZILCH->Report, Zilch::HeapFlags::NonReferenceCounted);

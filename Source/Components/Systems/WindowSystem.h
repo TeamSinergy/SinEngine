@@ -7,9 +7,10 @@
 using namespace DirectX;
 
 //GraphicsTypedefs
-typedef IDXGISwapChain DXSwapChain;
+typedef IDXGISwapChain1 DXSwapChain;
 typedef ID3D11Device DXDeviceInterface;
 typedef ID3D11DeviceContext DXDeviceContext;
+typedef D3D_FEATURE_LEVEL DXFeatureLevel;
 typedef ID3D11RenderTargetView DXRenderTargetView;
 typedef ID3D11Texture2D DXTexture2D;
 typedef ID3D11Buffer DXVertexBuffer;
@@ -18,6 +19,14 @@ typedef XMMATRIX DXMatrix;
 typedef ID3D11DepthStencilState DXDepthStencilState;
 typedef ID3D11DepthStencilView DXDepthStencilView;
 typedef ID3D11RasterizerState DXRasterizerState;
+typedef ID3D11Buffer DXBuffer;
+
+struct MatrixBufferType
+{
+	DXMatrix world;
+	DXMatrix view;
+	DXMatrix projection;
+};
 
 enum AntiAiliasingModes
 {
@@ -89,6 +98,7 @@ private:
     Integer2 Position;
 
     Integer2 Dimensions;
+    Integer2 DesktopResolution;
     Integer2 defaultSize;
 
     Real4 ClearColor;
@@ -102,31 +112,55 @@ private:
     //DIRECTX11
     int ColorMode;
     int SampleRate;
+    int QualityLevel;
     bool DebugMode;
     bool VSync;
     float NearPlane;
     float FarPlane;
+	float FieldOfView;
     bool AntiAliasedLines;
+    int ScalingMode;
 
     int VideoCardMemory;
     String VideoCardDescription;
+	Integer2 RefreshRate;
 
-    DXSwapChain* SwapChain;
-    DXDeviceInterface* DeviceInterface;
-    DXDeviceContext* DeviceContext;
-    DXRenderTargetView* RenderTarget;
+	//FUNCTIONS
+	void GetDeviceInformation();
+	void CreateDeviceAndSwapChain();
+	void CreateVertexBuffer();
+	void CreateDepthStencilBuffer();
+	void CreateDepthStencilState();
+	void CreateDepthStencilView();
+	void CreateRasterState();
+	//SetRendertTarget
+	//SetWindowAsViewport
+	void CalculateProjectionMatrix();
+	void CalculateWorldMatrix();
+	void CalculateOrthographicMatrix();
+	void CalculateViewMatrix();
+	//void InitializePipeline();
+	//DrawTriangle
+	//RenderFrame
+    DXDeviceInterface* DeviceInterface;//
+    DXDeviceContext* DeviceContext;//
+    DXFeatureLevel FeatureLevel;
+    DXSwapChain* SwapChain;//
+    
+    DXRenderTargetView* RenderTarget;//
 
-    DXVertexBuffer* VertexBuffer;
+    DXVertexBuffer* VertexBuffer;//
     DXInputLayout* InputLayout;
 
-    DXTexture2D* DepthStencilBuffer;
-    DXDepthStencilState* DepthStencilState;
-    DXDepthStencilView* DepthStencilView;
-    DXRasterizerState* RasterState;
+    DXTexture2D* DepthStencilBuffer;//
+    DXDepthStencilState* DepthStencilState;//
+    DXDepthStencilView* DepthStencilView;//
+    DXRasterizerState* RasterState;//
     DXMatrix ProjectionMatrix;
     DXMatrix WorldMatrix;
     DXMatrix OrthographicMatrix;
-
+	DXMatrix ViewMatrix;
+	DXBuffer* MatrixBuffer;//
     //MAKE A HASHMAP
     ID3D11VertexShader *pVS;    // the vertex shader
     ID3D11PixelShader *pPS;     // the pixel shader

@@ -35,9 +35,9 @@ void Game::Initialize()
     {
         ((Component*)Components[i].Dereference())->Initialize();
     }
-    WindowSystem->InitializePipeline();
-    WindowSystem->SetWindowAsViewport(WindowSystem);
-    WindowSystem->DrawDebugTriangle();
+    //WindowSystem->InitializePipeline();
+    //WindowSystem->SetWindowAsViewport(WindowSystem);
+    //WindowSystem->DrawDebugTriangle();
     Update();
 }
 
@@ -67,6 +67,12 @@ void Game::Update()
             WindowSystem->RenderFrame();
         }
     }
+}
+
+void Game::LoadLevel(DataLevel* level)
+{
+    Space* space = new Space(level->GetName());
+    Spaces.insert(space->Name, space);
 }
 
 void Game::Uninitialize()
