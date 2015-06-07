@@ -175,11 +175,5 @@ void DataLevel::SetRange(Unsigned2& range)
 
 DataLevel::~DataLevel()
 {
-    for (unsigned i = 0; i < DataObjects.values().size(); ++i)
-    {
-        delete DataObjects.values().front();
-        DataObjects.values().front() = nullptr;
-        DataObjects.values().popFront();
-    }
-    DataObjects.deallocate();
+    FreeHashMap(DataObjects);
 }

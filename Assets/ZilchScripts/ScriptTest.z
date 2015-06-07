@@ -3,6 +3,7 @@ class Utility
     [Static]
     function SayHi()
     {
-        Console.WriteLine("HelloWorld");
+        //Console.WriteLine("Gives Error");
+        Console.WriteLine(2);
     }
 }

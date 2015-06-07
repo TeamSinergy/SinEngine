@@ -60,7 +60,7 @@ solution "SinEngine"
       flags   { "Symbols" }
       defines { "_DEBUG"  , "_CRT_SECURE_NO_WARNINGS" }
       links {linker}
-      targetdir "../Solution/BinaryFiles/Debug"
+      targetdir "../Solution/"
       postbuildcommands
               {
               }

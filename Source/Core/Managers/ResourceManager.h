@@ -1,6 +1,19 @@
 #pragma once
 #include <Precompiled.h>
-#include "DataFile.h" 
+
+
+class DataFile;
+
+#define FreeResource(mapName) \
+        { \
+        auto comps = mapName.all(); \
+                while (!comps.empty()) \
+                        { \
+        delete comps.front().second; \
+        comps.popFront(); \
+                        } \
+        mapName.deallocate(); \
+        } \
 
 class Icon
 {
@@ -24,6 +37,7 @@ public:
     ID3DBlob* StoredShader;
 
     String Name;
+    ~FragmentShader() { StoredShader->Release(); };
 };
 
 class VertexShader
@@ -36,6 +50,7 @@ public:
     ID3DBlob* StoredShader;
 
     String Name;
+    ~VertexShader() { StoredShader->Release(); };
 };
 
 class PixelShader
@@ -48,6 +63,7 @@ public:
     ID3DBlob* StoredShader;
 
     String Name;
+    ~PixelShader() { StoredShader->Release(); };
 };
 
 class ResourceManager

@@ -60,5 +60,7 @@ public:
     static HashMap<String, ComponentCreator*> Components;
 
     static std::wstring ToWideString(const String& input);
+
+    static void Destroy();
 };
 
