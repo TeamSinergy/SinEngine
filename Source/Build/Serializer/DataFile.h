@@ -2,6 +2,7 @@
 #include <Precompiled.h>
 #include "Engine.h"
 #include "ArrayRange.h"
+#include "ResourceManager.h"
 
 #define DataFilePath "../Assets/DataFiles"
 
@@ -9,6 +10,8 @@ class DataLevel;
 
 #define SyntaxError(condition, line, fileName, expected) ErrorIf(condition, \
     "Syntax Error on line %i of %s.\n\tExpected: |%s|\n", line + 1, fileName.c_str(), expected.c_str())
+
+#define FreeHashMap(mapName) FreeResource(mapName)
 
 struct DataRange
 {

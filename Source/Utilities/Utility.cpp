@@ -92,3 +92,14 @@ void Utility::CompileShader(const String& srcFile, const String& entryPoint, con
 
     *blob = shaderBlob;
 }
+
+void Utility::Destroy()
+{
+    auto comps = Components.all();
+    while (!comps.empty())
+    {
+        delete comps.front().second;
+        comps.popFront();
+    }
+    Components.deallocate();
+}

@@ -45,7 +45,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Assets\DataFiles\Test.data">
+    <None Include="..\Assets\DataFiles\Level1.data">
       <Filter>Assets\DataFiles</Filter>
     </None>
     <None Include="..\Assets\Settings.data">

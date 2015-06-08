@@ -17,6 +17,7 @@ typedef HINSTANCE EngineInstance;
 int OnExit(void)
 {
     SinSole::DestroyConsole();
+    Utility::Destroy();
     //_CrtDumpMemoryLeaks();
     return 1;
 }
@@ -57,7 +58,7 @@ int main(void)
     //delete window;
     //system("pause");
     //delete settings;
-
+    ResourceManager::Uninitialize();
     ZilchLibrary->Uninitialize();
     ZilchLibrary->Destroy();
     delete ZilchLibrary;

@@ -1,6 +1,6 @@
 #include <Precompiled.h>
 #include "ResourceManager.h"
-
+#include "DataFile.h"
 
 HashMap<String, DataFile*> ResourceManager::DataFiles = HashMap<String, DataFile*>();
 HashMap<String, Icon*> ResourceManager::Icons = HashMap<String, Icon*>();
@@ -17,13 +17,15 @@ HashMap<String, PixelShader*> ResourceManager::PixelShaders = HashMap<String, Pi
 #define LoadIn(type, dir, path, vector)                                 \
     Serializer::FindAllFilesInFolder(dir, path, filepaths);             \
     for (unsigned i = 0; i < filepaths.size(); ++i)                     \
-    {                                                                   \
+        {                                                                   \
         type* file = new type(filepaths[i]);                            \
         MemCheck(file, filepaths[i].c_str());                           \
         file->Initialize();                                             \
         vector.insert(filepaths[i], file);                              \
-    }                                                                   \
+        }                                                                   \
     filepaths.clear();                                                  \
+
+
 
 DefineType(ResourceManager, SinningZilch)
 {
@@ -37,7 +39,7 @@ void ResourceManager::Initialize()
     filepaths.push_back(SettingsPath);
     LoadIn(DataFile, DataFilePath, ".data", DataFiles);
 
-    //loading icons
+    ////loading icons
     LoadIn(Icon, IconsPath, ".ico", Icons);
 
     LoadIn(VertexShader, VertexShaderPath, ".vert", VertexShaders);
@@ -57,12 +59,11 @@ void ResourceManager::SerializeAllFiles()
 
 void ResourceManager::Uninitialize()
 {
-    for (unsigned i = 0; i < DataFiles.values().size(); ++i)
-    {
-        delete DataFiles.values().front();
-        DataFiles.values().front() = nullptr;
-        DataFiles.values().popFront();
-    }
+    FreeResource(DataFiles);
+    FreeResource(Icons);
+    FreeResource(VertexShaders);
+    FreeResource(FragmentShaders);
+    FreeResource(PixelShaders);
 }
 
 HashMap<String, BoundType*>* ResourceManager::GetVector(Type* type)
@@ -113,6 +114,8 @@ void FragmentShader::Initialize()
 {
     Utility::CompileShader(String::Join("/", FragmentShaderPath, Name), "FSMain", "fs_4_0_level_9_1", &StoredShader);
 }
+
+
 
 DefineType(PixelShader, SinningZilch)
 {

@@ -77,6 +77,7 @@ void DataProperty::ParseValue(String& valueString, BoundType* type)
             Error("String on line %i must start and end with |\"\"|.\n\tExample: |\"\"Hello World\"\"|", Index + 1);
         }
         *(String**)Value.Data = new String(valueString.sub_string(1, valueString.size() - DataSyntax::GroupEnd.size() - 1));
+        
         MemCheck(*(String**)Value.Data, "String in Propery.cpp");
         //SinWriteLine(**(String**)Value.Data);
     }
@@ -403,6 +404,7 @@ DataProperty::~DataProperty()
     {
         delete *(String**)Value.Data;
         *(String**)Value.Data = nullptr;
+        Value.Manager = nullptr;
     }
-    Value.Delete();
+    (*(HeapHandleData*)Value.Data).Slot = nullptr;
 }

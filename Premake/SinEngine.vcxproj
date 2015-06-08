@@ -40,7 +40,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>..\Solution\BinaryFiles\Debug\</OutDir>
+    <OutDir>..\Solution\</OutDir>
     <IntDir>..\Solution\ObjectFiles\Debug\</IntDir>
     <TargetName>SinEngine</TargetName>
     <TargetExt>.exe</TargetExt>
@@ -58,14 +58,14 @@
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\Systems;..\Source\Core\Managers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\GamePlay;..\Source\Components\Systems;..\Source\Core\Managers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <ProgramDataBaseFileName>$(OutDir)SinEngine.pdb</ProgramDataBaseFileName>
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\Systems;..\Source\Core\Managers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\GamePlay;..\Source\Components\Systems;..\Source\Core\Managers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -81,7 +81,7 @@
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\Systems;..\Source\Core\Managers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\GamePlay;..\Source\Components\Systems;..\Source\Core\Managers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ProgramDataBaseFileName>$(OutDir)SinEngine.pdb</ProgramDataBaseFileName>
       <Optimization>Full</Optimization>
@@ -92,7 +92,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\Systems;..\Source\Core\Managers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\GamePlay;..\Source\Components\Systems;..\Source\Core\Managers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -166,7 +166,7 @@
     <ClCompile Include="..\Source\Zilch\ZilchCompiledLib.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Assets\DataFiles\Test.data" />
+    <None Include="..\Assets\DataFiles\Level1.data" />
     <None Include="..\Assets\Settings.data" />
     <None Include="..\Assets\ZilchScripts\ScriptTest.z" />
   </ItemGroup>

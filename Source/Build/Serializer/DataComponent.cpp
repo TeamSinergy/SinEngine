@@ -169,12 +169,5 @@ unsigned DataComponent::FindFirstGlobalIndexOfProperty(String* input)
 
 DataComponent::~DataComponent()
 {
-    for (unsigned i = 0; i < DataProperties.values().size(); ++i)
-    {
-        delete DataProperties.values().front();
-        DataProperties.values().front() = nullptr;
-        DataProperties.values().popFront();
-       
-    }
-    DataProperties.deallocate();
+    FreeHashMap(DataProperties);
 }

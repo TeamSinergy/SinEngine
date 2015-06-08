@@ -88,4 +88,10 @@ void Game::Destroy()
     {
         ((Component*)Components[i].Dereference())->Destroy();
     }
+
+}
+
+Game::~Game()
+{
+    FreeHashMap(Spaces);
 }

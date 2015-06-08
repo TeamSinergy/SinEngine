@@ -30,12 +30,14 @@ struct MatrixBufferType
 
 enum AntiAiliasingModes
 {
+    None,
     FXAA,
     MSAA,
     MSAAx2,
     MSAAx3,
     MSAAx4,
-    None
+    MSAAx5,
+    
 };
 
 struct Vertex

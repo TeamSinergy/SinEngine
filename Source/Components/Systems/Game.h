@@ -19,6 +19,7 @@ public:
     
     void Uninitialize() override;
     void Destroy() override;
+    ~Game();
 private:
     HashMap < String, Space* >  Spaces;
 };

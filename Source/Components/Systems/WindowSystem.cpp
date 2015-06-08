@@ -366,12 +366,16 @@ void WindowSystem::CreateDeviceAndSwapChain()
     }
     //Set the MSAA settings
     //if MSAA is enabled
-    if (SampleRate >= AntiAiliasingModes::MSAA && SampleRate <= AntiAiliasingModes::MSAAx4)
+    if (SampleRate != AntiAiliasingModes::FXAA && SampleRate != AntiAiliasingModes::None)
     {
         // how many multisamples
         scd.SampleDesc.Count = SampleRate;
         unsigned qualityLevel;
         DeviceInterface->CheckMultisampleQualityLevels(scd.Format, SampleRate, &qualityLevel);
+        if (qualityLevel == 0)
+        {
+            Error("MSAAx%i not supported on this device.", qualityLevel);
+        }
         if (QualityLevel > static_cast<int>(qualityLevel))
         {
             QualityLevel = qualityLevel;
@@ -384,6 +388,8 @@ void WindowSystem::CreateDeviceAndSwapChain()
     }
     else
     {
+        QualityLevel = 1;
+        SampleRate = 1;
         scd.SampleDesc.Count = 1;
         scd.SampleDesc.Quality = 0;
     }

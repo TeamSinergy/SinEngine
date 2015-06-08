@@ -207,7 +207,7 @@ void DataFile::Initialize()
                                 continue;
                             }
                             DataProperty* dataProperty = new DataProperty(dataComponent, FileData[range.x + w], range.x + w);
-                            MemCheck(dataComponent, "DataProperty in DataFile.cpp");
+                            MemCheck(dataProperty, "DataProperty in DataFile.cpp");
                             dataComponent->AddProperty(dataProperty, false);
                         }
                     }
@@ -363,11 +363,5 @@ DataFile::~DataFile()
         i = nullptr;
     }
 
-    for (unsigned i = 0; i < DataLevels.values().size(); ++i)
-    {
-        delete DataLevels.values().front();
-        DataLevels.values().front() = nullptr;
-        DataLevels.values().popFront();
-    }
-    DataLevels.deallocate();
+    FreeHashMap(DataLevels);
 }

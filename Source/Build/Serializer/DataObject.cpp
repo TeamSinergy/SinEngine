@@ -186,11 +186,5 @@ void DataObject::SetRange(Unsigned2& range)
 
 DataObject::~DataObject()
 {
-    for (unsigned i = 0; i < DataComponents.values().size(); ++i)
-    {
-        delete DataComponents.values().front();
-        DataComponents.values().front() = nullptr;
-        DataComponents.values().popFront();
-    }
-    DataComponents.deallocate();
+    FreeHashMap(DataComponents);
 }
