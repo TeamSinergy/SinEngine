@@ -10,6 +10,7 @@ void Engine::Serialize(DataNode* node)
 {
     DataLevel* fileData = static_cast<DataLevel*>(node);
     Name = fileData->GetName();
+    //Actually number of GameSessions.
     const Array<DataObject*>& levels = fileData->AllObjects();
 
     for (unsigned i = 0; i < levels.size(); ++i)

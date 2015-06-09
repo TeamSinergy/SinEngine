@@ -13,6 +13,7 @@ public:
     void Update();
 
     void LoadLevel(DataLevel* level);
+    void UnloadLevel(const String& levelName);
 
     ComponentPointer(WindowSystem);
 
@@ -22,4 +23,11 @@ public:
     ~Game();
 private:
     HashMap < String, Space* >  Spaces;
+};
+
+class UpdateEvent : public EventData
+{
+public:
+    UpdateEvent(float dt = 0.0f) : EventData(), Dt(dt) {}
+    float Dt;
 };

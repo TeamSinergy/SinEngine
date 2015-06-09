@@ -62,6 +62,7 @@ int main(void)
     ZilchLibrary->Uninitialize();
     ZilchLibrary->Destroy();
     delete ZilchLibrary;
+    ZilchShutdown();
     
     return 0;
 }

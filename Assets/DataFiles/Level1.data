@@ -4,6 +4,9 @@ Level1 =
     {
         Transform = 
         {
+            Real3 Translation = [0,0,0];
+            Real3 Rotation = [0,0,0];
+            Real3 Scale = [0,0,0];
         },
         Camera = 
         {

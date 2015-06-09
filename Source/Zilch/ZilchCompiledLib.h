@@ -20,7 +20,7 @@ public:
     LibraryRef* GetZilchLib(String& ScriptName);
 
     //Returns pointer to the dependency library
-    ExecutableState* GetDependencies(){ return LinkedLibs; }
+    ExecutableState* GetDependencies(){ return ExecState; }
 
     ExceptionReport Report;
     
@@ -42,7 +42,7 @@ private:
     
 
     //Debugger Debugger;    /* Link all the libraries together into one ExecutableState*/
-    ExecutableState* LinkedLibs;
+    ExecutableState* ExecState;
 
 
 

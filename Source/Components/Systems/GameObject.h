@@ -15,5 +15,6 @@ public:
     void Destroy() override;
 protected:
     Array<Handle> Components;
+    Array<GameObject*> Children;
     GameObject* Parent;
 };

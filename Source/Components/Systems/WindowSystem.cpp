@@ -783,4 +783,7 @@ void WindowSystem::UninitializeDX11()
 
 void WindowSystem::Destroy()
 {
+    PostQuitMessage(0);
+    DestroyWindow(handle);
+    handle = nullptr;
 }

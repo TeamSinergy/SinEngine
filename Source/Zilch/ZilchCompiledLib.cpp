@@ -46,12 +46,12 @@ void ZilchCompiledLib::Initialize()
     dependencies.push_back(SinningZilch::GetInstance().GetLibrary());
     CompileScripts(CompiledProject, dependencies);
 
-    LinkedLibs = dependencies.Link();
-    ErrorIf(LinkedLibs == nullptr, "Failed to link libraries together");
-    Zilch::EventConnect(LinkedLibs, Events::UnhandledException, Zilch::DefaultExceptionCallback);
+    ExecState = dependencies.Link();
+    ErrorIf(ExecState == nullptr, "Failed to link libraries together");
+    Zilch::EventConnect(ExecState, Events::UnhandledException, Zilch::DefaultExceptionCallback);
     
     //Debugger.AddProject(CompiledProject);
-    //Debugger.AddState(LinkedLibs);
+    //Debugger.AddState(ExecState);
     
 
 
@@ -65,10 +65,12 @@ void ZilchCompiledLib::Uninitialize()
 void ZilchCompiledLib::Destroy() 
 {
     
-    delete LinkedLibs;
+
     
-    LinkedLibs = nullptr;
-    ZilchShutdown();
+
+    delete ExecState;
+    ExecState = nullptr;
+    
 }
 
 void ZilchCompiledLib::LoadZilchFiles(Zilch::Project & project)

@@ -1,11 +1,14 @@
 #pragma once
 #include "SinEntity.h"
 #include "DataLevel.h"
-class Space : public GameObject
+
+class Game;
+
+class Space : public SinEntity
 {
 public:
-    Space():GameObject(){};
-    Space(const String& name) : GameObject(name){}
+    Space() :SinEntity(){};
+    Space(const String& name) : SinEntity(name){}
 
     void Serialize(DataNode* node) override{}; //DataLevel
     void Create() override{};
@@ -14,7 +17,8 @@ public:
 
     void LoadLevel(DataLevel* level){};
 
-    
+    Game* GameSession;
+    Array<GameObject*> ObjectList;
 
 
     void Uninitialize() override{};

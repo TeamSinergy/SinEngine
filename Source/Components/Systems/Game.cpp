@@ -1,5 +1,12 @@
 #include <Precompiled.h>
 
+#define StartingSpaceComp "StartingLevel"
+#define FilePropertyName "DataFile"
+#define LevelPropertyName "LevelName"
+
+#define DefaultLevelName "DefaultLevel"
+
+
 DefineType(Game, SinningZilch)
 {
     RegisterComponent(Game);
@@ -15,6 +22,22 @@ void Game::Serialize(DataNode* node)
     
     for (unsigned i = 0; i < ComponentsData.size(); ++i)
     {
+        if (ComponentsData[i]->GetName() == StartingSpaceComp)
+        {
+            String fileName = DefaultLevelName;
+            SerializeValueName(ComponentsData[i], fileName, FilePropertyName);
+            DataFile* fileData = ResourceManager::FindResourceType<DataFile>(fileName);
+
+            String levelName = DefaultLevelName;
+            SerializeValueName(ComponentsData[i], levelName, LevelPropertyName);
+            DataLevel* levelData = fileData->FindLevel(levelName);
+
+            if (levelData)
+            {
+                LoadLevel(levelData);
+            }
+            continue;
+        }
         Components.push_back(Utility::Components[ComponentsData[i]->GetName()]->Create());
         ((Component*)Components.back().Dereference())->Owner = this;
         ((Component*)Components.back().Dereference())->Serialize(ComponentsData[i]);
@@ -45,7 +68,8 @@ void Game::Update()
 {
     // this struct holds Windows event messages
     MSG msg;
-
+    UpdateEvent* eventData = new UpdateEvent();
+    MemCheck(eventData, "UpdateEvent");
     // wait for the next message in the queue, store the result in 'msg'
     while (true)
     {
@@ -56,7 +80,6 @@ void Game::Update()
 
             // send the message to the WindowProc function
             DispatchMessage(&msg);
-
             // check to see if it's time to quit
             if (msg.message == WM_QUIT)
                 break;
@@ -66,13 +89,32 @@ void Game::Update()
             //Update
             WindowSystem->RenderFrame();
         }
+        //CALCULATE DELTA TIME PROPERLY!
+        eventData->Dt = 0.016666666;
+        EventSend(this, "GameUpdate", eventData);
     }
 }
 
 void Game::LoadLevel(DataLevel* level)
 {
     Space* space = new Space(level->GetName());
+    space->GameSession = this;
+    space->Serialize(level);
+    space->Create();
+    space->Initialize();
     Spaces.insert(space->Name, space);
+    
+}
+
+void Game::UnloadLevel(const String& levelName)
+{
+    Space* space = Spaces[levelName];
+    space->Uninitialize();
+    space->Destroy();
+    delete space;
+
+    Spaces.erase(space->Name);
+
 }
 
 void Game::Uninitialize()
@@ -88,10 +130,19 @@ void Game::Destroy()
     {
         ((Component*)Components[i].Dereference())->Destroy();
     }
-
 }
 
 Game::~Game()
 {
-    FreeHashMap(Spaces);
+    auto comps = Spaces.all(); 
+    while (!comps.empty()) 
+    { 
+        Space* space = comps.front().second;
+        space->Uninitialize();
+        space->Destroy();
+        delete comps.front().second; 
+        comps.popFront(); 
+    } 
+    Spaces.deallocate();
 }
+

@@ -27,5 +27,10 @@ SinEngine =
             Real FarPlane = 1000;
             Boolean AntiAliasedLines = true;
         },
+        StartingLevel = 
+        {
+            String DataFile = "Level1.data";
+            String LevelName = "Level1";
+        },
     },
 },
