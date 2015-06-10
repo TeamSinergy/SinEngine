@@ -3,6 +3,23 @@ class Utility
     [Static]
     function SayHi()
     {
+        Console.WriteLine(2);
+    }
+}
+
+class CompTest : Component
+{
+    constructor() : base()
+    {
+    }
+    
+    function Initialize()
+    {
+        Console.WriteLine("HELLO!");
+    }
+    
+    function SayHi()
+    {
         Console.WriteLine("Gives Error");
         Console.WriteLine(2);
     }

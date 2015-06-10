@@ -9,7 +9,7 @@ class DataProperty;
 class DataComponent : public DataNode
 {
 public:
-    ZilchDeclareBaseType(DataComponent, TypeCopyMode::ReferenceType);
+    ZilchDeclareDerivedType(DataComponent, DataNode);
     DataComponent(DataObject* const parent);
     DataComponent(DataObject* const parent, String* name, const ArrayRange<String*>& level);
 

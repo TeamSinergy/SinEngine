@@ -52,6 +52,8 @@ class WindowSystem : public Component
 public:
     ZilchDeclareDerivedType(WindowSystem, Component);
 
+    WindowSystem() : Component() {};
+
     void Serialize(DataNode* node) override; //Serialize this through zilch
     void Create() override;
     void Initialize() override;
@@ -60,7 +62,7 @@ public:
 
     void SetWidth(int width);
     void SetHeight(int height);
-    void SetDimensions(Integer2 dimesions);
+    
 
     void SetPosition(Integer2 position);
 
@@ -68,26 +70,13 @@ public:
 
     int GetScreenMode(){ return screenMode; }
 
-    Integer2 GetDimensions(){ return Dimensions; }
+    const Integer2& GetDimensions() const{ return Dimensions; }
+    void SetDimensions(const Integer2&);
+
+    const Integer2& GetDesktopResolution() const{ return DesktopResolution; }
 
     WindowRef GetHandle();
-
-    //DX11 functions
-    void InitializeDX11();
-    //TO BE CHANGED
-    void SetRenderTargetView(DXTexture2D* target = nullptr);
-    //TO BE CHANGED
-    void SetWindowAsViewport(WindowSystem* window);
-
-    void InitializePipeline();
-
-    void DrawDebugTriangle();
-
-
-    void RenderFrame();
-    void UninitializeDX11();
     
-
 
     ~WindowSystem(){};
 private:
@@ -105,73 +94,10 @@ private:
     Integer2 DesktopResolution;
     Integer2 defaultSize;
 
-    Real4 ClearColor;
-
     int screenMode;
 
     bool Visible;
     bool Resizable;
     bool CursorVisible;
-
-    //DIRECTX11
-    int ColorMode;
-    int SampleRate;
-    int QualityLevel;
-    bool DebugMode;
-    bool VSync;
-    float NearPlane;
-    float FarPlane;
-	float FieldOfView;
-    bool AntiAliasedLines;
-    int ScalingMode;
-
-    int VideoCardMemory;
-    String VideoCardDescription;
-	Integer2 RefreshRate;
-
-	//FUNCTIONS
-	void GetDeviceInformation();
-	void CreateDeviceAndSwapChain();
-	void CreateVertexBuffer();
-	void CreateDepthStencilBuffer();
-	void CreateDepthStencilState();
-	void CreateDepthStencilView();
-	void CreateRasterState();
-	//SetRendertTarget
-	//SetWindowAsViewport
-	void CalculateProjectionMatrix();
-	void CalculateWorldMatrix();
-	void CalculateOrthographicMatrix();
-	void CalculateViewMatrix();
-	//void InitializePipeline();
-	//DrawTriangle
-	//RenderFrame
-    DXDeviceInterface* DeviceInterface;
-    DXDeviceContext* DeviceContext;
-    DXFeatureLevel FeatureLevel;
-    DXSwapChain* SwapChain;
     
-    DXRenderTargetView* RenderTarget;
-
-    DXVertexBuffer* VertexBuffer;
-    DXInputLayout* InputLayout;
-
-    DXTexture2D* DepthStencilBuffer;
-    DXDepthStencilState* DepthStencilState;
-    DXDepthStencilView* DepthStencilView;
-    DXRasterizerState* RasterState;
-    DXMatrix ProjectionMatrix;
-    DXMatrix WorldMatrix;
-    DXMatrix OrthographicMatrix;
-	DXMatrix ViewMatrix;
-	DXBuffer* MatrixBuffer;
-    //MAKE A HASHMAP
-    ID3D11VertexShader *pVS;    // the vertex shader
-    ID3D11PixelShader *pPS;     // the pixel shader
-
-
-
-
-
-
 };

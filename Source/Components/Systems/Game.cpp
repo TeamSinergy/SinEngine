@@ -1,4 +1,6 @@
 #include <Precompiled.h>
+#include "Game.h"
+#include "GameClock.h"
 
 #define StartingSpaceComp "StartingLevel"
 #define FilePropertyName "DataFile"
@@ -14,56 +16,6 @@ DefineType(Game, SinningZilch)
     BindDestructor();
 }
 
-void Game::Serialize(DataNode* node)
-{
-    DataObject* objectData = static_cast<DataObject*>(node);
-    const Array<DataComponent*>& ComponentsData = objectData->AllComponents();
-    Name = objectData->GetName();
-    
-    for (unsigned i = 0; i < ComponentsData.size(); ++i)
-    {
-        if (ComponentsData[i]->GetName() == StartingSpaceComp)
-        {
-            String fileName = DefaultLevelName;
-            SerializeValueName(ComponentsData[i], fileName, FilePropertyName);
-            DataFile* fileData = ResourceManager::FindResourceType<DataFile>(fileName);
-
-            String levelName = DefaultLevelName;
-            SerializeValueName(ComponentsData[i], levelName, LevelPropertyName);
-            DataLevel* levelData = fileData->FindLevel(levelName);
-
-            if (levelData)
-            {
-                LoadLevel(levelData);
-            }
-            continue;
-        }
-        Components.push_back(Utility::Components[ComponentsData[i]->GetName()]->Create());
-        ((Component*)Components.back().Dereference())->Owner = this;
-        ((Component*)Components.back().Dereference())->Serialize(ComponentsData[i]);
-    }
-}
-void Game::Create()
-{
-    for (unsigned i = 0; i < Components.size(); ++i)
-    {
-        ((Component*)Components[i].Dereference())->Create();
-    }
-    
-}
-
-void Game::Initialize()
-{
-    for (unsigned i = 0; i < Components.size(); ++i)
-    {
-        ((Component*)Components[i].Dereference())->Initialize();
-    }
-    //WindowSystem->InitializePipeline();
-    //WindowSystem->SetWindowAsViewport(WindowSystem);
-    //WindowSystem->DrawDebugTriangle();
-    Update();
-}
-
 void Game::Update()
 {
     // this struct holds Windows event messages
@@ -71,6 +23,8 @@ void Game::Update()
     UpdateEvent* eventData = new UpdateEvent();
     MemCheck(eventData, "UpdateEvent");
     // wait for the next message in the queue, store the result in 'msg'
+    GameClock clock;
+
     while (true)
     {
         if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -86,63 +40,45 @@ void Game::Update()
         }
         else
         {
-            //Update
-            WindowSystem->RenderFrame();
+            eventData->Dt = (float) clock.Update();
+            EventSend(this, "EngineUpdate", eventData);
         }
-        //CALCULATE DELTA TIME PROPERLY!
-        eventData->Dt = 0.016666666;
-        EventSend(this, "GameUpdate", eventData);
     }
+
+    delete eventData;
 }
 
-void Game::LoadLevel(DataLevel* level)
+void Game::LoadSpace(DataObject* spaceArchetype, DataLevel* level)
 {
-    Space* space = new Space(level->GetName());
+    Handle handle = ZilchAllocate<ObjectSpace>();
+    ObjectSpace* space = (ObjectSpace*)handle.Dereference();
+    space->Name = level->GetName();
     space->GameSession = this;
-    space->Serialize(level);
+    space->Space = space;
+
+    space->Serialize(spaceArchetype);
     space->Create();
     space->Initialize();
-    Spaces.insert(space->Name, space);
+    space->LoadLevel(level);
+    AddChild(space);
     
 }
 
-void Game::UnloadLevel(const String& levelName)
+void Game::UnloadSpace(const String& levelName)
 {
-    Space* space = Spaces[levelName];
+    ObjectSpace* space = (ObjectSpace*)FindChildByName(levelName);
+    ErrorIf(space == nullptr, "Could not find a child with the name %s.", levelName.c_str());
     space->Uninitialize();
     space->Destroy();
-    delete space;
+    RemoveChild(space);
 
-    Spaces.erase(space->Name);
-
+    /*Handle handle = Handle(ZILCH->GetDependencies(), ZilchTypeId(ObjectSpace),(byte*)space);
+    handle.Delete();*/
 }
 
-void Game::Uninitialize()
-{
-    for (unsigned i = 0; i < Components.size(); ++i)
-    {
-        ((Component*)Components[i].Dereference())->Uninitialize();
-    }
-}
-void Game::Destroy()
-{
-    for (unsigned i = 0; i < Components.size(); ++i)
-    {
-        ((Component*)Components[i].Dereference())->Destroy();
-    }
-}
 
 Game::~Game()
 {
-    auto comps = Spaces.all(); 
-    while (!comps.empty()) 
-    { 
-        Space* space = comps.front().second;
-        space->Uninitialize();
-        space->Destroy();
-        delete comps.front().second; 
-        comps.popFront(); 
-    } 
-    Spaces.deallocate();
+    
 }
 

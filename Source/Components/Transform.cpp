@@ -39,6 +39,7 @@ Real3& Transform::GetWorldTranslation()
     {
         return GetTranslation();
     }
+    return GetTranslation();
 }
 Real3& Transform::GetWorldRotation()
 {
@@ -46,6 +47,7 @@ Real3& Transform::GetWorldRotation()
     {
         return GetRotation();
     }
+    return GetRotation();
 }
 Real3& Transform::GetWorldScale()
 {
@@ -53,6 +55,7 @@ Real3& Transform::GetWorldScale()
     {
         return GetScale();
     }
+    return GetScale();
 }
 
 void Transform::SetTranslation(const Real3& translation)

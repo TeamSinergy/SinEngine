@@ -6,7 +6,7 @@
 class DataProperty : public DataNode
 {
 public:
-    ZilchDeclareBaseType(DataProperty, TypeCopyMode::ReferenceType);
+    ZilchDeclareDerivedType(DataProperty, DataNode);
     DataProperty(DataComponent* const parent);
     DataProperty(DataComponent* const parent, String* data, unsigned index);
     DataProperty(DataComponent* const parent, String* source, unsigned index, const String& name, const Handle& store);

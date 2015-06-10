@@ -51,6 +51,7 @@ int main(void)
     SinEngine->Serialize(settingsFile->FindLevel("SinEngine"));
     SinEngine->Create();
     SinEngine->Initialize();
+    
     SinEngine->Uninitialize();
     SinEngine->Destroy();
     EngineHandle.Delete();

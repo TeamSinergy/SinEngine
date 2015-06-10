@@ -5,6 +5,7 @@
 
 DefineType(DataComponent, SinningZilch)
 {
+    type->HandleManager = ZilchManagerId(Zilch::PointerManager);
     BindMethod(SetName);
 }
 

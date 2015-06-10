@@ -16,7 +16,11 @@ void Engine::Serialize(DataNode* node)
     for (unsigned i = 0; i < levels.size(); ++i)
     {
         GameSessions.push_back(ZilchAllocate<Game>());
-        ((Game*)GameSessions.back().Dereference())->Serialize(levels[i]);
+        Game* game = ((Game*)GameSessions.back().Dereference());
+        game->GameSession = (Game*)GameSessions.back().Dereference();
+        game->Parent = nullptr;
+        game->Space = nullptr;
+        game->Serialize(levels[i]);
     }
 }
 void Engine::Create()
@@ -31,6 +35,7 @@ void Engine::Initialize()
     for (unsigned i = 0; i < GameSessions.size(); ++i)
     {
         ((Game*)GameSessions[i].Dereference())->Initialize();
+        ((Game*)GameSessions[i].Dereference())->Update();
     }
 }
 void Engine::Uninitialize()

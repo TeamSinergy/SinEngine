@@ -8,6 +8,9 @@ HashMap<String, VertexShader*> ResourceManager::VertexShaders = HashMap<String, 
 HashMap<String, FragmentShader*> ResourceManager::FragmentShaders = HashMap<String, FragmentShader*>();
 HashMap<String, PixelShader*> ResourceManager::PixelShaders = HashMap<String, PixelShader*>();
 
+#define ArchetypesFileName "Archetypes.data"
+#define ArchetypesLevelName "Archetypes"
+
 #define SettingsPath "../Settings.data"
 #define IconsPath "../Assets/Sprites/Icons"
 #define VertexShaderPath "../Assets/Shaders/Vertex"
@@ -91,6 +94,31 @@ HashMap<String, BoundType*>* ResourceManager::GetVector(Type* type)
     else
     {
         Error("Could not find a vector of %s's", type->ToString().c_str());
+    }
+    return nullptr;
+}
+
+
+DataLevel* ResourceManager::FindLevel(const String& levelName)
+{
+    auto comps = DataFiles.all();
+    while (!comps.empty())
+    { 
+        if (comps.front().second->HasLevel(levelName))
+        {
+            return comps.front().second->FindLevel(levelName);
+        }
+        comps.popFront();
+    } 
+    return nullptr;
+}
+
+DataObject* ResourceManager::FindArchetype(const String& archName)
+{
+    DataLevel* level = DataFiles[ArchetypesFileName]->FindLevel(ArchetypesLevelName);
+    if (level->HasObject(archName))
+    {
+        return level->FindObject(archName);
     }
     return nullptr;
 }

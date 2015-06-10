@@ -7,9 +7,11 @@
 #include "DataProperty.h"
 
 
+
 DefineType(DataFile, SinningZilch)    
 {
-
+    BindConstructor();
+    BindDestructor();
 }
 
 DataFile::DataFile(const String& fileName) : Name(fileName)

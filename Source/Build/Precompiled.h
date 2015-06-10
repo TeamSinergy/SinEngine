@@ -62,7 +62,7 @@
 #endif
 
 //////////////////////////////////////////////////////////////////////////
-// NAMESPACES
+// namespace
 //////////////////////////////////////////////////////////////////////////
 using namespace Zilch;
 
@@ -95,5 +95,6 @@ using namespace Zilch;
 #include "DataLevel.h"
 #include "DataFile.h"
 #include "ResourceManager.h"
+#include "Component.h"
 
 #pragma hdrstop

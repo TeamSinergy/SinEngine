@@ -13,3 +13,10 @@ DefineType(SinEntity, SinningZilch)
     BindMethod(Destroy);
     BindDestructor();
 }
+
+DefineType(DataNode, SinningZilch)
+{
+    type->HandleManager = ZilchManagerId(Zilch::PointerManager);
+    BindConstructor();
+    BindDestructor();
+}

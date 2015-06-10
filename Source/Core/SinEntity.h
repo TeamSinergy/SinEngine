@@ -5,6 +5,9 @@
 
 class DataNode
 {
+    ZilchDeclareBaseType(DataNode, TypeCopyMode::ReferenceType);
+    DataNode() {};
+    virtual ~DataNode() {};
 };
 
 class SinEntity : public EventHandler

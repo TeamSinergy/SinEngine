@@ -1,15 +1,15 @@
 #pragma once
 #include <Precompiled.h>
 #include "Engine.h"
-#include "DataLevel.h"
 
 
+class DataLevel;
 class DataComponent;
 
 class DataObject : public DataNode
 {
 public:
-    ZilchDeclareBaseType(DataObject, TypeCopyMode::ReferenceType);
+    ZilchDeclareDerivedType(DataObject, DataNode);
     DataObject(DataLevel* const parent);
     DataObject(DataLevel* const parent, String* name, const ArrayRange<String*>& level);
 

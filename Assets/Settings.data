@@ -2,34 +2,9 @@ SinEngine =
 {
     Game = 
     {
-        WindowSystem = 
+        DefaultGameSetup = 
         {
-            Integer ColorMode = 0;
-            String Name = "MyGameName";
-            String WindowClassName = "Window1";
-            Boolean Visible = true;
-            //Integer xPosition = 350;
-            //Integer yPosition = 350;
-            Integer Width = 1024;
-            Integer Height = 800;
-            String IconPath = "icon.ico";
-            Integer ScreenMode = 'W';
-            Boolean Resizable = false;
-            Boolean CursorVisible = true;
-            //
-            //DirectX
-            Real4 ClearColor = [0, 126, 130, 1.0];
-            Integer SampleRate = 8;
-            Integer QualityLevel = 4;
-            Boolean DebugMode = true;
-            Integer FieldOfView = 90;
-            Real NearPlane = 0.1;
-            Real FarPlane = 1000;
-            Boolean AntiAliasedLines = true;
-        },
-        StartingLevel = 
-        {
-            String DataFile = "Level1.data";
+            String SpaceArchetype = "Space";
             String LevelName = "Level1";
         },
     },

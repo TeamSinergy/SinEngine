@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Assets">
@@ -45,7 +45,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Assets\DataFiles\Level1.data">
+    <None Include="..\Assets\DataFiles\Archetypes.data">
       <Filter>Assets\DataFiles</Filter>
     </None>
     <None Include="..\Assets\Settings.data">
@@ -98,10 +98,13 @@
     <ClInclude Include="..\Source\Components\Systems\GraphicsSystem.h">
       <Filter>Source\Components\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Components\Systems\ObjectSpace.h">
+      <Filter>Source\Components\Systems</Filter>
+    </ClInclude>
     <ClInclude Include="..\Source\Components\Systems\SoundSystem.h">
       <Filter>Source\Components\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Components\Systems\Space.h">
+    <ClInclude Include="..\Source\Components\Systems\TimeSystem.h">
       <Filter>Source\Components\Systems</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Components\Systems\WindowSystem.h">
@@ -128,11 +131,17 @@
     <ClInclude Include="..\Source\Utilities\ArrayRange.h">
       <Filter>Source\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Utilities\GameClock.h">
+      <Filter>Source\Utilities</Filter>
+    </ClInclude>
     <ClInclude Include="..\Source\Utilities\Utility.h">
       <Filter>Source\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Zilch\ZilchCompiledLib.h">
       <Filter>Source\Zilch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Components\Systems\DefaultGameSetup.h">
+      <Filter>Source\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -178,10 +187,13 @@
     <ClCompile Include="..\Source\Components\Systems\GraphicsSystem.cpp">
       <Filter>Source\Components\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Components\Systems\ObjectSpace.cpp">
+      <Filter>Source\Components\Systems</Filter>
+    </ClCompile>
     <ClCompile Include="..\Source\Components\Systems\SoundSystem.cpp">
       <Filter>Source\Components\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Components\Systems\Space.cpp">
+    <ClCompile Include="..\Source\Components\Systems\TimeSystem.cpp">
       <Filter>Source\Components\Systems</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Components\Systems\WindowSystem.cpp">
@@ -208,6 +220,9 @@
     <ClCompile Include="..\Source\Utilities\ArrayRange.cpp">
       <Filter>Source\Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Utilities\GameClock.cpp">
+      <Filter>Source\Utilities</Filter>
+    </ClCompile>
     <ClCompile Include="..\Source\Utilities\Utility.cpp">
       <Filter>Source\Utilities</Filter>
     </ClCompile>
@@ -219,6 +234,9 @@
     </ClCompile>
     <ClCompile Include="..\Source\Zilch\ZilchCompiledLib.cpp">
       <Filter>Source\Zilch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Components\Systems\DefaultGameSetup.cpp">
+      <Filter>Source\Components</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -10,7 +10,7 @@ class DataObject;
 class DataLevel : public DataNode
 {
 public:
-    ZilchDeclareBaseType(DataLevel, TypeCopyMode::ReferenceType);
+    ZilchDeclareDerivedType(DataLevel, DataNode);
     DataLevel(DataFile* const parent);
     DataLevel(DataFile* const parent, String* name, const ArrayRange<String*>& level);
 

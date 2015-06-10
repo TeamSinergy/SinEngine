@@ -1,7 +1,7 @@
 #pragma once
 #include <Precompiled.h>
-
-
+#include "DataLevel.h"
+#include "DataObject.h"
 class DataFile;
 
 #define FreeResource(mapName) \
@@ -123,7 +123,9 @@ public:
     }
     static void SerializeAllFiles();
     
+    static DataLevel* FindLevel(const String& levelName);
 
+    static DataObject* ResourceManager::FindArchetype(const String& archName);
     //Sounds
 
     //Fonts

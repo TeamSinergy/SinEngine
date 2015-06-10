@@ -1,7 +1,6 @@
 #include <Precompiled.h>
 #include "GraphicsManager.h"
 #include "ResourceManager.h"
-#include "WindowSystem.h"
 
 LRESULT CALLBACK WindowProc(WindowRef window, UINT message, WPARAM  windowParams, LPARAM  longParams)
 {

@@ -5,7 +5,7 @@
 
 DefineType(DataProperty, SinningZilch)
 {
-
+    type->HandleManager = ZilchManagerId(Zilch::PointerManager);
 }
 
 DataProperty::DataProperty(DataComponent* const parent) : Parent(parent)

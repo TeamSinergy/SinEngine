@@ -54,7 +54,9 @@ void ZilchCompiledLib::Initialize()
     //Debugger.AddState(ExecState);
     
 
-
+    GameObject::SerializeFunction = new Array<Type*>();
+    GameObject::SerializeFunction->push_back(ZilchTypeId(DataNode*));
+    GameObject::Default = new Array<Type*>();
     /////////////////////////////////////////////////////////////////
     std::cout << "Zilch Initialized" << std::endl;
 }
@@ -65,7 +67,8 @@ void ZilchCompiledLib::Uninitialize()
 void ZilchCompiledLib::Destroy() 
 {
     
-
+    delete GameObject::SerializeFunction;
+    delete GameObject::Default;
     
 
     delete ExecState;

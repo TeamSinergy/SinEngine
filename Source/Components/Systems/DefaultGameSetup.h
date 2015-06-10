@@ -1,22 +1,16 @@
 #pragma once
 #include "SinEntity.h"
 
-class Game;
-class ObjectSpace;
-class GameObject;
-
-class Component : public SinEntity
+class DefaultGameSetup : public Component
 {
-public:
-    ZilchDeclareDerivedType(Component, SinEntity);
+    ZilchDeclareDerivedType(DefaultGameSetup, Component);
     void Serialize(DataNode* node) override; //Serialize this through zilch
     void Create() override;
     void Initialize() override;
     void Uninitialize() override;
     void Destroy() override;
 
-    GameObject* Owner;
-    ObjectSpace* Space;
-    Game* GameSession;
 private:
+    String SpaceArchetype = "Space";
+    String LevelName = "Level";
 };

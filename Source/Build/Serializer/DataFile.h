@@ -34,7 +34,7 @@ enum Depth
 class DataFile : public DataNode
 {
 public:
-    ZilchDeclareBaseType(DataFile, TypeCopyMode::ReferenceType);
+    ZilchDeclareDerivedType(DataFile, DataNode);
     DataFile() = default;
     DataFile(const String& Name);
 
