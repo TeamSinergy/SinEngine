@@ -98,9 +98,6 @@
     <ClInclude Include="..\Source\Components\Systems\GraphicsSystem.h">
       <Filter>Source\Components\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Components\Systems\ObjectSpace.h">
-      <Filter>Source\Components\Systems</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Components\Systems\SoundSystem.h">
       <Filter>Source\Components\Systems</Filter>
     </ClInclude>
@@ -142,6 +139,9 @@
     </ClInclude>
     <ClInclude Include="..\Source\Components\Systems\DefaultGameSetup.h">
       <Filter>Source\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Components\Systems\Space.h">
+      <Filter>Source\Components\Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -185,9 +185,6 @@
       <Filter>Source\Components\Systems</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Components\Systems\GraphicsSystem.cpp">
-      <Filter>Source\Components\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Components\Systems\ObjectSpace.cpp">
       <Filter>Source\Components\Systems</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Components\Systems\SoundSystem.cpp">
@@ -237,6 +234,9 @@
     </ClCompile>
     <ClCompile Include="..\Source\Components\Systems\DefaultGameSetup.cpp">
       <Filter>Source\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Components\Systems\Space.cpp">
+      <Filter>Source\Components\Systems</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

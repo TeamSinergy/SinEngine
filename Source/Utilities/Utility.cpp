@@ -1,5 +1,6 @@
 #include <Precompiled.h>
 #include "Utility.h"
+#include <iomanip>
 
 HashMap<String, ComponentCreator*> Utility::Components = HashMap<String, ComponentCreator*>();
 
@@ -102,4 +103,203 @@ void Utility::Destroy()
         comps.popFront();
     }
     Components.deallocate();
+}
+
+Matrix::Matrix(unsigned rows, unsigned columns)
+{
+    data.resize(rows);
+    for (unsigned i = 0; i < rows; ++i)
+    {
+        data[i].resize(columns);
+    }
+    Fill(0);
+}
+
+Matrix::Matrix(const XMMATRIX& matrix)
+{
+    
+}
+
+Matrix Matrix::operator*(const Matrix& rhs) const
+{
+    const Matrix& lhs = *this;
+    Unsigned2 dim1 = Dimensions();
+    Unsigned2 dim2 = rhs.Dimensions();
+    if (dim1.y != dim2.x)
+    {
+        Error("Matrices are not able to be multiplied");
+    }
+
+    Matrix matrix = Matrix(dim1.x, dim2.y);
+
+    for (unsigned k = 0; k < dim1.x; ++k) //0
+    {
+        for (unsigned l = 0; l < dim2.y; ++l) //0, 1
+        {
+            for (unsigned i = 0; i < dim1.y; ++i) //0, 1, 2
+            {
+                matrix[k][l] += lhs[k][i] * rhs[i][l];
+            }
+        }
+    }
+    return matrix;
+}
+
+Unsigned2 Matrix::Dimensions() const
+{
+    return Unsigned2(Rows(), Columns());
+}
+
+const Array<int>& Matrix::operator[](unsigned rhs) const
+{
+    return data[rhs];
+}
+
+Array<int>& Matrix::operator[](unsigned rhs)
+{
+    return data[rhs];
+}
+
+unsigned Matrix::Dot(const Matrix& matrix) const
+{
+    Unsigned2 dim = Dimensions();
+    if (dim != matrix.Dimensions())
+    {
+        Error("Dimensions must be the same for a dot product.");
+    }
+    unsigned dot = 0;
+    for (unsigned i = 0; i < dim.x; ++i)
+    {
+        for (unsigned j = 0; j < dim.y; ++j)
+        {
+            dot += (*this)[i][j] * matrix[i][j];
+        }
+    }
+    return dot;
+}
+Matrix Matrix::Cross(const Matrix& matrix) const
+{
+    Error("NOT IMPLIMENTED");
+    return Matrix();
+}
+Matrix& Matrix::Transpose()
+{
+    Unsigned2 dim = Dimensions();
+    unsigned max = Utility::Max(dim.x, dim.y);
+    unsigned min = Utility::Min(dim.x, dim.y);
+    Resize(max, max);
+
+    unsigned padding = 0;
+    for (unsigned i = padding; i < max; ++i)
+    {
+        for (unsigned j = padding; j < max; ++j)
+        {
+            if (i == j)
+            {
+                continue;
+            }
+            Utility::Swap(data[i][j], data[j][i]);
+        }
+        ++padding;
+        if (padding == min)
+        {
+            break;
+        }
+    }
+    Resize(dim.y, dim.x);
+
+    return *this;
+}
+
+Matrix Matrix::Transposed()
+{
+    Matrix copy = *this;
+    return copy.Transpose();
+}
+
+unsigned Matrix::Rows() const
+{
+    return data.size();
+}
+unsigned Matrix::Columns() const
+{
+    if (Rows() == 0)
+    {
+        return 0;
+    }
+    return data[0].size();
+}
+Matrix& Matrix::Resize(unsigned rows, unsigned columns)
+{
+    return Resize(Unsigned2(rows, columns));
+}
+Matrix& Matrix::Resize(Unsigned2 dimensions)
+{
+    Unsigned2 dim = Dimensions();
+    data.resize(dimensions.x);
+    for (unsigned i = 0; i < dimensions.x; ++i)
+    {
+        data[i].resize(dimensions.y);
+        if (i < dim.x)
+        {
+            for (unsigned j = dim.y; j < dimensions.y; ++j)
+            {
+                data[i][j] = 0;
+            }
+        }
+        else
+        {
+            for (unsigned j = 0; j < dimensions.y; ++j)
+            {
+                data[i][j] = 0;
+            }
+        }
+    }
+    return *this;
+}
+Matrix& Matrix::Indentity()
+{
+    Fill(0);
+    for (unsigned i = 0; i < Rows(); ++i)
+    {
+        (*this)[i][i] = 1;
+    }
+    return *this;
+}
+
+void Matrix::Print()
+{
+    unsigned rows = Rows();
+    unsigned columns = Columns();
+
+    Matrix matrix = Matrix(rows, columns);
+    SinWrite("Matrix: ");
+    SinWrite((int)rows);
+    SinWrite("x");
+    SinWriteLine((int)columns);
+    for (unsigned i = 0; i < rows; ++i)
+    {
+        SinWrite("[");
+        for (unsigned j = 0; j < columns; ++j)
+        {
+            SinWrite(" ");
+            std::cout << std::setw(4) << std::setprecision(4) << (*this)[i][j];
+            SinWrite(" ");
+        }
+        SinWriteLine("]");
+    }
+}
+
+Matrix& Matrix::Fill(int number)
+{
+    unsigned rows = Rows();
+    unsigned columns = Columns();
+    for (unsigned i = 0; i < rows; ++i)
+    {
+        for (unsigned j = 0; j < columns; ++j)
+        {
+            (*this)[i][j] = number;
+        }
+    }
+    return *this;
 }

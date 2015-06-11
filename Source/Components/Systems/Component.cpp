@@ -1,7 +1,7 @@
 #include <Precompiled.h>
 #include "Component.h"
 #include "GameObject.h"
-#include "ObjectSpace.h"
+#include "Space.h"
 #include "Game.h"
 
 DefineType(Component, SinningZilch)

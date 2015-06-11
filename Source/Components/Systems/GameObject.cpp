@@ -1,5 +1,5 @@
 #include <Precompiled.h>
-#include "ObjectSpace.h"
+#include "Space.h"
 #include "DataLevel.h"
 #include "Game.h"
 
@@ -7,10 +7,16 @@ DefineType(GameObject, SinningZilch)
 {
   BindConstructor();
   BindDestructor();
+  BindMethod(Create);
+  BindMethod(Initialize);
+  BindMethod(Uninitialize);
+  BindMethod(Destroy);
+  
 }
 
 Array<Type*>* GameObject::SerializeFunction = nullptr;
 Array<Type*>* GameObject::Default = nullptr;
+EventData* GameObject::EmptyEventData = nullptr;
 
 void GameObject::Serialize(DataNode* node)
 {
@@ -55,7 +61,11 @@ void GameObject::Serialize(DataNode* node)
 }
 void GameObject::Create()
 {
-    if (LastState >= ObjectState::Create)
+    if (Space)
+    {
+        EventSend(Space, "ObjectCreated", GameObject::EmptyEventData);
+    }
+    if (LastState >= ObjectState::Create || LastState == ObjectState::Destroy)
     {
         return;
     }
@@ -72,20 +82,7 @@ void GameObject::Create()
         }
     }
 
-    for (unsigned i = 0; i < Children.size(); ++i)
-    {
-        GameObject* child = (GameObject*)Children[i].Dereference();
-        if (child->LastState < ObjectState::Uninitialize)
-        {
-            Function* ZilchSerialize = Children[i].Type->FindFunction("Create", *GameObject::Default, ZilchTypeId(void), FindMemberOptions::None);
-            ErrorIf(ZilchSerialize == nullptr, "Failed to find function 'Create' on Zilch type %s", Children[i].Type->ToString().c_str());
-            {
-                Zilch::Call call(ZilchSerialize, ZILCH->GetDependencies());
-                call.SetHandle(Zilch::Call::This, Children[i]);
-                call.Invoke(ZILCH->Report);
-            }
-        }
-    }
+    UpdateAllChildren(LastState);
 }
 void GameObject::Initialize()
 {
@@ -106,20 +103,7 @@ void GameObject::Initialize()
         }
     }
 
-    for (unsigned i = 0; i < Children.size(); ++i)
-    {
-        GameObject* child = (GameObject*)Children[i].Dereference();
-        if (child->LastState < ObjectState::Uninitialize)
-        {
-            Function* ZilchSerialize = Children[i].Type->FindFunction("Initialize", *GameObject::Default, ZilchTypeId(void), FindMemberOptions::None);
-            ErrorIf(ZilchSerialize == nullptr, "Failed to find function 'Initialize' on Zilch type %s", Children[i].Type->ToString().c_str());
-            {
-                Zilch::Call call(ZilchSerialize, ZILCH->GetDependencies());
-                call.SetHandle(Zilch::Call::This, Children[i]);
-                call.Invoke(ZILCH->Report);
-            }
-        }
-    }
+    UpdateAllChildren(LastState);
 }
 
 void GameObject::AttachTo(GameObject* parent)
@@ -160,20 +144,7 @@ void GameObject::Uninitialize()
         return;
     }
     LastState = ObjectState::Uninitialize;
-    for (unsigned i = 0; i < Children.size(); ++i)
-    {
-        GameObject* child = (GameObject*)Children[i].Dereference();
-        if (child->LastState < ObjectState::Uninitialize)
-        {
-            Function* ZilchSerialize = Children[i].Type->FindFunction("Uninitialize", *GameObject::Default, ZilchTypeId(void), FindMemberOptions::None);
-            ErrorIf(ZilchSerialize == nullptr, "Failed to find function 'Uninitialize' on Zilch type %s", Children[i].Type->ToString().c_str());
-            {
-                Zilch::Call call(ZilchSerialize, ZILCH->GetDependencies());
-                call.SetHandle(Zilch::Call::This, Children[i]);
-                call.Invoke(ZILCH->Report);
-            }
-        }
-    }
+    UpdateAllChildren(LastState);
     
     for (unsigned i = 0; i < Components.size(); ++i)
     {
@@ -188,25 +159,18 @@ void GameObject::Uninitialize()
 }
 void GameObject::Destroy()
 {
+    if (Space)
+    {
+        EventSend(Space, "ObjectDestroyed", GameObject::EmptyEventData);
+    }
+    
     if (LastState >= ObjectState::Destroy)
     {
         return;
     }
     LastState = ObjectState::Destroy;
-    for (unsigned i = 0; i < Children.size(); ++i)
-    {
-        GameObject* child = (GameObject*)Children[i].Dereference();
-        if (child->LastState < ObjectState::Destroy)
-        {
-            Function* ZilchSerialize = Children[i].Type->FindFunction("Destroy", *GameObject::Default, ZilchTypeId(void), FindMemberOptions::None);
-            ErrorIf(ZilchSerialize == nullptr, "Failed to find function 'Destroy' on Zilch type %s", Children[i].Type->ToString().c_str());
-            {
-                Zilch::Call call(ZilchSerialize, ZILCH->GetDependencies());
-                call.SetHandle(Zilch::Call::This, Children[i]);
-                call.Invoke(ZILCH->Report);
-            }
-        }
-    }
+    UpdateAllChildren(LastState);
+
     for (unsigned i = 0; i < Components.size(); ++i)
     {
         Function* ZilchSerialize = Components[i].Type->FindFunction("Destroy", *GameObject::Default, ZilchTypeId(void), FindMemberOptions::None);
@@ -216,5 +180,52 @@ void GameObject::Destroy()
             call.SetHandle(Zilch::Call::This, Components[i]);
             call.Invoke(ZILCH->Report);
         }
+    }
+}
+
+void GameObject::UpdateAllChildren(ObjectState stateToCall)
+{
+    String functionName;
+    switch (stateToCall)
+    {
+        case ObjectState::Create:
+        {
+            functionName = "Create";
+        }break;
+        case ObjectState::Initialize:
+        {
+            functionName = "Initialize";
+        }break;
+        case ObjectState::Uninitialize:
+        {
+            functionName = "Uninitialize";
+        }break;
+        case ObjectState::Destroy:
+        {
+            functionName = "Destroy";
+        }break;
+        default:
+        {
+            Error("Invalid State");
+        }
+    }
+
+    for (unsigned i = 0; i < Children.size(); ++i)
+    {
+        GameObject* child = (GameObject*)Children[i].Dereference();
+        if (child->LastState < stateToCall)
+        {
+            Function* ZilchSerialize = Children[i].Type->FindFunction(functionName, *GameObject::Default, ZilchTypeId(void), FindMemberOptions::None);
+            ErrorIf(ZilchSerialize == nullptr, "Failed to find function '%s' on Zilch type %s", functionName, Children[i].Type->ToString().c_str());
+            {
+                Zilch::Call call(ZilchSerialize, ZILCH->GetDependencies());
+                call.SetHandle(Zilch::Call::This, Children[i]);
+                call.Invoke(ZILCH->Report);
+            }
+        }
+    }
+    if (stateToCall == ObjectState::Destroy)
+    {
+        Children.clear();
     }
 }

@@ -2,21 +2,6 @@ Archetypes =
 {
     Space = 
     {
-        WindowSystem = 
-        {
-            Integer ColorMode = 0;
-            String Name = "MyGameName";
-            String WindowClassName = "Window1";
-            Boolean Visible = true;
-            //Integer xPosition = 350;
-            //Integer yPosition = 350;
-            Integer Width = 1024;
-            Integer Height = 800;
-            String IconPath = "icon.ico";
-            Integer ScreenMode = 'W';
-            Boolean Resizable = false;
-            Boolean CursorVisible = true;
-        },
         GraphicsSystem = 
         {
             //DirectX
@@ -33,7 +18,7 @@ Archetypes =
         {
             Integer MinimumFPS = 30;
             Integer MaximumFPS = 60;
-            Real TimeScale = 0.5;
+            Real TimeScale = 1;
             Boolean Paused = false;
             //How many LogicUpdate updates before a frame is rendered;
             Integer StepCount = 1;
@@ -41,7 +26,7 @@ Archetypes =
     },
 },
 
-Level1 = 
+Level = 
 {
     Camera = 
     {

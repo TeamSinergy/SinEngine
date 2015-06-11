@@ -24,8 +24,23 @@ void TimeSystem::Serialize(DataNode* node)
     StepCount = 1;
     SerializeValue(settings, StepCount);
     
-    minDt = 1.0f / MaximumFPS;
-    maxDt = 1.0f / MinimumFPS;
+    if (MaximumFPS != 0)
+    {
+        minDt = 1.0f / MaximumFPS;
+    }
+    else
+    {
+        //Non-Zero to prevent divide by zero;
+        minDt = 0.0000001f;
+    }
+    if (MinimumFPS != 0)
+    {
+        maxDt = 1.0f / MinimumFPS;
+    }
+    else
+    {
+        maxDt = FLT_MAX;
+    }
 }
 void TimeSystem::Create()
 {
@@ -44,7 +59,6 @@ void TimeSystem::Update(UpdateEvent* event)
     }
     dt = event->Dt;
     dt *= TimeScale;
-    dt /= StepCount;
 
     if (dt > maxDt)
     {
@@ -54,12 +68,14 @@ void TimeSystem::Update(UpdateEvent* event)
     {
         dt = minDt;
     }
+    
+    dt /= StepCount;
     event->Dt = dt;
     for (int i = 0; i < StepCount; ++i)
     {
         EventSend(Space, "LogicUpdate", event);
     }
-    SinWriteLine(event->Dt);
+    
 }
 
 void TimeSystem::Uninitialize()

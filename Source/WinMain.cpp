@@ -65,6 +65,26 @@ int main(void)
     delete ZilchLibrary;
     ZilchShutdown();
     
+    
+    /*Matrix m = Matrix(4, 2);
+    m[0][0] = 7; m[0][1] = 3;
+    m[1][0] = 2; m[1][1] = 5;
+    m[2][0] = 6; m[2][1] = 8;
+    m[3][0] = 9; m[3][1] = 0;
+    m.Print();
+    Matrix s = Matrix(2, 3);
+    s[0][0] = 7; s[0][1] = 4; s[0][2] = 9;
+    s[1][0] = 8; s[1][1] = 1; s[1][2] = 5;
+    s.Print();
+
+    Matrix g = m * s;
+    g.Print();
+    g.Transpose();
+    g.Print();*/
+    
+
+    //system("pause");
+
     return 0;
 }
 

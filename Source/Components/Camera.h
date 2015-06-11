@@ -1,7 +1,42 @@
 #pragma once
+#include <Precompiled.h>
 #include "GameObject.h"
+#include "Transform.h"
 
 class Camera : public Component
 {
+public:
+    ZilchDeclareDerivedType(Camera, Component);
+    void Serialize(DataNode* node) override; //Serialize this through zilch
+    void Create() override;
+    void Initialize() override;
+
+    const Math::Matrix4& ViewMatrix() const { return viewMatrix; }
+    const Math::Matrix4& ProjectionMatrix() const { return projectionMatrix; };
+    Math::Matrix4 ViewProjectionMatrix() const;
+
+    void UpdateViewMatrix();
+    void UpdateProjectionMatrix();
     
+
+    void Reset();
+    void Update(UpdateEvent* event);
+
+    void Uninitialize() override;
+    void Destroy() override;
+private:
+
+    Transform* transform;
+
+    float FieldOfView;
+    float AspectRatio;
+    float NearPlane;
+    float FarPlane;
+
+    Real3 Forward;
+    Real3 Up;
+    Real3 Right;
+
+    Math::Matrix4 viewMatrix;
+    Math::Matrix4 projectionMatrix;
 };

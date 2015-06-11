@@ -1,9 +1,20 @@
 #pragma once
 #include "SinEntity.h"
 
+#define Dependancy(comp) ErrorIf(comp == nullptr, "Component %s has a dependancy on Component %s.", Name.c_str(), String(#comp).Replace("Owner->", "").c_str())
+
 class Game;
-class ObjectSpace;
+class Space;
 class GameObject;
+
+#define BindComponent(component) \
+RegisterComponent(component);\
+BindConstructor();\
+BindMethod(Create);\
+BindMethod(Initialize);\
+BindMethod(Uninitialize);\
+BindMethod(Destroy);\
+BindDestructor();
 
 class Component : public SinEntity
 {
@@ -16,7 +27,7 @@ public:
     void Destroy() override;
 
     GameObject* Owner;
-    ObjectSpace* Space;
+    Space* Space;
     Game* GameSession;
 private:
 };

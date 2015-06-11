@@ -1,7 +1,7 @@
 #pragma once
 #include "SinEntity.h"
 #include "GameObject.h"
-#include "ObjectSpace.h"
+#include "Space.h"
 
 class Game : public GameObject
 {

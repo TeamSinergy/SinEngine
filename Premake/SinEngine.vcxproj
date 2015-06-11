@@ -120,7 +120,7 @@
     <ClInclude Include="..\Source\Components\Systems\Game.h" />
     <ClInclude Include="..\Source\Components\Systems\GameObject.h" />
     <ClInclude Include="..\Source\Components\Systems\GraphicsSystem.h" />
-    <ClInclude Include="..\Source\Components\Systems\ObjectSpace.h" />
+    <ClInclude Include="..\Source\Components\Systems\Space.h" />
     <ClInclude Include="..\Source\Components\Systems\SoundSystem.h" />
     <ClInclude Include="..\Source\Components\Systems\TimeSystem.h" />
     <ClInclude Include="..\Source\Components\Systems\WindowSystem.h" />
@@ -154,7 +154,7 @@
     <ClCompile Include="..\Source\Components\Systems\Game.cpp" />
     <ClCompile Include="..\Source\Components\Systems\GameObject.cpp" />
     <ClCompile Include="..\Source\Components\Systems\GraphicsSystem.cpp" />
-    <ClCompile Include="..\Source\Components\Systems\ObjectSpace.cpp" />
+    <ClCompile Include="..\Source\Components\Systems\Space.cpp" />
     <ClCompile Include="..\Source\Components\Systems\SoundSystem.cpp" />
     <ClCompile Include="..\Source\Components\Systems\TimeSystem.cpp" />
     <ClCompile Include="..\Source\Components\Systems\WindowSystem.cpp" />

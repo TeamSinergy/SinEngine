@@ -7,6 +7,9 @@ struct Unsigned2
     Unsigned2(size_t X, size_t Y) : x(X), y(Y){}
     size_t x;
     size_t y;
+
+    bool operator==(const Unsigned2& rhs) { return (x == rhs.x && y == rhs.y); }
+    bool operator!=(const Unsigned2& rhs) { return (x != rhs.x || y != rhs.y); }
 };
 
 template < typename DataType >

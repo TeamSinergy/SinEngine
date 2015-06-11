@@ -44,7 +44,7 @@ void GraphicsSystem::Serialize(DataNode* data)
 //////////////////////////////////
 void GraphicsSystem::Create()
 {
-    Window = Owner->WindowSystem;
+    Window = GameSession->WindowSystem;
     ErrorIf(Window == nullptr, "YA NEED A WINDOW TO DISPLAY GRAPHICS, DOOFUS!");
 
     GetDeviceInformation();
@@ -588,7 +588,7 @@ void GraphicsSystem::Uninitialize()
 
 void GraphicsSystem::Destroy()
 {
-
+    EventDisconnect(GameSession, this, "EngineUpdate", this);
     // close and release all existing COM objects
     ReleaseCOM(pVS);
     ReleaseCOM(pPS) //TO BE MADE HASMAPS

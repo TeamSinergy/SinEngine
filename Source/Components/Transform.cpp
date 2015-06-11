@@ -4,10 +4,17 @@
 DefineType(Transform, SinningZilch)
 {
     RegisterComponent(Transform);
+    BindConstructor();
+    BindDestructor();
+    BindMethod(Create);
+    BindMethod(Initialize);
+    BindMethod(Uninitialize);
+    BindMethod(Destroy);
 }
 
 void Transform::Serialize(DataNode* node)
 {
+    Owner->Transform = this;
     DataComponent* values = static_cast<DataComponent*>(node);
     SerializeValue(values, Translation);
     SerializeValue(values, Rotation);
@@ -41,7 +48,7 @@ Real3& Transform::GetWorldTranslation()
     }
     return GetTranslation();
 }
-Real3& Transform::GetWorldRotation()
+Quaternion& Transform::GetWorldRotation()
 {
     if (!HasParent)
     {
@@ -64,7 +71,7 @@ void Transform::SetTranslation(const Real3& translation)
 }
 void Transform::SetRotation(const Real3& rotation)
 {
-    Rotation = rotation;
+    Rotation = Math::ToQuaternion(rotation);
 }
 void Transform::SetScale(const Real3& scale)
 {
@@ -82,7 +89,7 @@ void Transform::SetWorldRotation(const Real3& rotation)
 {
     if (!HasParent)
     {
-        Rotation = rotation;
+        Rotation = Math::ToQuaternion(rotation);
     }
 }
 void Transform::SetWorldScale(const Real3& scale)

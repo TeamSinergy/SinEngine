@@ -6,6 +6,10 @@ DefineType(DefaultGameSetup, SinningZilch)
     RegisterComponent(DefaultGameSetup);
     BindConstructor();
     BindDestructor();
+    BindMethod(Create);
+    BindMethod(Initialize);
+    BindMethod(Uninitialize);
+    BindMethod(Destroy);
 }
 
 void DefaultGameSetup::Serialize(DataNode* node)

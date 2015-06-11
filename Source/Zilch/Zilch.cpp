@@ -432,7 +432,7 @@ namespace Zilch
         // Append the stringified value to the builder
         builder.Append(valueString);
 
-        // If we're not the last element, add a comma (argument separator) and a space
+        // If we're not the last element, add a comma (argument separator) and a Space
         bool isNotLastItem = (self->NativeArray.size() - 1 != i);
         if (isNotLastItem)
         {
@@ -680,7 +680,7 @@ namespace Zilch
       // Get the first argument, capacity
       Integer capacity = call.Get<Integer>(0);
 
-      // Reserve space on the array (setting to anything smaller than the current capacity is ignored)
+      // Reserve Space on the array (setting to anything smaller than the current capacity is ignored)
       self->NativeArray.reserve(capacity);
     }
 
@@ -703,12 +703,12 @@ namespace Zilch
         return;
       }
 
-      // Reserve space on the array (setting to anything smaller than the current capacity is ignored)
+      // Reserve Space on the array (setting to anything smaller than the current capacity is ignored)
       // Normally we'd like to just invoke 'resize', however because this is an array of any types,
       // each element needs to be default constructed to the contained value type
       if (newSize > self->GetCount())
       {
-        // First start by reserving space
+        // First start by reserving Space
         self->NativeArray.reserve((size_t)newSize);
 
         // Loop until we've filled the array
@@ -2256,7 +2256,7 @@ namespace Zilch
     // NOTE:
     // This was here, but if you look above in 'GeneratePreConstructorAndPushClassContext'
     // it is already doing this (doing it again would not break anything, just use extra memory)
-    // Allocate space for the implicit 'this' pointer
+    // Allocate Space for the implicit 'this' pointer
     //preCtor->AllocateRegister(preCtor->This->ResultType->GetCopyableSize());
 
     // Invoke the class context, which walks the rest of the tree and pushes the class type
@@ -2333,7 +2333,7 @@ namespace Zilch
     Function* function = context->FunctionStack.back();
     ZilchTodo("Default parameter values (expressions)");
 
-    // We already allocated space for this parameter inside the delegate's parameter computing
+    // We already allocated Space for this parameter inside the delegate's parameter computing
     // Just set our variable's local position to the delegate's same parameter stack position
     node->CreatedVariable->Local = function->Type->Parameters[node->ParameterIndex].StackOffset;
   }
@@ -2974,7 +2974,7 @@ namespace Zilch
       if (node->LeftOperand->IoUsage & IoMode::StrictPropertySet)
       {
         // We actually need to perform initialization, despite it being an assignment
-        // because a strict property set just generates a temporary space to initialize
+        // because a strict property set just generates a temporary Space to initialize
         CreateCopyOpcode(function, CopyMode::Initialize, type, source, destination, debug, node->Location);
       }
       else
@@ -3450,7 +3450,7 @@ namespace Zilch
       // Note: Assignment should be the only thing possible with a set-only property
       node->IoUsage = (IoMode::Enum)(node->IoUsage | IoMode::StrictPropertySet);
 
-      // Make space that any operator will write to
+      // Make Space that any operator will write to
       CreateLocal(function, property->PropertyType->GetCopyableSize(), node->Access);
     }
     else
@@ -3750,7 +3750,7 @@ namespace Zilch
     node->Access.Type = OperandType::Constant;
     node->Access.FieldOffset = 0;
 
-    // Create a handle in constant space for the type pointer
+    // Create a handle in constant Space for the type pointer
     Handle& handle = function->AllocateConstant<Handle>(node->ResultType->GetCopyableSize(), node->Access.HandleConstantLocal);
 
     // Set the handle manager and type of the handle
@@ -4040,7 +4040,7 @@ namespace Zilch
       opcode.TypeToConvert = elementNode->ResultType;
     }
 
-    // Make space for the string local (the string should be the result type)
+    // Make Space for the string local (the string should be the result type)
     CreateLocal(function, node->ResultType->GetCopyableSize(), node->Access);
 
     // Finish off the string builder (with all our additions to it) and store the resulting string on the stack
@@ -4146,7 +4146,7 @@ namespace Zilch
       {
         ZilchTodo("We probably want to eventually share null constants, also examine the behavior of using sizeof(Delegate)!");
 
-        // At the moment, since we use null for handles, delegates, etc, we just allocate wiped space (with 0s) that
+        // At the moment, since we use null for handles, delegates, etc, we just allocate wiped Space (with 0s) that
         // is big enough to support all nullable things (all primtives support being set to all 0)
         size_t largeIndex;
         byte* data = function->Constants.Allocate(sizeof(Delegate), nullptr, nullptr, &largeIndex);
@@ -4252,7 +4252,7 @@ namespace Zilch
       ErrorIf(node->CreatedType != node->ResultType,
         "The created type should always be the expression type");
 
-      // Allocate space for a handle created to the local object
+      // Allocate Space for a handle created to the local object
       // The local creation opcode will generate a handle for us at the specified location
       // This handle gets used in calling the preconstructor (inside the 'LocalObject' instruction)
       // and in calling the actual constructor (inside of 'FunctionCall')
@@ -6623,7 +6623,7 @@ namespace Zilch
   }
 
   //***************************************************************************
-  void StringRangeIsNullOrWhitespace(Call& call, ExceptionReport& report)
+  void StringRangeIsNullOrWhiteSpace(Call& call, ExceptionReport& report)
   {
     StringRangeExtended* separator = call.Get<StringRangeExtended*>(0);
     bool result = true;
@@ -6839,7 +6839,7 @@ namespace Zilch
       return;
     }
 
-    // This must be less than or equal to, because we need extra space for the null
+    // This must be less than or equal to, because we need extra Space for the null
     if (temporaryBuffer.size() <= (size_t)sprintfLength)
     {
       // Expand it just a bit to prevent a lot of re-allocating (and +1 just for the null)
@@ -7792,65 +7792,65 @@ namespace Zilch
     }
   }
 
-#define ZilchSplatAllVectorOperationsAs(ZilchBuilder, ZilchType, NamespaceAndClass, type, Method, Name, UserDescription) \
-  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatVecToVec<1, type, NamespaceAndClass::Method>, OneParameter(this->type##Type ), this->type##Type , FunctionOptions::Static)->Description = ZilchDocumentString(UserDescription); \
-  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatVecToVec<2, type, NamespaceAndClass::Method>, OneParameter(this->type##2Type), this->type##2Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
-  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatVecToVec<3, type, NamespaceAndClass::Method>, OneParameter(this->type##3Type), this->type##3Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
-  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatVecToVec<4, type, NamespaceAndClass::Method>, OneParameter(this->type##4Type), this->type##4Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); 
+#define ZilchSplatAllVectorOperationsAs(ZilchBuilder, ZilchType, namespaceAndClass, type, Method, Name, UserDescription) \
+  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatVecToVec<1, type, namespaceAndClass::Method>, OneParameter(this->type##Type ), this->type##Type , FunctionOptions::Static)->Description = ZilchDocumentString(UserDescription); \
+  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatVecToVec<2, type, namespaceAndClass::Method>, OneParameter(this->type##2Type), this->type##2Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
+  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatVecToVec<3, type, namespaceAndClass::Method>, OneParameter(this->type##3Type), this->type##3Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
+  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatVecToVec<4, type, namespaceAndClass::Method>, OneParameter(this->type##4Type), this->type##4Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); 
 
-#define ZilchSplatNamedAllVectorOperationsTwoExtraAs(ZilchBuilder, ZilchType, NamespaceAndClass, type, typeA, typeB, Method, Name, p1, p2, p3, UserDescription) \
-  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatVecToVecTwoExtra<1, type, typeA, typeB, NamespaceAndClass::Method>, ThreeParameters(this->type##Type , p1, ZilchTypeId(typeA), p2, ZilchTypeId(typeB), p3), this->type##Type , FunctionOptions::Static)->Description = ZilchDocumentString(UserDescription); \
-  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatVecToVecTwoExtra<2, type, typeA, typeB, NamespaceAndClass::Method>, ThreeParameters(this->type##2Type, p1, ZilchTypeId(typeA), p2, ZilchTypeId(typeB), p3), this->type##2Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
-  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatVecToVecTwoExtra<3, type, typeA, typeB, NamespaceAndClass::Method>, ThreeParameters(this->type##3Type, p1, ZilchTypeId(typeA), p2, ZilchTypeId(typeB), p3), this->type##3Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
-  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatVecToVecTwoExtra<4, type, typeA, typeB, NamespaceAndClass::Method>, ThreeParameters(this->type##4Type, p1, ZilchTypeId(typeA), p2, ZilchTypeId(typeB), p3), this->type##4Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); 
+#define ZilchSplatNamedAllVectorOperationsTwoExtraAs(ZilchBuilder, ZilchType, namespaceAndClass, type, typeA, typeB, Method, Name, p1, p2, p3, UserDescription) \
+  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatVecToVecTwoExtra<1, type, typeA, typeB, namespaceAndClass::Method>, ThreeParameters(this->type##Type , p1, ZilchTypeId(typeA), p2, ZilchTypeId(typeB), p3), this->type##Type , FunctionOptions::Static)->Description = ZilchDocumentString(UserDescription); \
+  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatVecToVecTwoExtra<2, type, typeA, typeB, namespaceAndClass::Method>, ThreeParameters(this->type##2Type, p1, ZilchTypeId(typeA), p2, ZilchTypeId(typeB), p3), this->type##2Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
+  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatVecToVecTwoExtra<3, type, typeA, typeB, namespaceAndClass::Method>, ThreeParameters(this->type##3Type, p1, ZilchTypeId(typeA), p2, ZilchTypeId(typeB), p3), this->type##3Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
+  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatVecToVecTwoExtra<4, type, typeA, typeB, namespaceAndClass::Method>, ThreeParameters(this->type##4Type, p1, ZilchTypeId(typeA), p2, ZilchTypeId(typeB), p3), this->type##4Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); 
   
-#define ZilchSplatNamedAllVectorOperationsOneExtraAs(ZilchBuilder, ZilchType, NamespaceAndClass, type, typeA, Method, Name, p1, p2, UserDescription) \
-  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatVecToVecOneExtra<1, type, typeA, NamespaceAndClass::Method>, TwoParameters(this->type##Type , p1, ZilchTypeId(typeA), p2), this->type##Type , FunctionOptions::Static)->Description = ZilchDocumentString(UserDescription); \
-  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatVecToVecOneExtra<2, type, typeA, NamespaceAndClass::Method>, TwoParameters(this->type##2Type, p1, ZilchTypeId(typeA), p2), this->type##2Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
-  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatVecToVecOneExtra<3, type, typeA, NamespaceAndClass::Method>, TwoParameters(this->type##3Type, p1, ZilchTypeId(typeA), p2), this->type##3Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
-  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatVecToVecOneExtra<4, type, typeA, NamespaceAndClass::Method>, TwoParameters(this->type##4Type, p1, ZilchTypeId(typeA), p2), this->type##4Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); 
+#define ZilchSplatNamedAllVectorOperationsOneExtraAs(ZilchBuilder, ZilchType, namespaceAndClass, type, typeA, Method, Name, p1, p2, UserDescription) \
+  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatVecToVecOneExtra<1, type, typeA, namespaceAndClass::Method>, TwoParameters(this->type##Type , p1, ZilchTypeId(typeA), p2), this->type##Type , FunctionOptions::Static)->Description = ZilchDocumentString(UserDescription); \
+  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatVecToVecOneExtra<2, type, typeA, namespaceAndClass::Method>, TwoParameters(this->type##2Type, p1, ZilchTypeId(typeA), p2), this->type##2Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
+  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatVecToVecOneExtra<3, type, typeA, namespaceAndClass::Method>, TwoParameters(this->type##3Type, p1, ZilchTypeId(typeA), p2), this->type##3Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
+  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatVecToVecOneExtra<4, type, typeA, namespaceAndClass::Method>, TwoParameters(this->type##4Type, p1, ZilchTypeId(typeA), p2), this->type##4Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); 
 
-#define ZilchSplatNamedAllVectorOperationsAs(ZilchBuilder, ZilchType, NamespaceAndClass, type, Method, FunctionName, ParamName, UserDescription) \
-  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatVecToVec<1, type, NamespaceAndClass::Method>, OneParameter(this->type##Type , ParamName), this->type##Type,  FunctionOptions::Static)->Description = ZilchDocumentString(UserDescription); \
-  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatVecToVec<2, type, NamespaceAndClass::Method>, OneParameter(this->type##2Type, ParamName), this->type##2Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
-  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatVecToVec<3, type, NamespaceAndClass::Method>, OneParameter(this->type##3Type, ParamName), this->type##3Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
-  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatVecToVec<4, type, NamespaceAndClass::Method>, OneParameter(this->type##4Type, ParamName), this->type##4Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));
+#define ZilchSplatNamedAllVectorOperationsAs(ZilchBuilder, ZilchType, namespaceAndClass, type, Method, FunctionName, ParamName, UserDescription) \
+  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatVecToVec<1, type, namespaceAndClass::Method>, OneParameter(this->type##Type , ParamName), this->type##Type,  FunctionOptions::Static)->Description = ZilchDocumentString(UserDescription); \
+  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatVecToVec<2, type, namespaceAndClass::Method>, OneParameter(this->type##2Type, ParamName), this->type##2Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
+  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatVecToVec<3, type, namespaceAndClass::Method>, OneParameter(this->type##3Type, ParamName), this->type##3Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
+  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatVecToVec<4, type, namespaceAndClass::Method>, OneParameter(this->type##4Type, ParamName), this->type##4Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));
 
-#define ZilchSplatAllVectorOperationsWithErrorAs(ZilchBuilder, ZilchType, NamespaceAndClass, type, Method, FunctionName, ErrorFormatString) \
-  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatVecToVecWithError<1, type, NamespaceAndClass::Method>, OneParameter(this->type##Type ),  this->type##Type, FunctionOptions::Static)->UserData = ErrorFormatString; \
-  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatVecToVecWithError<2, type, NamespaceAndClass::Method>, OneParameter(this->type##2Type), this->type##2Type, FunctionOptions::Static)->UserData = ErrorFormatString; \
-  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatVecToVecWithError<3, type, NamespaceAndClass::Method>, OneParameter(this->type##3Type), this->type##3Type, FunctionOptions::Static)->UserData = ErrorFormatString; \
-  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatVecToVecWithError<4, type, NamespaceAndClass::Method>, OneParameter(this->type##4Type), this->type##4Type, FunctionOptions::Static)->UserData = ErrorFormatString;
+#define ZilchSplatAllVectorOperationsWithErrorAs(ZilchBuilder, ZilchType, namespaceAndClass, type, Method, FunctionName, ErrorFormatString) \
+  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatVecToVecWithError<1, type, namespaceAndClass::Method>, OneParameter(this->type##Type ),  this->type##Type, FunctionOptions::Static)->UserData = ErrorFormatString; \
+  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatVecToVecWithError<2, type, namespaceAndClass::Method>, OneParameter(this->type##2Type), this->type##2Type, FunctionOptions::Static)->UserData = ErrorFormatString; \
+  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatVecToVecWithError<3, type, namespaceAndClass::Method>, OneParameter(this->type##3Type), this->type##3Type, FunctionOptions::Static)->UserData = ErrorFormatString; \
+  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatVecToVecWithError<4, type, namespaceAndClass::Method>, OneParameter(this->type##4Type), this->type##4Type, FunctionOptions::Static)->UserData = ErrorFormatString;
 
-#define ZilchSplatNamedAllVectorOperationsWithErrorAs(ZilchBuilder, ZilchType, NamespaceAndClass, type, Method, FunctionName, ParamName, ErrorFormatString) \
-  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatVecToVecWithError<1, type, NamespaceAndClass::Method>, OneParameter(this->type##Type , ParamName),  this->type##Type, FunctionOptions::Static)->UserData = ErrorFormatString; \
-  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatVecToVecWithError<2, type, NamespaceAndClass::Method>, OneParameter(this->type##2Type, ParamName), this->type##2Type, FunctionOptions::Static)->UserData = ErrorFormatString; \
-  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatVecToVecWithError<3, type, NamespaceAndClass::Method>, OneParameter(this->type##3Type, ParamName), this->type##3Type, FunctionOptions::Static)->UserData = ErrorFormatString; \
-  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatVecToVecWithError<4, type, NamespaceAndClass::Method>, OneParameter(this->type##4Type, ParamName), this->type##4Type, FunctionOptions::Static)->UserData = ErrorFormatString;
+#define ZilchSplatNamedAllVectorOperationsWithErrorAs(ZilchBuilder, ZilchType, namespaceAndClass, type, Method, FunctionName, ParamName, ErrorFormatString) \
+  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatVecToVecWithError<1, type, namespaceAndClass::Method>, OneParameter(this->type##Type , ParamName),  this->type##Type, FunctionOptions::Static)->UserData = ErrorFormatString; \
+  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatVecToVecWithError<2, type, namespaceAndClass::Method>, OneParameter(this->type##2Type, ParamName), this->type##2Type, FunctionOptions::Static)->UserData = ErrorFormatString; \
+  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatVecToVecWithError<3, type, namespaceAndClass::Method>, OneParameter(this->type##3Type, ParamName), this->type##3Type, FunctionOptions::Static)->UserData = ErrorFormatString; \
+  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatVecToVecWithError<4, type, namespaceAndClass::Method>, OneParameter(this->type##4Type, ParamName), this->type##4Type, FunctionOptions::Static)->UserData = ErrorFormatString;
 
-#define ZilchSplatAllTwoVecToVecAs(ZilchBuilder, ZilchType, NamespaceAndClass, type, Method, Name, UserDescription) \
-  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatTwoVecToVec<1, type, NamespaceAndClass::Method>, TwoParameters(this->type##Type),  this->type##Type,  FunctionOptions::Static)->Description = ZilchDocumentString(UserDescription); \
-  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatTwoVecToVec<2, type, NamespaceAndClass::Method>, TwoParameters(this->type##2Type), this->type##2Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
-  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatTwoVecToVec<3, type, NamespaceAndClass::Method>, TwoParameters(this->type##3Type), this->type##3Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
-  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatTwoVecToVec<4, type, NamespaceAndClass::Method>, TwoParameters(this->type##4Type), this->type##4Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));
+#define ZilchSplatAllTwoVecToVecAs(ZilchBuilder, ZilchType, namespaceAndClass, type, Method, Name, UserDescription) \
+  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatTwoVecToVec<1, type, namespaceAndClass::Method>, TwoParameters(this->type##Type),  this->type##Type,  FunctionOptions::Static)->Description = ZilchDocumentString(UserDescription); \
+  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatTwoVecToVec<2, type, namespaceAndClass::Method>, TwoParameters(this->type##2Type), this->type##2Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
+  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatTwoVecToVec<3, type, namespaceAndClass::Method>, TwoParameters(this->type##3Type), this->type##3Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
+  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatTwoVecToVec<4, type, namespaceAndClass::Method>, TwoParameters(this->type##4Type), this->type##4Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));
 
-#define ZilchSplatNamedAllTwoVecToVecAs(ZilchBuilder, ZilchType, NamespaceAndClass, type, Method, FunctionName, Param1Name, Param2Name, UserDescription) \
-  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatTwoVecToVec<1, type, NamespaceAndClass::Method>, TwoParameters( this->type##Type, Param1Name,  this->type##Type, Param2Name), this->type##Type,  FunctionOptions::Static)->Description = ZilchDocumentString(UserDescription); \
-  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatTwoVecToVec<2, type, NamespaceAndClass::Method>, TwoParameters(this->type##2Type, Param1Name, this->type##2Type, Param2Name), this->type##2Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
-  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatTwoVecToVec<3, type, NamespaceAndClass::Method>, TwoParameters(this->type##3Type, Param1Name, this->type##3Type, Param2Name), this->type##3Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
-  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatTwoVecToVec<4, type, NamespaceAndClass::Method>, TwoParameters(this->type##4Type, Param1Name, this->type##4Type, Param2Name), this->type##4Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));
+#define ZilchSplatNamedAllTwoVecToVecAs(ZilchBuilder, ZilchType, namespaceAndClass, type, Method, FunctionName, Param1Name, Param2Name, UserDescription) \
+  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatTwoVecToVec<1, type, namespaceAndClass::Method>, TwoParameters( this->type##Type, Param1Name,  this->type##Type, Param2Name), this->type##Type,  FunctionOptions::Static)->Description = ZilchDocumentString(UserDescription); \
+  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatTwoVecToVec<2, type, namespaceAndClass::Method>, TwoParameters(this->type##2Type, Param1Name, this->type##2Type, Param2Name), this->type##2Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
+  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatTwoVecToVec<3, type, namespaceAndClass::Method>, TwoParameters(this->type##3Type, Param1Name, this->type##3Type, Param2Name), this->type##3Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
+  ZilchBuilder.AddBoundFunction(ZilchType, FunctionName, SplatTwoVecToVec<4, type, namespaceAndClass::Method>, TwoParameters(this->type##4Type, Param1Name, this->type##4Type, Param2Name), this->type##4Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));
 
-#define ZilchSplatAllThreeVecToVecAs(ZilchBuilder, ZilchType, NamespaceAndClass, type, Method, Name, p1, p2, p3, UserDescription) \
-  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatThreeVecToVec<1, type, NamespaceAndClass::Method>, ThreeParameters(this->type##Type,   p1, this->type##Type,   p2,  this->type##Type, p3),  this->type##Type, FunctionOptions::Static)->Description = ZilchDocumentString(UserDescription); \
-  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatThreeVecToVec<2, type, NamespaceAndClass::Method>, ThreeParameters(this->type##2Type,  p1, this->type##2Type,  p2, this->type##2Type, p3), this->type##2Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
-  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatThreeVecToVec<3, type, NamespaceAndClass::Method>, ThreeParameters(this->type##3Type,  p1, this->type##3Type,  p2, this->type##3Type, p3), this->type##3Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
-  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatThreeVecToVec<4, type, NamespaceAndClass::Method>, ThreeParameters(this->type##4Type,  p1, this->type##4Type,  p2, this->type##4Type, p3), this->type##4Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));
+#define ZilchSplatAllThreeVecToVecAs(ZilchBuilder, ZilchType, namespaceAndClass, type, Method, Name, p1, p2, p3, UserDescription) \
+  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatThreeVecToVec<1, type, namespaceAndClass::Method>, ThreeParameters(this->type##Type,   p1, this->type##Type,   p2,  this->type##Type, p3),  this->type##Type, FunctionOptions::Static)->Description = ZilchDocumentString(UserDescription); \
+  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatThreeVecToVec<2, type, namespaceAndClass::Method>, ThreeParameters(this->type##2Type,  p1, this->type##2Type,  p2, this->type##2Type, p3), this->type##2Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
+  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatThreeVecToVec<3, type, namespaceAndClass::Method>, ThreeParameters(this->type##3Type,  p1, this->type##3Type,  p2, this->type##3Type, p3), this->type##3Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
+  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatThreeVecToVec<4, type, namespaceAndClass::Method>, ThreeParameters(this->type##4Type,  p1, this->type##4Type,  p2, this->type##4Type, p3), this->type##4Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));
 
-#define ZilchSplatAllTwoVecAndRealToVecAs(ZilchBuilder, ZilchType, NamespaceAndClass, type, Method, Name, p1, p2, p3, UserDescription) \
-  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatTwoVecAndRealToVec<1, type, NamespaceAndClass::Method>, ThreeParameters(this->type##Type,  p1, this->type##Type,  p2, this->type##Type, p3),  this->type##Type, FunctionOptions::Static)->Description = ZilchDocumentString(UserDescription); \
-  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatTwoVecAndRealToVec<2, type, NamespaceAndClass::Method>, ThreeParameters(this->type##2Type, p1, this->type##2Type, p2, this->type##Type, p3), this->type##2Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
-  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatTwoVecAndRealToVec<3, type, NamespaceAndClass::Method>, ThreeParameters(this->type##3Type, p1, this->type##3Type, p2, this->type##Type, p3), this->type##3Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
-  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatTwoVecAndRealToVec<4, type, NamespaceAndClass::Method>, ThreeParameters(this->type##4Type, p1, this->type##4Type, p2, this->type##Type, p3), this->type##4Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));
+#define ZilchSplatAllTwoVecAndRealToVecAs(ZilchBuilder, ZilchType, namespaceAndClass, type, Method, Name, p1, p2, p3, UserDescription) \
+  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatTwoVecAndRealToVec<1, type, namespaceAndClass::Method>, ThreeParameters(this->type##Type,  p1, this->type##Type,  p2, this->type##Type, p3),  this->type##Type, FunctionOptions::Static)->Description = ZilchDocumentString(UserDescription); \
+  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatTwoVecAndRealToVec<2, type, namespaceAndClass::Method>, ThreeParameters(this->type##2Type, p1, this->type##2Type, p2, this->type##Type, p3), this->type##2Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
+  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatTwoVecAndRealToVec<3, type, namespaceAndClass::Method>, ThreeParameters(this->type##3Type, p1, this->type##3Type, p2, this->type##Type, p3), this->type##3Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise.")); \
+  ZilchBuilder.AddBoundFunction(ZilchType, Name, SplatTwoVecAndRealToVec<4, type, namespaceAndClass::Method>, ThreeParameters(this->type##4Type, p1, this->type##4Type, p2, this->type##Type, p3), this->type##4Type, FunctionOptions::Static)->Description = ZilchDocumentString(BuildString(UserDescription, " Performed component-wise."));
 
   //***************************************************************************
   // Splat a zero parameter function across a vector/matrix.
@@ -8378,11 +8378,11 @@ namespace Zilch
     builder.AddBoundFunction(stringType, "EndsWith", StringEndsWith, OneParameter(stringRangeType), booleanType, FunctionOptions::None)
       ->Description = ZilchDocumentString("Returns if the string ends with the specified substring.");
     builder.AddBoundFunction(stringType, "TrimStart", StringTrimStart, ParameterArray(), stringRangeType, FunctionOptions::None)
-      ->Description = ZilchDocumentString("Trims all leading whitespace.");
+      ->Description = ZilchDocumentString("Trims all leading WhiteSpace.");
     builder.AddBoundFunction(stringType, "TrimEnd", StringTrimEnd, ParameterArray(), stringRangeType, FunctionOptions::None)
-      ->Description = ZilchDocumentString("Trims all trailing whitespace.");
+      ->Description = ZilchDocumentString("Trims all trailing WhiteSpace.");
     builder.AddBoundFunction(stringType, "Trim", StringTrim, ParameterArray(), stringRangeType, FunctionOptions::None)
-      ->Description = ZilchDocumentString("Trims all leading and trailing whitespace.");
+      ->Description = ZilchDocumentString("Trims all leading and trailing WhiteSpace.");
     builder.AddBoundFunction(stringType, "ToLower", StringToLower, ParameterArray(), stringType, FunctionOptions::None)
       ->Description = ZilchDocumentString("Returns a copy of the string that has been converted to lowercase.");
     builder.AddBoundFunction(stringType, "ToUpper", StringToUpper, ParameterArray(), stringType, FunctionOptions::None)
@@ -8405,8 +8405,8 @@ namespace Zilch
       ->Description = ZilchDocumentString("Concatenates the given strings with the given separator string.");
     builder.AddBoundFunction(stringType, "IsNullOrEmpty", StringRangeIsNullOrEmpty, OneParameter(stringRangeType), booleanType, FunctionOptions::Static)
       ->Description = ZilchDocumentString("Returns if the given string is null or empty.");
-    builder.AddBoundFunction(stringType, "IsNullOrWhitespace", StringRangeIsNullOrWhitespace, OneParameter(stringRangeType), booleanType, FunctionOptions::Static)
-      ->Description = ZilchDocumentString("Returns if the given string is null, empty, or all whitespace.");
+    builder.AddBoundFunction(stringType, "IsNullOrWhiteSpace", StringRangeIsNullOrWhiteSpace, OneParameter(stringRangeType), booleanType, FunctionOptions::Static)
+      ->Description = ZilchDocumentString("Returns if the given string is null, empty, or all WhiteSpace.");
 
     // Bind the FormatC function which has "variadic arguments"
     ParameterArray parameters;
@@ -9404,8 +9404,8 @@ namespace Zilch
     EventHandler savedEvents;
     EventSwapAll(&savedEvents, state);
 
-    // Temporary space used for traversing object paths and copying Zilch objects (Delegate is the largest object)
-    byte tempSpace[sizeof(Delegate)];
+    // Temporary Space used for traversing object paths and copying Zilch objects (Delegate is the largest object)
+    byte tempObjectSpace[sizeof(Delegate)];
 
     // Send a message back to answer the expression query
     JsonBuilder builder;
@@ -9459,13 +9459,13 @@ namespace Zilch
 
                 // Get the stack location of the variable
                 byte* variableStackMemory = frame->Frame + variable->Local;
-                type->GenericCopyConstruct(tempSpace, variableStackMemory);
+                type->GenericCopyConstruct(tempObjectSpace, variableStackMemory);
 
                 // If this is the first value, then write out its value (otherwise the parent would have written out our value)
                 if (splitter.empty())
                 {
                   // Stringify the variable (gets its value)
-                  String value = type->GenericToString(tempSpace);
+                  String value = type->GenericToString(tempObjectSpace);
                   builder.Begin(JsonType::Object);
                   {
                     builder.Key("Property");
@@ -9482,8 +9482,8 @@ namespace Zilch
                 while (splitter.empty() == false)
                 {
                   // Get the most virtual version of that memory (dereferences handles, gets the most derived type, etc)
-                  byte* valueMemory = type->GenericGetMemory(tempSpace);
-                  type = type->GenericGetVirtualType(tempSpace);
+                  byte* valueMemory = type->GenericGetMemory(tempObjectSpace);
+                  type = type->GenericGetVirtualType(tempObjectSpace);
 
                   // Get the current property name
                   String propertyName = splitter.front();
@@ -9502,7 +9502,7 @@ namespace Zilch
                   // We allowe debugging of hidden properties, we just don't enumerate them
                   if (property != nullptr && property->Get != nullptr)
                   {
-                    type->GenericDestruct(tempSpace);
+                    type->GenericDestruct(tempObjectSpace);
 
                     valueName = propertyName;
                     type = property->PropertyType;
@@ -9524,7 +9524,7 @@ namespace Zilch
                       goto END;
 
                     byte* returnValue = call.GetReturnUnchecked();
-                    type->GenericCopyConstruct(tempSpace, returnValue);
+                    type->GenericCopyConstruct(tempObjectSpace, returnValue);
                   }
                   else
                   {
@@ -9544,7 +9544,7 @@ namespace Zilch
                 while (boundType != nullptr)
                 {
                   // Either dereference the handle or get the memory for the value
-                  byte* memory = boundType->GenericGetMemory(tempSpace);
+                  byte* memory = boundType->GenericGetMemory(tempObjectSpace);
 
                   // Loop through all the instance properties
                   PropertyArray& properties = boundType->AllProperties;
@@ -9642,7 +9642,7 @@ namespace Zilch
                   boundType = boundType->BaseType;
                 }
                 
-                type->GenericDestruct(tempSpace);
+                type->GenericDestruct(tempObjectSpace);
 
                 // We discovered a valid variable, time to break out of all loops
                 goto END;
@@ -10614,7 +10614,7 @@ namespace Zilch
       columnLengths[c] = columnLength;
     }
 
-    // We include two padding spaces
+    // We include two padding ObjectSpaces
     const size_t Padding = 2;
 
     // Walk through all the rows and print out their values
@@ -10639,7 +10639,7 @@ namespace Zilch
       if (r == table.Rows)
         break;
 
-      // Now write out the cell values (mind the space, must match padding!)
+      // Now write out the cell values (mind the Space, must match padding!)
       for (size_t c = 0; c < table.Columns; ++c)
       {
         this->Write("| ");
@@ -10648,7 +10648,7 @@ namespace Zilch
         this->Write(cell);
         this->Write(String::Repeat(' ', columnLength - cell.size()));
 
-        // Write out the ending padding space
+        // Write out the ending padding Space
         this->Write(" ");
       }
       this->WriteLine("|");
@@ -12873,11 +12873,11 @@ namespace Zilch
       this->State->ThrowException(report, "Maximum recursion depth reached (too many function called inside of other functions)");
       return true;
     }
-    // If we truly ran out of stack space...
+    // If we truly ran out of stack Space...
     else if (this->ErrorState == StackErrorState::Overflowed)
     {
       this->State->HitStackOverflow = true;
-      this->State->ThrowException(report, "The stack ran out of space (too many function called inside of other functions)");
+      this->State->ThrowException(report, "The stack ran out of Space (too many function called inside of other functions)");
       return true;
     }
 
@@ -12973,7 +12973,7 @@ namespace Zilch
   {
     ZilchErrorIfNotStarted(ExecutableState);
 
-    // Reserve space for frames and scopes
+    // Reserve Space for frames and scopes
     this->StackFrames.reserve(128);
     this->RecycledFrames.reserve(128);
     this->RecycledScopes.reserve(128);
@@ -12983,7 +12983,7 @@ namespace Zilch
     this->StackObjects = this->GetHandleManager<StackManager>();
     this->PointerObjects = this->GetHandleManager<PointerManager>();
 
-    // Clear the stack (including reserved space)
+    // Clear the stack (including reserved Space)
     size_t totalStackSize = this->StackSize + this->OverflowStackSize;
     this->Stack = new byte[totalStackSize];
     memset(this->Stack, 0xCD, totalStackSize);
@@ -12995,8 +12995,8 @@ namespace Zilch
 
     // Generate an empty function to help reduce code paths
     // When any function wants to get the next stack position,
-    // they generally look at the current function + required space
-    // The 'empty function' has a required space of zero (0) always
+    // they generally look at the current function + required Space
+    // The 'empty function' has a required Space of zero (0) always
     Function* emptyFunction = new Function();
 
     // Initialize the frame data to defaults, except the stack pointer
@@ -13100,7 +13100,7 @@ namespace Zilch
     PerFrameData* current = this->StackFrames.back();
 
     // Compute the frame from the current position
-    // (moved forward by the used stack space)
+    // (moved forward by the used stack Space)
     return current->NextFrame;
   }
 
@@ -13169,7 +13169,7 @@ namespace Zilch
       EventSend(this, Events::FatalError, &toSend);
 
       // Time to quit the process!
-      Error("We hit a stack overflow more than once (used up the reserved stack space). The fatal callback was called, and now we're aborting");
+      Error("We hit a stack overflow more than once (used up the reserved stack Space). The fatal callback was called, and now we're aborting");
       abort();
     }
 
@@ -13251,7 +13251,7 @@ namespace Zilch
       byte* endOfStack = this->Stack + this->StackSize;
       if (frame->NextFrame < endOfStack && this->StackFrames.size() < this->MaxRecursionDepth)
       {
-        // Clear the flag that lets us use extra stack space
+        // Clear the flag that lets us use extra stack Space
         this->HitStackOverflow = false;
       }
     }
@@ -13771,8 +13771,8 @@ namespace Zilch
             // The patch dummy is a special function that returns default constructed values (runs no code)
             patchDummy->BoundFunction = VirtualMachine::PatchDummy;
 
-            // We technically only need enough stack space to match the delegate call, and nothing else (no local variables, etc)
-            // However, because we want to match the amount of data for parameter passing (and the this handle), we just use the old function's space
+            // We technically only need enough stack Space to match the delegate call, and nothing else (no local variables, etc)
+            // However, because we want to match the amount of data for parameter passing (and the this handle), we just use the old function's Space
             patchDummy->RequiredStackSpace = oldFunction->RequiredStackSpace;
 
             // Map the old function to the new function (currently this overwrites!)
@@ -14014,7 +14014,7 @@ namespace Zilch
 
     // Allocate a default constructed base exception
     // Note: We only allocate the exception and DO NOT default construct it
-    // This is because we know the exception will be fully initialized, and moreover if we run out of allocation space
+    // This is because we know the exception will be fully initialized, and moreover if we run out of allocation Space
     // then returning a null handle is considered ok!
     // The StackTrace allocator originally did not support memset to zero, but we made a special one called MemsetZeroDefaultAllocator
     ExceptionReport defaultExceptionReport;
@@ -15503,19 +15503,19 @@ namespace Zilch
   //***************************************************************************
   void ZilchCodeBuilder::WriteKeywordOrSymbolSpaceStyle(Grammar::Enum token, SpaceStyle::Enum specific, SpaceStyle::Enum globalDefault)
   {
-    // This tells us if we want to place spaces before or after (or around) the token
-    SpaceStyle::Enum spaceStyle = GetSpaceStyle(specific, globalDefault);
+    // This tells us if we want to place ObjectSpaces before or after (or around) the token
+    SpaceStyle::Enum SpaceStyle = GetSpaceStyle(specific, globalDefault);
 
-    // Prepend a space if we require it
-    if (spaceStyle == SpaceStyle::BeforeAndAfter || spaceStyle == SpaceStyle::Before)
+    // Prepend a Space if we require it
+    if (SpaceStyle == SpaceStyle::BeforeAndAfter || SpaceStyle == SpaceStyle::Before)
     {
       this->WriteSpace();
     }
 
     this->WriteKeywordOrSymbol(token);
 
-    // Append a space if we require it
-    if (spaceStyle == SpaceStyle::BeforeAndAfter || spaceStyle == SpaceStyle::After)
+    // Append a Space if we require it
+    if (SpaceStyle == SpaceStyle::BeforeAndAfter || SpaceStyle == SpaceStyle::After)
     {
       this->WriteSpace();
     }
@@ -15596,7 +15596,7 @@ namespace Zilch
         break;
 
       case LineStyle::SameLine:
-        // We always write out a space (this should probably become an option in the future)
+        // We always write out a Space (this should probably become an option in the future)
         this->Write(" ");
         break;
     }
@@ -15623,7 +15623,7 @@ namespace Zilch
   //***************************************************************************
   void ZilchCodeBuilder::EndScope()
   {
-    // Trim any previously writen lines or spaces
+    // Trim any previously writen lines or ObjectSpaces
     this->TrimEnd();
 
     // Make sure we have scopes to end, and we didn't call this one too many times
@@ -15702,7 +15702,7 @@ namespace Zilch
         break;
 
       case LineStyle::SameLine:
-        // We always write out a space (this should probably become an option in the future)
+        // We always write out a Space (this should probably become an option in the future)
         this->Write(" ");
         break;
     }
@@ -15754,7 +15754,7 @@ namespace Zilch
   //***************************************************************************
   String ZilchCodeBuilder::ToString()
   {
-    //HACK need to run post pass to trim trailing space / empty lines
+    //HACK need to run post pass to trim trailing Space / empty lines
     return StringBuilderExtended::ToString();
   }
 
@@ -15821,13 +15821,13 @@ namespace Zilch
     ErrorIf(globalDefault == IndentStyle::UseGlobalDefault,
       "The global default cannot be set to 'SpaceStyle::UseGlobalDefault'");
 
-    // Return the specific space style as long as it's not falling back on the default
+    // Return the specific Space style as long as it's not falling back on the default
     if (specific != SpaceStyle::UseGlobalDefault)
     {
       return specific;
     }
 
-    // Return the default space format
+    // Return the default Space format
     return globalDefault;
   }
 
@@ -16038,7 +16038,7 @@ namespace Zilch
 
       builder.WriteKeywordOrSymbol(Grammar::CommentLine);
 
-      size_t leadingSpaces = 0;
+      size_t leadingObjectSpaces = 0;
       StringRange range = comment.all();
       while (range.empty() == false)
       {
@@ -16046,7 +16046,7 @@ namespace Zilch
         range.popFront();
 
         if (character == ' ')
-          ++leadingSpaces;
+          ++leadingObjectSpaces;
         else
           break;
       }
@@ -16055,14 +16055,14 @@ namespace Zilch
 
       if (builder.Format.SpaceAfterComment)
       {
-        if (leadingSpaces == 0)
+        if (leadingObjectSpaces == 0)
         {
           builder.WriteSpace();
         }
       }
       else
       {
-        if (leadingSpaces == 1)
+        if (leadingObjectSpaces == 1)
         {
           ++range.begin;
         }
@@ -16132,7 +16132,7 @@ namespace Zilch
     ZilchCodeBuilder& builder = context->Builder;
     builder.WriteKeywordOrSymbol(Grammar::ForEach);
     
-    // HACK, this needs a space style!
+    // HACK, this needs a Space style!
     builder.WriteKeywordOrSymbolSpaceStyle(Grammar::BeginGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::Before);
 
     if (node->NonTraversedVariable != nullptr)
@@ -16150,7 +16150,7 @@ namespace Zilch
       context->Walker->Walk(this, node->NonTraversedRange, context);
     }
 
-    // HACK, this needs a space style!
+    // HACK, this needs a Space style!
     builder.WriteKeywordOrSymbolSpaceStyle(Grammar::EndGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
 
     builder.BeginScope(ScopeType::Block);
@@ -16164,7 +16164,7 @@ namespace Zilch
     ZilchCodeBuilder& builder = context->Builder;
     builder.WriteKeywordOrSymbol(Grammar::For);
     
-    // HACK, this needs a space style!
+    // HACK, this needs a Space style!
     builder.WriteKeywordOrSymbolSpaceStyle(Grammar::BeginGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::Before);
 
     if (node->Initialization != nullptr)
@@ -16178,7 +16178,7 @@ namespace Zilch
       this->FormatLocalVariable(node->ValueVariable, context);
     }
     
-    // HACK, this needs a space style!
+    // HACK, this needs a Space style!
     builder.WriteKeywordOrSymbolSpaceStyle(Grammar::StatementSeparator, SpaceStyle::UseGlobalDefault, SpaceStyle::After);
 
     if (node->Condition != nullptr)
@@ -16186,7 +16186,7 @@ namespace Zilch
       context->Walker->Walk(this, node->Condition, context);
     }
     
-    // HACK, this needs a space style!
+    // HACK, this needs a Space style!
     builder.WriteKeywordOrSymbolSpaceStyle(Grammar::StatementSeparator, SpaceStyle::UseGlobalDefault, SpaceStyle::After);
 
     if (node->Iterator != nullptr)
@@ -16194,7 +16194,7 @@ namespace Zilch
       context->Walker->Walk(this, node->Iterator, context);
     }
 
-    // HACK, this needs a space style!
+    // HACK, this needs a Space style!
     builder.WriteKeywordOrSymbolSpaceStyle(Grammar::EndGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
 
     builder.BeginScope(ScopeType::Block);
@@ -16217,10 +16217,10 @@ namespace Zilch
     builder.WriteLineIndented();
     builder.WriteKeywordOrSymbol(Grammar::While);
 
-    // HACK, this needs a space style!
+    // HACK, this needs a Space style!
     builder.WriteKeywordOrSymbolSpaceStyle(Grammar::BeginGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::Before);
     context->Walker->Walk(this, node->Condition, context);
-    // HACK, this needs a space style!
+    // HACK, this needs a Space style!
     builder.WriteKeywordOrSymbolSpaceStyle(Grammar::EndGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
   }
 
@@ -16242,10 +16242,10 @@ namespace Zilch
     
     builder.WriteKeywordOrSymbol(Grammar::While);
 
-    // HACK, this needs a space style!
+    // HACK, this needs a Space style!
     builder.WriteKeywordOrSymbolSpaceStyle(Grammar::BeginGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::Before);
     context->Walker->Walk(this, node->Condition, context);
-    // HACK, this needs a space style!
+    // HACK, this needs a Space style!
     builder.WriteKeywordOrSymbolSpaceStyle(Grammar::EndGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
 
     builder.BeginScope(ScopeType::Block);
@@ -16271,10 +16271,10 @@ namespace Zilch
       }
 
       builder.WriteKeywordOrSymbol(Grammar::If);
-      // HACK, this needs a space style!
+      // HACK, this needs a Space style!
       builder.WriteKeywordOrSymbolSpaceStyle(Grammar::BeginGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::Before);
       context->Walker->Walk(this, node->Condition, context);
-      // HACK, this needs a space style!
+      // HACK, this needs a Space style!
       builder.WriteKeywordOrSymbolSpaceStyle(Grammar::EndGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
     }
 
@@ -16303,8 +16303,8 @@ namespace Zilch
     ZilchCodeBuilder& builder = context->Builder;
     builder.WriteKeywordOrSymbol(Grammar::Typeid);
     
-    // HACK, this needs a space style!
-    // NOTE: Probably the same space style as function calling!
+    // HACK, this needs a Space style!
+    // NOTE: Probably the same Space style as function calling!
     builder.WriteKeywordOrSymbol(Grammar::BeginFunctionCall);
 
     if (node->Value != nullptr)
@@ -16316,7 +16316,7 @@ namespace Zilch
       builder.Write(node->CompileTimeSyntaxType->ToString());
     }
 
-    // HACK, this needs a space style!
+    // HACK, this needs a Space style!
     builder.WriteKeywordOrSymbol(Grammar::EndFunctionCall);
   }
 
@@ -16342,7 +16342,7 @@ namespace Zilch
     // Note: Our formatter makes the assumption that all unary operators are to the left
     ZilchCodeBuilder& builder = context->Builder;
 
-    // HACK, this needs a space style!
+    // HACK, this needs a Space style!
     builder.WriteKeywordOrSymbolSpaceStyle(node->Operator->TokenId, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
     context->Walker->Walk(this, node->Operand, context);
   }
@@ -16354,7 +16354,7 @@ namespace Zilch
 
     context->Walker->Walk(this, node->Operand, context);
     
-    // HACK, this needs a space style!
+    // HACK, this needs a Space style!
     builder.WriteKeywordOrSymbolSpaceStyle(Grammar::As, SpaceStyle::UseGlobalDefault, SpaceStyle::BeforeAndAfter);
 
     builder.Write(node->Type->ToString());
@@ -16367,7 +16367,7 @@ namespace Zilch
     
     context->Walker->Walk(this, node->LeftOperand, context);
 
-    // HACK, this needs a space style!
+    // HACK, this needs a Space style!
     builder.WriteKeywordOrSymbolSpaceStyle(Grammar::BeginIndex, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
 
     for (size_t i = 0; i < node->Arguments.size(); ++i)
@@ -16379,12 +16379,12 @@ namespace Zilch
       bool isNotLast = (i != (node->Arguments.size() - 1));
       if (isNotLast)
       {
-        // HACK, this needs a space style!
+        // HACK, this needs a Space style!
         builder.WriteKeywordOrSymbolSpaceStyle(Grammar::ArgumentSeparator, SpaceStyle::UseGlobalDefault, builder.Format.SpaceStyleGlobalDefaultComma);
       }
     }
 
-    // HACK, this needs a space style!
+    // HACK, this needs a Space style!
     builder.WriteKeywordOrSymbolSpaceStyle(Grammar::EndIndex, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
   }
 
@@ -16437,7 +16437,7 @@ namespace Zilch
 
     if (needsGroup)
     {
-      // HACK, this needs a space style!
+      // HACK, this needs a Space style!
       builder.WriteKeywordOrSymbolSpaceStyle(Grammar::BeginGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
     }
 
@@ -16453,14 +16453,14 @@ namespace Zilch
       globalOperatorSpaceStyle = SpaceStyle::None;
     }
 
-    // HACK, this needs a space style!
+    // HACK, this needs a Space style!
     builder.WriteKeywordOrSymbolSpaceStyle(node->Operator->TokenId, SpaceStyle::UseGlobalDefault, globalOperatorSpaceStyle);
     
     context->Walker->Walk(this, node->RightOperand, context);
 
     if (needsGroup)
     {
-      // HACK, this needs a space style!
+      // HACK, this needs a Space style!
       builder.WriteKeywordOrSymbolSpaceStyle(Grammar::EndGroup, SpaceStyle::UseGlobalDefault, SpaceStyle::None);
     }
   }
@@ -16623,7 +16623,7 @@ namespace Zilch
     builder.Write(node->Name);
     if (node->Value != nullptr)
     {
-      // HACK, needs space style
+      // HACK, needs Space style
       builder.WriteKeywordOrSymbolSpaceStyle
       (
         Grammar::Assignment,
@@ -16641,7 +16641,7 @@ namespace Zilch
   {
     ZilchCodeBuilder& builder = context->Builder;
 
-    // HACK, this needs a space style!
+    // HACK, this needs a Space style!
     builder.WriteKeywordOrSymbol(Grammar::BeginFunctionParameters);
 
     for (size_t i = 0; i < node->Parameters.size(); ++i)
@@ -16671,7 +16671,7 @@ namespace Zilch
       }
     }
 
-    // HACK, this needs a space style!
+    // HACK, this needs a Space style!
     builder.WriteKeywordOrSymbol(Grammar::EndFunctionParameters);
 
     emitPostArgs(node, builder);
@@ -16783,7 +16783,7 @@ namespace Zilch
 
     context->Walker->Walk(this, node->LeftOperand, context);
 
-    // HACK, this needs a space style!
+    // HACK, this needs a Space style!
     builder.WriteKeywordOrSymbol(Grammar::BeginFunctionCall);
 
     for (size_t i = 0; i < node->Arguments.size(); ++i)
@@ -16817,7 +16817,7 @@ namespace Zilch
       }
     }
 
-    // HACK, this needs a space style!
+    // HACK, this needs a Space style!
     builder.WriteKeywordOrSymbol(Grammar::EndFunctionCall);
   }
 
@@ -16893,8 +16893,8 @@ namespace Zilch
     }
     else if (node->InitialValue != nullptr)
     {
-      // HACK, this needs a space style! 
-      // PROBABLY BINARY OPERATOR SPACE STYLE
+      // HACK, this needs a Space style! 
+      // PROBABLY BINARY OPERATOR Space STYLE
       builder.WriteKeywordOrSymbolSpaceStyle
       (
         Grammar::Assignment,
@@ -16944,8 +16944,8 @@ namespace Zilch
     // Some variable nodes don't have initial values, or defaults
     if (node->InitialValue != nullptr)
     {
-      // HACK, this needs a space style! 
-      // PROBABLY BINARY OPERATOR SPACE STYLE
+      // HACK, this needs a Space style! 
+      // PROBABLY BINARY OPERATOR Space STYLE
       builder.WriteKeywordOrSymbolSpaceStyle
       (
         Grammar::Assignment,
@@ -17146,7 +17146,7 @@ namespace Zilch
     "Invalid",
     "End",
     "Error",
-    "Whitespace",
+    "WhiteSpace",
     "UpperIdentifier",
     "LowerIdentifier",
     "IntegerLiteral",
@@ -17321,7 +17321,7 @@ namespace Zilch
     "Invalid",
     "End",
     "Error",
-    "Whitespace",
+    "WhiteSpace",
     "UpperIdentifier",
     "LowerIdentifier",
     "IntegerLiteral",
@@ -17365,7 +17365,7 @@ namespace Zilch
     "Lock",
     "Module",
     "Mutable",
-    "Namespace",
+    "namespace",
     "Operator",
     "Out",
     "Override",
@@ -21051,7 +21051,7 @@ namespace Zilch
     FunctionArray& functions = this->BuiltLibrary->OwnedFunctions;
     for (size_t i = 0; i < functions.size(); ++i)
     {
-      // The base required stack space for any function is the parameters and return sizes totaled
+      // The base required stack Space for any function is the parameters and return sizes totaled
       Function* function = functions[i];
       function->RequiredStackSpace = function->Type->TotalStackSizeExcludingThisHandle;
 
@@ -30688,8 +30688,8 @@ void SHA1_Transform(uint32_t state[5], const uint8_t buffer[64])
     CHAR64LONG16* block;
 
 #ifdef SHA1HANDSOFF
-    static uint8_t workspace[64];
-    block = (CHAR64LONG16*)workspace;
+    static uint8_t workObjectSpace[64];
+    block = (CHAR64LONG16*)workObjectSpace;
     memcpy(block, buffer, 64);
 #else
     block = (CHAR64LONG16*)buffer;
@@ -32894,11 +32894,11 @@ namespace Zilch
     ZilchBindMethod(builder, type, &StringRangeExtended::StartsWith, ZilchNoOverload, "StartsWith", nullptr)
       ->Description = ZilchDocumentString("Returns if the string ends with the specified substring.");
     builder.AddBoundFunction(type, "Trim", Trim, ParameterArray(), type, FunctionOptions::None)
-      ->Description = ZilchDocumentString("Trims all leading and trailing whitespace.");
+      ->Description = ZilchDocumentString("Trims all leading and trailing WhiteSpace.");
     builder.AddBoundFunction(type, "TrimEnd", TrimEnd, ParameterArray(), type, FunctionOptions::None)
-      ->Description = ZilchDocumentString("Trims all trailing whitespace.");
+      ->Description = ZilchDocumentString("Trims all trailing WhiteSpace.");
     builder.AddBoundFunction(type, "TrimStart", TrimStart, ParameterArray(), type, FunctionOptions::None)
-      ->Description = ZilchDocumentString("Trims all leading whitespace.");
+      ->Description = ZilchDocumentString("Trims all leading WhiteSpace.");
     ZilchBindMethod(builder, type, &StringRangeExtended::ToLower, ZilchNoOverload, "ToLower", nullptr)
       ->Description = ZilchDocumentString("Returns a copy of the string that has been converted to lowercase.");
     builder.AddBoundFunction(type, "ToString", ConvertToString, ParameterArray(), stringType, FunctionOptions::None)
@@ -37762,10 +37762,10 @@ namespace Zilch
       // Get the current comment
       String& comment = this->Comments[i];
 
-      // Get a string range for the comment, since we're going to trim starting white space
+      // Get a string range for the comment, since we're going to trim starting white Space
       StringRange range = comment.all();
       
-      // While we're reading a space...
+      // While we're reading a Space...
       while (*range.begin == ' ')
       {
         // Move the range start forward
@@ -38254,7 +38254,7 @@ namespace Zilch
     ++parentProject->VariableUniqueIdCounter;
 
     // This is entirely just to avoid a redudant copy into a local variable,
-    // since the CreationCallNode already allocates stack space (and we only need the local variable for the name lookup!)
+    // since the CreationCallNode already allocates stack Space (and we only need the local variable for the name lookup!)
     this->InitialValue = initialValue;
     this->ForwardLocalAccessIfPossible = true;
   }
@@ -39238,7 +39238,7 @@ namespace Zilch
     // Store the data pointer
     this->Data = entry.Code;
 
-    // The average number of characters per token (including whitespace)
+    // The average number of characters per token (including WhiteSpace)
     const int AverageCharsPerToken = 5;
 
     // Reserve some memory for parsed tokens
@@ -39303,7 +39303,7 @@ namespace Zilch
         }
         break;
 
-        // Whitespace we do absolutely nothing (just ignore it)
+        // WhiteSpace we do absolutely nothing (just ignore it)
         case Grammar::Whitespace:
         {
         }
@@ -40661,10 +40661,10 @@ switch (character)
       {
         acceptedToken = false;
 
-        if (DiffString("mespace"))
+        if (DiffString("meObjectSpace"))
         {
           lastAcceptedPos = this->Position;
-          outToken->TokenId = Grammar::Namespace /* Namespace */;
+          outToken->TokenId = Grammar::Namespace /* namespace */;
           acceptedToken = true;
         }
         character = ReadCharacter();
@@ -42683,14 +42683,14 @@ switch (character)
         // If we didn't read anything yet...
         else if (tokenType == TokenCategory::Unknown)
         {
-          // If the character is some sort of space character...
+          // If the character is some sort of Space character...
           if (CharacterUtilities::IsWhiteSpace(character))
           {
             // Set the starting position that the token is reading from
             outToken->Start = this->Position;
 
-            // Since we hit whitespace, we want to update the location
-            // so that the next token doesn't think it started in whitespace
+            // Since we hit WhiteSpace, we want to update the location
+            // so that the next token doesn't think it started in WhiteSpace
             this->Location.StartLine = this->Line;
             this->Location.StartCharacter = this->Character;
             this->Location.PrimaryLine = this->Line;
@@ -42831,7 +42831,7 @@ switch (character)
     // Depending on the character...
     switch (c)
     {
-      // Look for any of the standard white-space characters
+      // Look for any of the standard white-Space characters
       case ' ':
       case '\t':
       case '\n':
@@ -42841,7 +42841,7 @@ switch (character)
         return true;
     }
 
-    // Otherwise, we got here so it must not be white-space!
+    // Otherwise, we got here so it must not be white-Space!
     return false;
   }
 
@@ -43903,11 +43903,11 @@ namespace Zilch
   }
 
   //***************************************************************************
-  // Writes a line out that is tabbed in by two spaces
+  // Writes a line out that is tabbed in by two ObjectSpaces
   // and every newline in the text will also be tabbed in
   void WriteLineTabbed(StringBuilderExtended& builder, StringParam text)
   {
-    // Start off with two spaces of tabs
+    // Start off with two ObjectSpaces of tabs
     builder.Write("  ");
 
     // Loop through every character in the text
@@ -43922,7 +43922,7 @@ namespace Zilch
       // If the character was a newline, we need to insert a tab
       if (c == '\n')
       {
-        // Write another two space tab, note that this is AFTER the newline
+        // Write another two Space tab, note that this is AFTER the newline
         builder.Write("  ");
       }
     }
@@ -44306,7 +44306,7 @@ namespace Zilch
     // After we've parsed a key, we attempt to parse a description (if it exists)
     StringBuilder descriptionBuilder;
 
-    // When set to true, we will eat whitespace
+    // When set to true, we will eat WhiteSpace
     // Meant for eating the tabbing at the front of the descriptions
     bool eatTabs = false;
 
@@ -44321,10 +44321,10 @@ namespace Zilch
       if (c == '\r')
         continue;
 
-      // If set, we will eat tabs (in the form of spaces) until we hit a valid character
+      // If set, we will eat tabs (in the form of ObjectSpaces) until we hit a valid character
       if (eatTabs)
       {
-        // If we hit a space, eat it up (don't let it enter the descriptionBuilder)
+        // If we hit a Space, eat it up (don't let it enter the descriptionBuilder)
         if (c == ' ')
         {
           continue;
@@ -44905,7 +44905,7 @@ namespace Zilch
         /* Note: The primitive used here is actually the source primitive! */                           \
         /* See the comment above 'CopyHandler' */                                                       \
         /* For returns, we need to clean up the primitive immediately after */                          \
-        /* copy since that space could be reused by anyone else */                                      \
+        /* copy since that Space could be reused by anyone else */                                      \
         source->~T();                                                                                   \
                                                                                                         \
         /* We also need to queue our own frame to clean */                                              \
@@ -46954,7 +46954,7 @@ namespace Zilch
             if (dividerIndex != String::InvalidIndex)
             {
               // Parse the key and value part of the header line
-              // The +2 is for the ':' and the space after it
+              // The +2 is for the ':' and the Space after it
               StringRange httpHeaderKey(range.begin, dividerIndex);
               StringRange httpHeaderValue(range.begin + dividerIndex + 2, range.end);
 
@@ -49182,9 +49182,9 @@ private:
 };
 
 CharacterTable t;
-int IsSpace(int c){ return t.GetTraits(c) & CharacterBits::WhiteSpace; }
+int isSpace(int c){ return t.GetTraits(c) & CharacterBits::WhiteSpace; }
 int IsGraph(int c){ return t.GetTraits(c) & CharacterBits::Graphical; }
-int IsGraphOrSpace(int c){return t.GetTraits(c) & (CharacterBits::Graphical | CharacterBits::WhiteSpace);}
+int IsGraphOrObjectSpace(int c){return t.GetTraits(c) & (CharacterBits::Graphical | CharacterBits::WhiteSpace);}
 int IsAlpha(int c){ return t.GetTraits(c) & CharacterBits::Alpha; }
 int IsDigit(int c){ return t.GetTraits(c) & CharacterBits::Number; }
 int IsNumber(int c){ return t.GetTraits(c) & CharacterBits::Number; }
@@ -49495,11 +49495,11 @@ String ToLower(StringParam str)
   return buffer;
 }
 
-size_t GetNextWhitespace(StringRange input)
+size_t GetNextWhiteSpace(StringRange input)
 {
   for(size_t i = 0; i < input.size(); ++i)
   {
-    if (isspace(input[i]))
+    if (isSpace(input[i]))
       return i;
   }
   return input.size();
@@ -49524,9 +49524,9 @@ String WordWrap(StringRange input, size_t maxLineLength)
       builder.Append(c);
       continue;
     }
-    else if(!isspace(c))
+    else if(!isSpace(c))
     {
-      size_t wordLength = GetNextWhitespace(input);
+      size_t wordLength = GetNextWhiteSpace(input);
       bool isWordShort = wordLength < maxLineLength;
       bool doesWordMakeLineTooLong = lineLength + wordLength >= maxLineLength;
       if(isWordShort && doesWordMakeLineTooLong)
@@ -49542,8 +49542,8 @@ String WordWrap(StringRange input, size_t maxLineLength)
       builder.Append("\n");
     }
 
-    // Eat any whitespace at the beginning of the line
-    if(lineLength == 0 && isspace(c))
+    // Eat any WhiteSpace at the beginning of the line
+    if(lineLength == 0 && isSpace(c))
       continue;
     
     builder.Append(c);
@@ -50152,7 +50152,7 @@ uint StringRange::FindFirstNonWhitespaceCharIndex() const
 {
   for (uint i = 0; i < size(); ++i)
   {
-    if (!isspace(begin[i]))
+    if (!isSpace(begin[i]))
       return i;
   }
 
@@ -50165,7 +50165,7 @@ uint StringRange::FindLastNonWhitespaceCharIndex() const
 
   for (size_t i = 0; i <= last; ++i)
   {
-    if (!isspace(begin[last - i]))
+    if (!isSpace(begin[last - i]))
       return (uint)(last - i);
   }
 
@@ -50350,7 +50350,7 @@ bool StringRange::IsAllWhitespace() const
 {
   for (uint i = 0; i < size(); ++i)
   {
-    if (!isspace(begin[i]))
+    if (!isSpace(begin[i]))
       return false;
   }
 
@@ -57570,7 +57570,7 @@ Quaternion CreateDiagonalizer(Mat3Param matrix)
 
    Any feedback is very welcome.
    http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html
-   email: m-mat @ math.sci.hiroshima-u.ac.jp (remove space)
+   email: m-mat @ math.sci.hiroshima-u.ac.jp (remove Space)
 */
 
 using Zero::String;
@@ -59784,7 +59784,7 @@ String FilePath::Combine(const StringRange** paths, uint count, StringRange exte
   for(uint i = 0; i < count; ++i)
     pathSize += paths[i]->length();
   //just assume that no path has the ending separator,
-  //then we need extra space for each / and then one for the null
+  //then we need extra Space for each / and then one for the null
   pathSize += count;
   //also account for the extension's length (assumed it contains the '.')
   pathSize += extension.length();
@@ -63421,7 +63421,7 @@ void Enumerate(Array<Resolution>& resolutions, uint bitDepth, Resolution aspect)
 typedef struct tagTHREADNAME_INFO
 {
   DWORD dwType;     // must be 0x1000
-  LPCSTR szName;    // pointer to name (in user addr space)
+  LPCSTR szName;    // pointer to name (in user addr Space)
   DWORD dwThreadID; // thread ID (-1=caller thread)
   DWORD dwFlags;    // reserved for future use, must be zero
 } THREADNAME_INFO;

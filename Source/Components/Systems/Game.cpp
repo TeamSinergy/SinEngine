@@ -52,11 +52,13 @@ void Game::LoadSpace(DataObject* spaceArchetype, DataLevel* level)
 {
     Handle handle = ZilchAllocate<ObjectSpace>();
     ObjectSpace* space = (ObjectSpace*)handle.Dereference();
+    ((GameObject*)space)->Space = space;
     space->Name = level->GetName();
     space->GameSession = this;
-    space->Space = space;
+    
 
     space->Serialize(spaceArchetype);
+    space->InitializeSpace();
     space->Create();
     space->Initialize();
     space->LoadLevel(level);
@@ -70,10 +72,7 @@ void Game::UnloadSpace(const String& levelName)
     ErrorIf(space == nullptr, "Could not find a child with the name %s.", levelName.c_str());
     space->Uninitialize();
     space->Destroy();
-    RemoveChild(space);
-
-    /*Handle handle = Handle(ZILCH->GetDependencies(), ZilchTypeId(ObjectSpace),(byte*)space);
-    handle.Delete();*/
+    space->UninitializeSpace();
 }
 
 

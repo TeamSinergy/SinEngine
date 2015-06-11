@@ -2,10 +2,25 @@ SinEngine =
 {
     Game = 
     {
+        WindowSystem = 
+        {
+            Integer ColorMode = 0;
+            String Name = "MyGameName";
+            String WindowClassName = "Window1";
+            Boolean Visible = true;
+            //Integer xPosition = 350;
+            //Integer yPosition = 350;
+            Integer Width = 1024;
+            Integer Height = 800;
+            String IconPath = "icon.ico";
+            Integer ScreenMode = 'W';
+            Boolean Resizable = false;
+            Boolean CursorVisible = true;
+        },
         DefaultGameSetup = 
         {
             String SpaceArchetype = "Space";
-            String LevelName = "Level1";
+            String LevelName = "Level";
         },
     },
 },

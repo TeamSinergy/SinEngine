@@ -3,9 +3,12 @@
 #include "GraphicsSystem.h"
 #include "DefaultGameSetup.h"
 #include "TimeSystem.h"
+#include "Camera.h"
+#include "Transform.h"
 
 class Game;
-class ObjectSpace;
+class Space;
+
 
 enum ObjectState
 {
@@ -32,6 +35,8 @@ public:
     ComponentPointer(GraphicsSystem);
     ComponentPointer(TimeSystem);
     ComponentPointer(DefaultGameSetup);
+    ComponentPointer(Camera);
+    ComponentPointer(Transform);
 
     void Uninitialize() override;
     void Destroy() override;
@@ -40,15 +45,16 @@ public:
     void AddChild(GameObject* child);
     void RemoveChild(GameObject* child);
     GameObject* FindChildByName(const String& name);
-
+    void UpdateAllChildren(ObjectState stateToCall);
 
     static Array<Type*>* SerializeFunction;
-    static  Array<Type*>* Default;
+    static Array<Type*>* Default;
+    static EventData* EmptyEventData;
 
     Array<Handle> Components;
     Array<Handle> Children;
     GameObject* Parent;
-    ObjectSpace* Space;
+    Space* Space;
     Game* GameSession;
 
     ObjectState LastState = ObjectState::Construct;
