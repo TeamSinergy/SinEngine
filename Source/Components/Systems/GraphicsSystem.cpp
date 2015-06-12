@@ -579,8 +579,8 @@ void GraphicsSystem::RenderFrame(UpdateEvent* event)
 
 
     VSBufferDefault WorldViewProj;
-
-    WorldViewProj.WorldViewProjection = GraphicsComponents[0]->Owner->Transform->GetWorldMatrix() * MainCamera->ViewProjectionMatrix();
+    //IS SOMETHING WRONG WITH THE PERSPECTIVE MATRIX?
+    WorldViewProj.WorldViewProjection = GraphicsComponents[0]->Owner->Transform->GetWorldMatrix();// *MainCamera->ViewProjectionMatrix();
     //MainCamera->ViewMatrix() * MainCamera->ProjectionMatrix();
     WorldViewProj.WorldViewProjection.Transpose();
     unsigned vertexCount = 0;

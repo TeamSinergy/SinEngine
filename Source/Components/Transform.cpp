@@ -80,14 +80,9 @@ void Transform::SetWorldScale(const Real3& scale)
 
 Math::Matrix4 Transform::GetWorldMatrix() const
 {
-    XMMATRIX matRotateX;    // a matrix to store the rotation information
-    // build a matrix to rotate the model 3.14 radians
-    matRotateX = XMMatrixRotationX(Math::DegToRad(WorldRotation.x));
-    XMMATRIX matRotateY;
-    matRotateY = XMMatrixRotationY(Math::DegToRad(WorldRotation.y));
-    XMMATRIX matRotateZ;
-    matRotateZ = XMMatrixRotationZ(Math::DegToRad(WorldRotation.z));
 
+    XMMATRIX matRotate = XMMatrixRotationRollPitchYawFromVector(*(XMVECTOR*)(WorldRotation * (Math::cPi/180)).array);
+    
     XMMATRIX matScale;    // a matrix to store the scaling information
     
     // build a matrix to double the size of the model and store it to matScale
@@ -97,7 +92,7 @@ Math::Matrix4 Transform::GetWorldMatrix() const
     matTranslate = XMMatrixTranslation(WorldTranslation.x, WorldTranslation.y, WorldTranslation.z);
 
     XMMATRIX matWorld;
-    matWorld = matRotateX * matRotateY * matRotateZ * matScale * matTranslate;
+    matWorld = matRotate * matScale * matTranslate;
     Math::Matrix4 viewMatrix;
     XMStoreFloat4x4((XMFLOAT4X4*)viewMatrix.array, matWorld);
     
@@ -106,7 +101,7 @@ Math::Matrix4 Transform::GetWorldMatrix() const
 
 void Transform::Update(UpdateEvent* event)
 {
-    WorldRotation.y += 360 *event->Dt;
-
+    WorldRotation.z += 90 *event->Dt;
+    
     //WorldTranslation.z += 30.0f * event->Dt;
 }

@@ -32,7 +32,7 @@ Level =
     {
         Transform = 
         {
-            Real3 Translation = [1.5,1,1.5];
+            Real3 Translation = [1.5,0,1.5];
             Real3 Rotation = [0,0,0];
             Real3 Scale = [1,1,1];
         },
@@ -49,7 +49,7 @@ Level =
         Transform = 
         {
             Real3 Translation = [0,0,0];
-            Real3 Rotation = [0,225,0];
+            Real3 Rotation = [0,0,0];
             Real3 Scale = [1,1,1];
         },
         VectorGraphic = 
