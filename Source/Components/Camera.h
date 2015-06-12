@@ -3,6 +3,8 @@
 #include "GameObject.h"
 #include "Transform.h"
 
+class UpdateEvent;
+
 class Camera : public Component
 {
 public:
@@ -11,13 +13,14 @@ public:
     void Create() override;
     void Initialize() override;
 
+    Math::Matrix4 WorldMatrix() const;
     const Math::Matrix4& ViewMatrix() const { return viewMatrix; }
     const Math::Matrix4& ProjectionMatrix() const { return projectionMatrix; };
     Math::Matrix4 ViewProjectionMatrix() const;
 
     void UpdateViewMatrix();
     void UpdateProjectionMatrix();
-    
+    void UpdateOrthographicMatrix();
 
     void Reset();
     void Update(UpdateEvent* event);
@@ -39,4 +42,5 @@ private:
 
     Math::Matrix4 viewMatrix;
     Math::Matrix4 projectionMatrix;
+    Math::Matrix4 orthographicMatrix;
 };

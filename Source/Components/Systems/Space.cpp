@@ -39,7 +39,10 @@ void Space::LoadLevel(DataLevel* level)
     }
     
     UpdateAllChildren(ObjectState::Create);
-    UpdateAllChildren(ObjectState::Initialize);
+    if (LastState >= ObjectState::Initialize)
+    {
+        UpdateAllChildren(ObjectState::Initialize);
+    }
 
     EventSend(this, "LevelLoaded", GameObject::EmptyEventData);
 }

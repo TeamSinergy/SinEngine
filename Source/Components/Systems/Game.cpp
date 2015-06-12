@@ -60,8 +60,8 @@ void Game::LoadSpace(DataObject* spaceArchetype, DataLevel* level)
     space->Serialize(spaceArchetype);
     space->InitializeSpace();
     space->Create();
-    space->Initialize();
     space->LoadLevel(level);
+    space->Initialize();
     AddChild(space);
     
 }

@@ -43,7 +43,7 @@ void GameObject::Serialize(DataNode* node)
             Handle Component = state->AllocateDefaultConstructedHeapObject(ZilchClass, ZILCH->Report, Zilch::HeapFlags::ReferenceCounted);
             Components.push_back(Component);
         }
-        
+        ((Component*)Components.back().Dereference())->Name = name;
         ((Component*)Components.back().Dereference())->Owner = this;
         ((Component*)Components.back().Dereference())->Space = this->Space;
         ((Component*)Components.back().Dereference())->GameSession = this->GameSession;

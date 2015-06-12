@@ -37,6 +37,7 @@ public:
     ComponentPointer(DefaultGameSetup);
     ComponentPointer(Camera);
     ComponentPointer(Transform);
+    ComponentPointer(VectorGraphic);
 
     void Uninitialize() override;
     void Destroy() override;

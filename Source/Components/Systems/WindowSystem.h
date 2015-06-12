@@ -40,12 +40,7 @@ enum AntiAiliasingModes
     
 };
 
-struct Vertex
-{
-    Vertex(Real3 pos, Real4 color) : Position(pos), Color(color){}
-    Real3 Position;      // position
-    Real4 Color;         // color
-};
+
 
 class WindowSystem : public Component
 {

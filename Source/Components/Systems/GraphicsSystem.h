@@ -2,12 +2,30 @@
 #include <Precompiled.h>
 #include "SinEntity.h"
 #include "WindowSystem.h"
+#include "Camera.h"
 
 class UpdateEvent;
 class WindowSystem;
+class VectorGraphic;
+class GraphicsComponent;
+struct Vertex
+{
+    Vertex(Real3 pos = Real3(), Real4 color = Real4(1, 1, 1, 1)) : Position(pos), Color(color){}
+    Real3 Position;      // position
+    Real4 Color;         // color
+};
+
+struct VSBufferDefault
+{
+    //Real3 Translation = Real3();
+    //Real4 Color = Real4(1,1,1,1);
+    Math::Matrix4 WorldViewProjection;
+};
+typedef D3D11_BUFFER_DESC DXBufferDescription;
 
 class GraphicsSystem : public Component
 {
+    friend GraphicsComponent;
     ZilchDeclareDerivedType(GraphicsSystem, Component);
     void Serialize(DataNode* node) override; //DataLevel
     void Create() override;
@@ -27,7 +45,13 @@ class GraphicsSystem : public Component
     void Uninitialize() override;
     void Destroy() override;
 
-    
+    void AddGraphicsComponent(GraphicsComponent* comp, const DXBufferDescription& bufferDesc);
+    void RemoveGraphicsComponent(GraphicsComponent* comp);
+    DXBuffer* CreateBuffer(const DXBufferDescription& desc);
+    void DestroyBuffer(DXBuffer* buffer);
+
+
+    Camera* MainCamera;
 private:
     WindowSystem* Window;
     //DIRECTX11
@@ -37,9 +61,6 @@ private:
     int QualityLevel;
     bool DebugMode;
     bool VSync;
-    float NearPlane;
-    float FarPlane;
-    float FieldOfView;
     bool AntiAliasedLines;
     int ScalingMode;
 
@@ -50,7 +71,7 @@ private:
     //FUNCTIONS
     void GetDeviceInformation();
     void CreateDeviceAndSwapChain();
-    void CreateVertexBuffer();
+    
     void CreateDepthStencilBuffer();
     void CreateDepthStencilState();
     void CreateDepthStencilView();
@@ -64,25 +85,28 @@ private:
     //void InitializePipeline();
     //DrawTriangle
     //RenderFrame
+    
     DXDeviceInterface* DeviceInterface;
     DXDeviceContext* DeviceContext;
-    DXFeatureLevel FeatureLevel;
+    DXFeatureLevel FeatureLevel; //Version of DX
     DXSwapChain* SwapChain;
 
-    DXRenderTargetView* RenderTarget;
+    DXRenderTargetView* RenderTarget; //The Back-Buffer.
 
-    DXVertexBuffer* VertexBuffer;
-    DXInputLayout* InputLayout;
+    Array<GraphicsComponent*> GraphicsComponents; //For all the graphics components we are drawing. Maybe array of arrays?
+    Array<DXBuffer*> VertexBuffers; //For all the stored vertices.
+    DXBuffer* VSConstantBuffer; //For all the user-defined variables in the VertexShader.
+    DXBuffer* PSConstantBuffer; //For all the user-defined variables in the PixelShader.
+    DXBuffer* MatrixBuffer; //No idea yet
+
+    DXInputLayout* InputLayout; //This holds the layout of our Vertex struct.
 
     DXTexture2D* DepthStencilBuffer;
     DXDepthStencilState* DepthStencilState;
     DXDepthStencilView* DepthStencilView;
     DXRasterizerState* RasterState;
-    DXMatrix ProjectionMatrix;
-    DXMatrix WorldMatrix;
-    DXMatrix OrthographicMatrix;
-    DXMatrix ViewMatrix;
-    DXBuffer* MatrixBuffer;
+    
+    
     //MAKE A HASHMAP
     ID3D11VertexShader *pVS;    // the vertex shader
     ID3D11PixelShader *pPS;     // the pixel shader

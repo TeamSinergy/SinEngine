@@ -1,6 +1,8 @@
 #include <Precompiled.h>
 #include "GraphicsSystem.h"
 #include "Game.h"
+#include "VectorGraphic.h"
+#include "GraphicsComponent.h"
 
 DefineType(GraphicsSystem, SinningZilch)
 {
@@ -27,12 +29,6 @@ void GraphicsSystem::Serialize(DataNode* data)
     SerializeValue(settings, DebugMode);
     VSync = true;
     SerializeValue(settings, VSync);
-    NearPlane = 1;
-    SerializeValue(settings, NearPlane);
-    FarPlane = 1000;
-    SerializeValue(settings, FarPlane);
-    FieldOfView = 3.14f / 4;
-    SerializeValue(settings, FieldOfView);
     AntiAliasedLines = true;
     SerializeValue(settings, AntiAliasedLines);
     ScalingMode = 0;
@@ -56,20 +52,20 @@ void GraphicsSystem::Initialize()
 {
     
     EventConnect(GameSession, "EngineUpdate", &GraphicsSystem::RenderFrame, this);
-    
+
     SetWindowAsViewport(Window);
-    CreateDepthStencilBuffer();
-    CreateDepthStencilState();
+    //CreateDepthStencilBuffer();
+    //CreateDepthStencilState();
+
     //CreateDepthStencilView();
-    CreateRasterState();
+
+    //CreateRasterState();
 
     InitializePipeline();
-    CreateVertexBuffer();
-    ////CalculateProjectionMatrix();
+    //CreateVertexBuffer();
     ////CalculateWorldMatrix();
     ////CalculateOrthographicMatrix();
-    ////CalculateViewMatrix();
-    DrawDebugTriangle();
+    //DrawDebugTriangle();
 }
 
 void GraphicsSystem::GetDeviceInformation()
@@ -251,20 +247,6 @@ void GraphicsSystem::CreateDeviceAndSwapChain()
 
 }
 
-void GraphicsSystem::CreateVertexBuffer()
-{
-    // create the vertex buffer
-    D3D11_BUFFER_DESC bd;
-    ZeroMemory(&bd, sizeof(bd));
-
-    bd.Usage = D3D11_USAGE_DYNAMIC;                // write access access by CPU and GPU
-    bd.ByteWidth = sizeof(Vertex) * 3;             // size is the VERTEX struct * 3
-    bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;       // use as a vertex buffer
-    bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;    // allow CPU to write in buffer
-
-    DeviceInterface->CreateBuffer(&bd, NULL, &VertexBuffer);       // create the buffer
-}
-
 void GraphicsSystem::CreateDepthStencilBuffer()
 {
     HRESULT result;
@@ -416,17 +398,17 @@ void GraphicsSystem::SetWindowAsViewport(WindowSystem* window)
 void GraphicsSystem::CalculateProjectionMatrix()
 {
     // Create the projection matrix for 3D rendering.
-    ProjectionMatrix = XMMatrixPerspectiveFovLH(FieldOfView, static_cast<float>(Window->GetDimensions().x) / static_cast<float>(Window->GetDimensions().y), NearPlane, FarPlane);
+    //ProjectionMatrix = XMMatrixPerspectiveFovLH(FieldOfView, static_cast<float>(Window->GetDimensions().x) / static_cast<float>(Window->GetDimensions().y), NearPlane, FarPlane);
 }
 void GraphicsSystem::CalculateWorldMatrix()
 {
     // Initialize the world matrix to the identity matrix.
-    WorldMatrix = XMMatrixIdentity();
+    //WorldMatrix = XMMatrixIdentity();
 }
 void GraphicsSystem::CalculateOrthographicMatrix()
 {
     // Create an orthographic projection matrix for 2D rendering.
-    OrthographicMatrix = XMMatrixOrthographicLH((float)Window->GetDimensions().x, (float)Window->GetDimensions().y, NearPlane, FarPlane);
+    //OrthographicMatrix = XMMatrixOrthographicLH((float)Window->GetDimensions().x, (float)Window->GetDimensions().y, NearPlane, FarPlane);
 }
 void GraphicsSystem::CalculateViewMatrix()
 {
@@ -468,13 +450,13 @@ void GraphicsSystem::CalculateViewMatrix()
     LookAt = Position + LookAt;
 
     // Finally create the view matrix from the three updated vectors.
-    ViewMatrix = XMMatrixLookAtLH(Position, LookAt, Up);
+    //ViewMatrix = XMMatrixLookAtLH(Position, LookAt, Up);
 }
 
 void GraphicsSystem::InitializePipeline()
 {
 
-
+    //Should initialize them all;
     VertexShader* VS = ResourceManager::FindResourceType<VertexShader>("VertexTest.vert");
     PixelShader* PS = ResourceManager::FindResourceType<PixelShader>("PixelTest.pix");
     DeviceInterface->CreateVertexShader(VS->StoredShader->GetBufferPointer(), VS->StoredShader->GetBufferSize(), NULL, &pVS);
@@ -483,6 +465,7 @@ void GraphicsSystem::InitializePipeline()
     // set the shader objects
     DeviceContext->VSSetShader(pVS, nullptr, 0);
     DeviceContext->PSSetShader(pPS, nullptr, 0);
+    
 
     //The element description
     D3D11_INPUT_ELEMENT_DESC inputLayout[] =
@@ -495,46 +478,83 @@ void GraphicsSystem::InitializePipeline()
     DeviceContext->IASetInputLayout(InputLayout);
 
 
+    //Perhaps I can add this to the GraphicsSystemClass
+    // this can be part of the Init_Pipeline() function
+    D3D11_BUFFER_DESC bd;
+    ZeroMemory(&bd, sizeof(bd));
+
+    bd.Usage = D3D11_USAGE_DEFAULT;
+    bd.ByteWidth = sizeof(VSBufferDefault) + sizeof(VSBufferDefault) % 16; //Must always be a multiple of 16
+    bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    
+    DeviceInterface->CreateBuffer(&bd, NULL, &VSConstantBuffer);
+    DeviceContext->VSSetConstantBuffers(0, 1, &VSConstantBuffer);
 
     //WorldMatrix = XMMatrixTranspose(WorldMatrix);
     //ViewMatrix = XMMatrixTranspose(ViewMatrix);
     //ProjectionMatrix = XMMatrixTranspose(ProjectionMatrix);
 
-    //HRESULT result;
-    //D3D11_MAPPED_SUBRESOURCE mappedResource;
-    //MatrixBufferType* dataPtr;
-    //unsigned int bufferNumber;
-
-    //DeviceContext->Map(MatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-    //// Get a pointer to the data in the constant buffer.
-    //dataPtr = (MatrixBufferType*)mappedResource.pData;
-
-    //// Copy the matrices into the constant buffer.
-    //dataPtr->world = WorldMatrix;
-    //dataPtr->view = ViewMatrix;
-    //dataPtr->projection = ProjectionMatrix;
-
-    //// Unlock the constant buffer.
-    //DeviceContext->Unmap(MatrixBuffer, 0);
-
-    //// Set the position of the constant buffer in the vertex shader.
-    //bufferNumber = 0;
-
-    //// Finanly set the constant buffer in the vertex shader with the updated values.
-    //DeviceContext->VSSetConstantBuffers(bufferNumber, 1, &MatrixBuffer);
-
-    //// Set the vertex input layout.
-    //DeviceContext->IASetInputLayout(InputLayout);
+    // located wherever, but most likely in RenderFrame()
+    // create an OFFSET struct and fill it out
+    
+}
 
 
-    // Set the vertex and pixel shaders that will be used to render this triangle.
+void GraphicsSystem::AddGraphicsComponent(GraphicsComponent* comp, const DXBufferDescription& bufferDesc)
+{
+    GraphicsComponents.push_back(comp);
+    comp->SetVertexBuffer(CreateBuffer(bufferDesc));
+}
+void GraphicsSystem::RemoveGraphicsComponent(GraphicsComponent* comp)
+{
+    GraphicsComponents.erase_value(comp);
+    DestroyBuffer(comp->GetVertexBuffer());
+}
 
-    // Render the triangle.
-    //DeviceContext->DrawIndexed(3, 0, 0);
+
+DXBuffer* GraphicsSystem::CreateBuffer(const DXBufferDescription& desc)
+{
+    DXBuffer* buffer;
+    DeviceInterface->CreateBuffer(&desc, NULL, &buffer);       // create the buffer
+    switch (desc.BindFlags)
+    {
+        case D3D11_BIND_VERTEX_BUFFER:
+        {
+            VertexBuffers.push_back(buffer);
+        }break;
+    }
+    return buffer;
+}
+
+void GraphicsSystem::DestroyBuffer(DXBuffer* buffer)
+{
+    DXBufferDescription desc;
+    buffer->GetDesc(&desc);
+
+    switch (desc.BindFlags)
+    {
+        case D3D11_BIND_VERTEX_BUFFER:
+        {
+            VertexBuffers.erase_value(buffer);
+        }break;
+    }
+    
+    ReleaseCOM(buffer);
 }
 
 void GraphicsSystem::DrawDebugTriangle()
 {
+    //WILL CAUSE A MEMORY LEAK!
+    // create the vertex buffer
+    D3D11_BUFFER_DESC bd;
+    ZeroMemory(&bd, sizeof(bd));
+
+    bd.Usage = D3D11_USAGE_DYNAMIC;                // write access access by CPU and GPU
+    bd.ByteWidth = sizeof(Vertex) * 3;             // size is the VERTEX struct * 3
+    bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;       // use as a vertex buffer
+    bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;    // allow CPU to write in buffer
+    DXBuffer* buffer = CreateBuffer(bd);
+
     Vertex OurVertices[] =
     {
         { Real3(0.0f, 0.5f, 1.0f), Real4(1.0f, 0.0f, 0.0f, 1.0f) },
@@ -544,9 +564,9 @@ void GraphicsSystem::DrawDebugTriangle()
 
     // copy the vertices into the buffer
     D3D11_MAPPED_SUBRESOURCE ms;
-    DeviceContext->Map(VertexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);    // map the buffer
-    memcpy(ms.pData, OurVertices, sizeof(OurVertices));                 // copy the data
-    DeviceContext->Unmap(VertexBuffer, NULL);                                      // unmap the buffer
+    DeviceContext->Map(buffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);    // map the buffer
+    memcpy(ms.pData, OurVertices, sizeof(OurVertices));                            // copy the data
+    DeviceContext->Unmap(buffer, NULL);                                      // unmap the buffer
 
 }
 
@@ -557,15 +577,70 @@ void GraphicsSystem::RenderFrame(UpdateEvent* event)
     float color[4] = { ClearColor.x, ClearColor.y, ClearColor.z, ClearColor.w };
     DeviceContext->ClearRenderTargetView(RenderTarget, color);
 
+
+    VSBufferDefault WorldViewProj;
+
+    WorldViewProj.WorldViewProjection = GraphicsComponents[0]->Owner->Transform->GetWorldMatrix() * MainCamera->ViewProjectionMatrix();
+    //MainCamera->ViewMatrix() * MainCamera->ProjectionMatrix();
+    WorldViewProj.WorldViewProjection.Transpose();
+    unsigned vertexCount = 0;
+    for (unsigned i = 0; i < GraphicsComponents.size(); ++i)
+    {
+        vertexCount += GraphicsComponents[i]->GetVertexCount();
+    }
+
+    // set the new values for the constant buffer
+    DeviceContext->UpdateSubresource(VSConstantBuffer, 0, 0, &WorldViewProj, 0, 0);
+    
+    
     // Clear the depth buffer.
     //DeviceContext->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-
+    
     // do 3D rendering on the back buffer here
+    //This is the primary bottleneck
     unsigned stride = sizeof(Vertex);
     unsigned offset = 0;
-    DeviceContext->IASetVertexBuffers(0, 1, &VertexBuffer, &stride, &offset);
+    DeviceContext->IASetVertexBuffers(0, VertexBuffers.size(), VertexBuffers.data(), &stride, &offset);
     DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    DeviceContext->Draw(3, 0);
+    
+
+    DeviceContext->Draw(vertexCount, 0);
+
+    /*HRESULT result;
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    MatrixBufferType* dataPtr;
+    
+    unsigned int bufferNumber;*/
+    
+
+    //DeviceContext->Map(MatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    //// Get a pointer to the data in the constant buffer.
+    //dataPtr = (MatrixBufferType*)mappedResource.pData;
+
+    ////// Copy the matrices into the constant buffer.
+    //dataPtr->world = XMMatrixIdentity();
+
+    //dataPtr->view = XMMATRIX(MainCamera->ViewMatrix().array);
+    //dataPtr->projection = XMMATRIX(MainCamera->ProjectionMatrix().array);
+
+    ////// Unlock the constant buffer.
+    //DeviceContext->Unmap(MatrixBuffer, 0);
+
+    ////// Set the position of the constant buffer in the vertex shader.
+    //bufferNumber = 0;
+
+    ////// Finanly set the constant buffer in the vertex shader with the updated values.
+    //DeviceContext->VSSetConstantBuffers(bufferNumber, 1, &MatrixBuffer);
+
+    ////// Set the vertex input layout.
+    //DeviceContext->IASetInputLayout(InputLayout);
+
+
+    //// Set the vertex and pixel shaders that will be used to render this triangle.
+
+    //// Render the triangle.
+    //DeviceContext->DrawIndexed(3, 0, 0);
+
 
     // Present the back buffer to the screen since rendering is complete.
     if (VSync)
@@ -613,7 +688,10 @@ void GraphicsSystem::Destroy()
     ReleaseCOM(DeviceContext);
     ReleaseCOM(DeviceInterface);
     ReleaseCOM(SwapChain);
-    ReleaseCOM(VertexBuffer);
     ReleaseCOM(MatrixBuffer);
     ReleaseCOM(InputLayout);
+
+    ReleaseCOM(VSConstantBuffer);
+    ReleaseCOM(PSConstantBuffer);
+    VertexBuffers.clear();
 }

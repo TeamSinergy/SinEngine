@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Assets">
@@ -48,6 +48,9 @@
     <None Include="..\Assets\DataFiles\Archetypes.data">
       <Filter>Assets\DataFiles</Filter>
     </None>
+    <None Include="..\Assets\DataFiles\Level1.data">
+      <Filter>Assets\DataFiles</Filter>
+    </None>
     <None Include="..\Assets\Settings.data">
       <Filter>Assets</Filter>
     </None>
@@ -86,6 +89,9 @@
     <ClInclude Include="..\Source\Components\Camera.h">
       <Filter>Source\Components</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Components\DefaultGameSetup.h">
+      <Filter>Source\Components</Filter>
+    </ClInclude>
     <ClInclude Include="..\Source\Components\Systems\Component.h">
       <Filter>Source\Components\Systems</Filter>
     </ClInclude>
@@ -95,10 +101,16 @@
     <ClInclude Include="..\Source\Components\Systems\GameObject.h">
       <Filter>Source\Components\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Components\Systems\GraphicsComponent.h">
+      <Filter>Source\Components\Systems</Filter>
+    </ClInclude>
     <ClInclude Include="..\Source\Components\Systems\GraphicsSystem.h">
       <Filter>Source\Components\Systems</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Components\Systems\SoundSystem.h">
+      <Filter>Source\Components\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Components\Systems\Space.h">
       <Filter>Source\Components\Systems</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Components\Systems\TimeSystem.h">
@@ -108,6 +120,9 @@
       <Filter>Source\Components\Systems</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Components\Transform.h">
+      <Filter>Source\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Components\VectorGraphic.h">
       <Filter>Source\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Core\Engine.h">
@@ -136,12 +151,6 @@
     </ClInclude>
     <ClInclude Include="..\Source\Zilch\ZilchCompiledLib.h">
       <Filter>Source\Zilch</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Components\Systems\DefaultGameSetup.h">
-      <Filter>Source\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Source\Components\Systems\Space.h">
-      <Filter>Source\Components\Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +184,9 @@
     <ClCompile Include="..\Source\Components\Camera.cpp">
       <Filter>Source\Components</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Components\DefaultGameSetup.cpp">
+      <Filter>Source\Components</Filter>
+    </ClCompile>
     <ClCompile Include="..\Source\Components\Systems\Component.cpp">
       <Filter>Source\Components\Systems</Filter>
     </ClCompile>
@@ -184,10 +196,16 @@
     <ClCompile Include="..\Source\Components\Systems\GameObject.cpp">
       <Filter>Source\Components\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Components\Systems\GraphicsComponent.cpp">
+      <Filter>Source\Components\Systems</Filter>
+    </ClCompile>
     <ClCompile Include="..\Source\Components\Systems\GraphicsSystem.cpp">
       <Filter>Source\Components\Systems</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Components\Systems\SoundSystem.cpp">
+      <Filter>Source\Components\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Components\Systems\Space.cpp">
       <Filter>Source\Components\Systems</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Components\Systems\TimeSystem.cpp">
@@ -197,6 +215,9 @@
       <Filter>Source\Components\Systems</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Components\Transform.cpp">
+      <Filter>Source\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Components\VectorGraphic.cpp">
       <Filter>Source\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Core\Engine.cpp">
@@ -231,12 +252,6 @@
     </ClCompile>
     <ClCompile Include="..\Source\Zilch\ZilchCompiledLib.cpp">
       <Filter>Source\Zilch</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Components\Systems\DefaultGameSetup.cpp">
-      <Filter>Source\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Source\Components\Systems\Space.cpp">
-      <Filter>Source\Components\Systems</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
