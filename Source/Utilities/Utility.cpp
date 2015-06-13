@@ -306,3 +306,31 @@ Matrix& Matrix::Fill(int number)
     }
     return *this;
 }
+
+Math::Matrix4 Math::RotationMatrixXYZ(const Real3& rotation)
+{
+    Matrix4 rotX;
+    rotX.Rotate(Real3(1, 0, 0), rotation.x);
+    Matrix4 rotY;
+    rotY.Rotate(Real3(0, 1, 0), rotation.y);
+    Matrix4 rotZ;
+    rotZ.Rotate(Real3(0, 0, 1), rotation.z);
+
+    return rotX * rotY * rotZ;
+}
+
+Math::Matrix4 Math::RotationMatrixXYZ(real x, real y, real z)
+{
+    return Math::RotationMatrixXYZ(Real3(x, y, z));
+}
+
+void Zilch::CallFunctionOnObject(Handle object, const String& functionName)
+{
+    Function* ZilchSerialize = object.Type->FindFunction(functionName, *GameObject::Default, ZilchTypeId(void), FindMemberOptions::None);
+    ErrorIf(ZilchSerialize == nullptr, "Failed to find function '%s' on Zilch type %s", functionName, object.Type->ToString().c_str());
+    {
+        Zilch::Call call(ZilchSerialize, ZILCH->GetDependencies());
+        call.SetHandle(Zilch::Call::This, object);
+        call.Invoke(ZILCH->Report);
+    }
+}

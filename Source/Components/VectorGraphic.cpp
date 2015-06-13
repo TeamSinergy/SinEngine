@@ -38,12 +38,22 @@ void VectorGraphic::Create()
 void VectorGraphic::Initialize()
 {
     UpdateVertexBuffer();
+    EventConnect(GameSession, "EngineUpdate", &VectorGraphic::Update, this);
 }
 void VectorGraphic::Uninitialize()
 {
-
+    EventDisconnect(GameSession, this, "EngineUpdate", this);
 }
 void VectorGraphic::Destroy()
 {
     graphics->RemoveGraphicsComponent(this);
+}
+
+void VectorGraphic::Update(UpdateEvent* event)
+{
+    //WorldRotation.z += 90.0f *event->Dt;
+    //Owner->Transform->GetWorldTranslation().z -= 1.0f * event->Dt;
+    //Owner->Transform->GetWorldRotation().z += 100.0f * event->Dt;
+    //Owner->Transform->GetWorldScale().y += 10.0f * event->Dt;
+    //WorldRotation.z += 10.0f * event->Dt;
 }

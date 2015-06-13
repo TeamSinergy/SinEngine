@@ -6,14 +6,11 @@
 
 DefineType(Component, SinningZilch)
 {
-  BindConstructor();
-  BindDestructor();
-  BindMethod(Serialize);
-  BindMethod(Create);
-  BindMethod(Initialize);
-  BindMethod(Uninitialize);
-  BindMethod(Destroy);
+    BindComponent(Component);
+    
 }
+
+
 
 void Component::Serialize(DataNode* node)
 {

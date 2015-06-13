@@ -25,3 +25,4 @@ public:
     UpdateEvent(float dt = 0.0f) : EventData(), Dt(dt) {}
     float Dt;
 };
+

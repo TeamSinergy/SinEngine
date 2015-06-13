@@ -29,7 +29,7 @@ public:
     const Real3& GetWorldScale() const { return WorldScale; }
     Real3& GetWorldScale() { return WorldScale; }
 
-    void Update(UpdateEvent* event);
+    
 
     //Setters
     void SetTranslation(const Real3& translation);

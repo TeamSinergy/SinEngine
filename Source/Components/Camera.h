@@ -36,9 +36,7 @@ private:
     float NearPlane;
     float FarPlane;
 
-    Real3 Forward;
-    Real3 Up;
-    Real3 Right;
+    Math::Matrix4 ForwardUpRight;
 
     Math::Matrix4 viewMatrix;
     Math::Matrix4 projectionMatrix;

@@ -2,10 +2,8 @@
 #include <Precompiled.h>
 #include "Component.h"
 #include "ArrayRange.h"
-#include "DirectXMath.h"
 
 #define MemCheck(pointer, name) ErrorIf(pointer == nullptr, String::Join("","Could not allocate enough memory for: ", name).c_str())
-
 
 template <typename T>
 Handle ZilchAllocate()
@@ -62,8 +60,10 @@ public:
     static HashMap<String, ComponentCreator*> Components;
 
     static std::wstring ToWideString(const String& input);
-
+    
     static void Destroy();
+
+    
 
     template <typename T>
     static void Swap(T& a, T& b)
@@ -127,8 +127,21 @@ public:
     Real4x4(){}
     Real4x4(const DirectX::XMMATRIX& inputMatrix) { matrix = inputMatrix; };
 
+    
+
     const DirectX::XMMATRIX& GetXMMATRIX() const { return matrix; }
     DirectX::XMMATRIX& GetXMMATRIX() { return matrix; }
 private:
     DirectX::XMMATRIX matrix;
+};
+
+namespace Math
+{
+    Math::Matrix4 RotationMatrixXYZ(const Real3& rotation);
+    Math::Matrix4 RotationMatrixXYZ(real x, real y, real z);
+};
+
+namespace Zilch
+{
+    void CallFunctionOnObject(Handle object, const String& functionName);
 };

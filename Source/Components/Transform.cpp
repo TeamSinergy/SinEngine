@@ -4,13 +4,9 @@
 
 DefineType(Transform, SinningZilch)
 {
-    RegisterComponent(Transform);
-    BindConstructor();
-    BindDestructor();
-    BindMethod(Create);
-    BindMethod(Initialize);
-    BindMethod(Uninitialize);
-    BindMethod(Destroy);
+    BindComponent(Transform);
+    BindMethodOverload(GetTranslation, Real3&);
+    
 }
 
 void Transform::Serialize(DataNode* node)
@@ -32,11 +28,11 @@ void Transform::Create()
 }
 void Transform::Initialize()
 {
-    EventConnect(GameSession, "EngineUpdate", &Transform::Update, this);
+    
 }
 void Transform::Uninitialize()
 {
-    EventDisconnect(GameSession, this, "EngineUpdate", this);
+    
 }
 void Transform::Destroy()
 {
@@ -81,27 +77,16 @@ void Transform::SetWorldScale(const Real3& scale)
 Math::Matrix4 Transform::GetWorldMatrix() const
 {
 
-    XMMATRIX matRotate = XMMatrixRotationRollPitchYawFromVector(*(XMVECTOR*)(WorldRotation * (Math::cPi/180)).array);
+    Math::Matrix4 matRotate = Math::RotationMatrixXYZ(Math::DegToRad(WorldRotation.x), Math::DegToRad(WorldRotation.y), Math::DegToRad(-WorldRotation.z));
     
-    XMMATRIX matScale;    // a matrix to store the scaling information
+    Math::Matrix4 matScale;    // a matrix to store the scaling information
+    matScale.Scale(WorldScale);
+    Math::Matrix4 matTranslate;
+    matTranslate.Translate(WorldTranslation);
+    Math::Matrix4 matWorld;
+    matWorld = matRotate * matScale;
+    matWorld.SetCross(3, WorldTranslation, 1);
     
-    // build a matrix to double the size of the model and store it to matScale
-    matScale = XMMatrixScaling(WorldScale.x, WorldScale.y, WorldScale.z);
-
-    XMMATRIX matTranslate;
-    matTranslate = XMMatrixTranslation(WorldTranslation.x, WorldTranslation.y, WorldTranslation.z);
-
-    XMMATRIX matWorld;
-    matWorld = matRotate * matScale * matTranslate;
-    Math::Matrix4 viewMatrix;
-    XMStoreFloat4x4((XMFLOAT4X4*)viewMatrix.array, matWorld);
-    
-    return viewMatrix;
+    return matWorld;
 }
 
-void Transform::Update(UpdateEvent* event)
-{
-    WorldRotation.z += 90 *event->Dt;
-    
-    //WorldTranslation.z += 30.0f * event->Dt;
-}

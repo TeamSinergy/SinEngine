@@ -5,8 +5,8 @@
 DefineType(SinEntity, SinningZilch)
 {
     BindFieldGetSet(Name);
-
     BindConstructor();
+    BindVirtualConstructor(const String&);
     BindMethod(Create);
     BindMethod(Initialize);
     BindMethod(Uninitialize);

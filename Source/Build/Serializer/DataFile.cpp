@@ -359,11 +359,11 @@ const Array<DataLevel*>& DataFile::AllLevels()
 
 DataFile::~DataFile()
 {
-    for (auto i : FileData)
+    /*for (auto i : FileData)
     {
         delete i;
         i = nullptr;
-    }
-
+    }*/
+    FileData.deallocate();
     FreeHashMap(DataLevels);
 }

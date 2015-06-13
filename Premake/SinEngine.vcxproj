@@ -58,14 +58,14 @@
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\GamePlay;..\Source\Components\Systems;..\Source\Core\Managers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\Systems;..\Source\Core\Managers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <ProgramDataBaseFileName>$(OutDir)SinEngine.pdb</ProgramDataBaseFileName>
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\GamePlay;..\Source\Components\Systems;..\Source\Core\Managers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\Systems;..\Source\Core\Managers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -81,7 +81,7 @@
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\GamePlay;..\Source\Components\Systems;..\Source\Core\Managers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\Systems;..\Source\Core\Managers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ProgramDataBaseFileName>$(OutDir)SinEngine.pdb</ProgramDataBaseFileName>
       <Optimization>Full</Optimization>
@@ -92,7 +92,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\GamePlay;..\Source\Components\Systems;..\Source\Core\Managers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\Systems;..\Source\Core\Managers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -127,6 +127,7 @@
     <ClInclude Include="..\Source\Components\Systems\WindowSystem.h" />
     <ClInclude Include="..\Source\Components\Transform.h" />
     <ClInclude Include="..\Source\Components\VectorGraphic.h" />
+    <ClInclude Include="..\Source\Components\ZilchComponent.h" />
     <ClInclude Include="..\Source\Core\Engine.h" />
     <ClInclude Include="..\Source\Core\Managers\GraphicsManager.h" />
     <ClInclude Include="..\Source\Core\Managers\ResourceManager.h" />
@@ -163,6 +164,7 @@
     <ClCompile Include="..\Source\Components\Systems\WindowSystem.cpp" />
     <ClCompile Include="..\Source\Components\Transform.cpp" />
     <ClCompile Include="..\Source\Components\VectorGraphic.cpp" />
+    <ClCompile Include="..\Source\Components\ZilchComponent.cpp" />
     <ClCompile Include="..\Source\Core\Engine.cpp" />
     <ClCompile Include="..\Source\Core\Managers\GraphicsManager.cpp" />
     <ClCompile Include="..\Source\Core\Managers\ResourceManager.cpp" />

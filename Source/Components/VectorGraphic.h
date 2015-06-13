@@ -9,6 +9,9 @@ class VectorGraphic : public GraphicsComponent
     void Serialize(DataNode* node) override; //Serialize this through zilch
     void Create() override;
     void Initialize() override;
+
+    void Update(UpdateEvent* event);
+
     void Uninitialize() override;
     void Destroy() override;
 

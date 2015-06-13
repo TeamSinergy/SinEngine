@@ -125,6 +125,9 @@
     <ClInclude Include="..\Source\Components\VectorGraphic.h">
       <Filter>Source\Components</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Components\ZilchComponent.h">
+      <Filter>Source\Components</Filter>
+    </ClInclude>
     <ClInclude Include="..\Source\Core\Engine.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
@@ -218,6 +221,9 @@
       <Filter>Source\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Components\VectorGraphic.cpp">
+      <Filter>Source\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Components\ZilchComponent.cpp">
       <Filter>Source\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Core\Engine.cpp">

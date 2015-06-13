@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "VectorGraphic.h"
 #include "GraphicsComponent.h"
+#include "DirectXMath.h"
 
 DefineType(GraphicsSystem, SinningZilch)
 {
@@ -59,7 +60,7 @@ void GraphicsSystem::Initialize()
 
     //CreateDepthStencilView();
 
-    //CreateRasterState();
+    CreateRasterState();
 
     InitializePipeline();
     //CreateVertexBuffer();
@@ -579,8 +580,8 @@ void GraphicsSystem::RenderFrame(UpdateEvent* event)
 
 
     VSBufferDefault WorldViewProj;
-    //IS SOMETHING WRONG WITH THE PERSPECTIVE MATRIX?
-    WorldViewProj.WorldViewProjection = GraphicsComponents[0]->Owner->Transform->GetWorldMatrix();// *MainCamera->ViewProjectionMatrix();
+    
+    WorldViewProj.WorldViewProjection = GraphicsComponents[0]->Owner->Transform->GetWorldMatrix() * MainCamera->ViewProjectionMatrix();
     //MainCamera->ViewMatrix() * MainCamera->ProjectionMatrix();
     WorldViewProj.WorldViewProjection.Transpose();
     unsigned vertexCount = 0;

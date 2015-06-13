@@ -6,9 +6,10 @@
 #include "Camera.h"
 #include "Transform.h"
 
+
 class Game;
 class Space;
-
+class DataComponent;
 
 enum ObjectState
 {
@@ -27,6 +28,7 @@ public:
     GameObject(const String& name) : SinEntity(name){}
 
     ZilchDeclareDerivedType(GameObject, SinEntity);
+
     void Serialize(DataNode* node) override; //DataLevel
     void Create() override;
     void Initialize() override;
@@ -47,10 +49,16 @@ public:
     void RemoveChild(GameObject* child);
     GameObject* FindChildByName(const String& name);
     void UpdateAllChildren(ObjectState stateToCall);
+    void UpdateAllComponents(ObjectState stateToCall);
+    
 
-    static Array<Type*>* SerializeFunction;
-    static Array<Type*>* Default;
-    static EventData* EmptyEventData;
+    void AddComponent(Handle comp, DataComponent* data);
+    void AddComponent(Handle comp);
+    void RemoveComponent(Handle comp);
+
+    Component* FindComponentByName(const String& name);
+
+    
 
     Array<Handle> Components;
     Array<Handle> Children;
@@ -59,7 +67,10 @@ public:
     Game* GameSession;
 
     ObjectState LastState = ObjectState::Construct;
-protected:
+    ObjectState GetStateFromString(const String& stateName);
+    String GetStringFromState(ObjectState state);
     
-    
+    static Array<Type*>* SerializeFunction;
+    static Array<Type*>* Default;
+    static EventData* EmptyEventData;
 };

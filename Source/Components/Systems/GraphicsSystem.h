@@ -8,6 +8,34 @@ class UpdateEvent;
 class WindowSystem;
 class VectorGraphic;
 class GraphicsComponent;
+
+namespace Math
+{
+    template <typename T>
+    static const XMVECTOR& ArrayToXMVector(const T& array)
+    {
+        return *(XMVECTOR*)&array;
+    }
+
+    template <typename T>
+    static const T& XMVectorToArray(const XMVECTOR& xmvector)
+    {
+        return *(T*)&xmvector;
+    }
+
+    //template <typename To, typename From>
+    //static const T& ArrayToXM(const From& xmvector)
+    //{
+    //    return *(To*)&xmvector;
+    //}
+
+    //template <typename To, typename From>
+    //static const T& XMToArray(const From& xmvector)
+    //{
+    //    return *(To*)&xmvector;
+    //}
+};
+
 struct Vertex
 {
     Vertex(Real3 pos = Real3(), Real4 color = Real4(1, 1, 1, 1)) : Position(pos), Color(color){}

@@ -1,7 +1,8 @@
 #include "Precompiled.h"
 #include "ZilchCompiledLib.h"
 #include "Serializer.h"
-
+#include <String.h>
+#include "ZilchComponent.h"
 ZilchCompiledLib* ZILCH = NULL;
 
 ZilchCompiledLib::ZilchCompiledLib(String systemName) : SinEntity(systemName)
@@ -92,6 +93,30 @@ void ZilchCompiledLib::LoadZilchFiles(Zilch::Project & project)
     }
 }
 
+namespace ZilchHandler
+{
+    void GetComponent(Call& call, ExceptionReport& report)
+    {
+        /*GameObject* gameObject = (GameObject*)call.GetHandle(Call::This).Dereference();
+
+        BoundType* componentType = (BoundType*)call.GetFunction()->UserData;
+
+        Component* comp = gameObject->FindComponentByName(componentType->Name);
+
+        call.DisableReturnChecks();
+        call.Set(Call::Return, GameObject());*/
+    }
+
+    void TypeParsedCallback(ParseEvent* event)
+    {
+        if (TypeBinding::IsA(event->Type, ZilchTypeId(ZilchComponent)))
+        {
+            Zilch::Property* prop = event->Builder->AddExtensionProperty(ZilchTypeId(GameObject), event->Type->Name, event->Type, NULL, ZilchHandler::GetComponent, MemberOptions::None);
+            prop->Get->UserData = event->Type;
+        }
+    }
+}
+
 void ZilchCompiledLib::CompileScripts(Zilch::Project& project, Zilch::Module& dependencies)
 {
     std::cout << "Compiling Scripts " << std::endl;
@@ -101,7 +126,7 @@ void ZilchCompiledLib::CompileScripts(Zilch::Project& project, Zilch::Module& de
     //not sure what "Test" is?!?
 
     //Adds the callback to get ZilchCOmponents from just saying .comp
-    //Zilch::EventConnect(&project, Events::TypeParsed, ZilchHandler::TypeParsedCallback);
+    //EventConnect(&project, Events::TypeParsed, ZilchHandler::TypeParsedCallback);
 
     CompiledLib = project.Compile("LibraryOfSin", dependencies, EvaluationMode::Project);
     
@@ -111,33 +136,23 @@ void ZilchCompiledLib::CompileScripts(Zilch::Project& project, Zilch::Module& de
     dependencies.push_back(CompiledLib);
 }
 
-
-//For Extension Properties
-//namespace ZilchHandler
-//{
-//    void GetComponent(Call& call, ExceptionReport& report)
-//    {
-//        IEntity* gameObject = (IEntity*)call.GetHandle(Call::This).Dereference();
-//
-//        BoundType* componentType = (BoundType*)call.GetFunction()->UserData;
-//
-//        IComponent* comp = (IComponent*)(gameObject->GetZilchComponent(componentType->Name.c_str()).Dereference());
-//
-//        call.DisableReturnChecks();
-//        call.Set(Call::Return, comp);
-//    }
-//
-//    void TypeParsedCallback(ParseEvent* event)
-//    {
-//        if (TypeBinding::IsA(event->Type, ZilchTypeId(ZilchComponent)))
-//        {
-//            Property* prop = event->Builder->AddExtensionProperty(ZilchTypeId(IEntity), event->Type->Name, event->Type, NULL, ZilchHandler::GetComponent, MemberOptions::None);
-//            prop->Get->UserData = event->Type;
-//        }
-//    }
-//}
-
 Zilch::LibraryRef* ZilchCompiledLib::GetZilchLib(String& ScriptName)
 {
     return &LibList[ScriptName];
 }
+
+String StdStringToZString(const std::string& input)
+{
+    return String(input.c_str(), input.size());
+}
+std::string ZStringToStdString(const String& input)
+{
+    return std::string(input.c_str(), input.size());
+}
+
+//ZilchDefineRedirectType(std::string, StdStringToZString, ZStringToStdString);
+
+//ZilchDefineImplicitRedirectType(std::string);
+
+ZilchDefineEvent(UpdateEvent);
+

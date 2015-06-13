@@ -7,7 +7,7 @@ class Utility
     }
 }
 
-class CompTest : Component
+class CompTest : ZilchComponent
 {
     constructor() : base()
     {

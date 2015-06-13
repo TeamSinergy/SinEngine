@@ -13,18 +13,17 @@ class DataNode
 class SinEntity : public EventHandler
 {
 public:
-    ZilchDeclareDerivedType(SinEntity, Zilch::EventHandler);
+    ZilchDeclareDerivedType(SinEntity, EventHandler);
     String Name;
 
-    SinEntity() {}
+    SinEntity() : EventHandler() {}
     //Optional constructor to set the name equal to the passed in name.
-    SinEntity(String name) : Name (name){}
+    SinEntity(const String& name) : EventHandler(), Name(name){}
     virtual void Serialize(DataNode* node) {}
     virtual void Create() {}
     virtual void Initialize() {}
     virtual void Uninitialize() {}
     virtual void Destroy() {}
     virtual ~SinEntity() {}
-private:
 
 };
