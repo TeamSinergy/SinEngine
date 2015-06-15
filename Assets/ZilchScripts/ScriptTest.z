@@ -1,12 +1,3 @@
-class Utility
-{
-    [Static]
-    function SayHi()
-    {
-        Console.WriteLine(2);
-    }
-}
-
 class CompTest : ZilchComponent
 {
     constructor() : base()
@@ -15,12 +6,76 @@ class CompTest : ZilchComponent
     
     function Initialize()
     {
-        Console.WriteLine("HELLO!");
+        Console.WriteLine(this.Owner.Name);
+        this.Owner.AddComponent(new Faggot());
+        Trace(this.Owner.Faggot);
+        Events.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        //debug break;
+    }
+    sends LogicUpdate:UpdateEvent;
+    sends KeyUp:KeyboardEvent;
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {
+        
+        if(InputManager.IsKeyDown(Keys.W))
+        {
+            
+            this.Owner.Transform.Translation = this.Owner.Transform.Translation + Real3(0,0,-20) * event.Dt;
+        }
+        if(InputManager.IsKeyDown(Keys.S))
+        {
+            
+            this.Owner.Transform.Translation = this.Owner.Transform.Translation +  Real3(0,0,20) * event.Dt;
+        }
+        if(InputManager.IsKeyDown(Keys.A))
+        {
+            
+            this.Owner.Transform.Rotation = this.Owner.Transform.Rotation +  Real3(0,-20,0) * event.Dt;
+        }
+        if(InputManager.IsKeyDown(Keys.D))
+        {
+            
+            this.Owner.Transform.Rotation = this.Owner.Transform.Rotation +  Real3(0,20,0) * event.Dt;
+        }
+    }
+    
+    function Destroy()
+    {
+        //Must disconnect or else error?
+        Events.Disconnect(this.Space, this.Owner, Events.LogicUpdate, this);
     }
     
     function SayHi()
     {
         Console.WriteLine("Gives Error");
         Console.WriteLine(2);
+    }
+}
+
+class Faggot : ZilchComponent
+{
+    var Hello:String = "Srsly, u are";
+    constructor() : base()
+    {
+    }
+    
+    function Initialize()
+    {
+        Console.WriteLine("Ure a faget");
+    }
+    
+    function SayHi()
+    {
+        Console.WriteLine("Gives Error");
+        Console.WriteLine(2);
+    }
+}
+
+struct Trace
+{
+    constructor(output:any)
+    {
+        Console.WriteLine(output);
     }
 }

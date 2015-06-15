@@ -52,7 +52,7 @@ void GraphicsSystem::Create()
 void GraphicsSystem::Initialize()
 {
     
-    EventConnect(GameSession, "EngineUpdate", &GraphicsSystem::RenderFrame, this);
+    EventConnect(GameSession, Events::EngineUpdate, &GraphicsSystem::RenderFrame, this);
 
     SetWindowAsViewport(Window);
     //CreateDepthStencilBuffer();
@@ -605,8 +605,8 @@ void GraphicsSystem::RenderFrame(UpdateEvent* event)
     DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     
 
-    DeviceContext->Draw(vertexCount, 0);
-
+    DeviceContext->Draw(3, 0);
+    //DeviceContext->Draw(3, 3);
     /*HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     MatrixBufferType* dataPtr;
@@ -655,7 +655,7 @@ void GraphicsSystem::RenderFrame(UpdateEvent* event)
         SwapChain->Present(0, 0);
     }
 
-    EventSend(Space, "FrameUpdate", event);
+    EventSend(Space, Events::FrameUpdate, event);
 }
 void GraphicsSystem::Uninitialize()
 {
@@ -664,7 +664,7 @@ void GraphicsSystem::Uninitialize()
 
 void GraphicsSystem::Destroy()
 {
-    EventDisconnect(GameSession, this, "EngineUpdate", this);
+    EventDisconnect(GameSession, this, Events::EngineUpdate, this);
     // close and release all existing COM objects
     ReleaseCOM(pVS);
     ReleaseCOM(pPS) //TO BE MADE HASMAPS

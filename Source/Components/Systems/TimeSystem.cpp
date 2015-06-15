@@ -75,7 +75,7 @@ void TimeSystem::Update(UpdateEvent* event)
     {
         EventSend(Space, "LogicUpdate", event);
     }
-    
+
 }
 
 void TimeSystem::Uninitialize()

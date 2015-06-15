@@ -7,12 +7,20 @@
 DefineType(GameObject, SinningZilch)
 {
     BindComponent(GameObject);
-    //BindMethod(FindComponentByName);
-    //ZilchBindMethod(builder, type, &GameObject::FindComponentByName, ZilchNoOverload, "FindComponentByName", ZilchNoNames);
+    BindMethod(FindComponentByName);
     BindVirtualConstructor(const String&);
-    //BindFieldGet(Parent);
-    //BindFieldGet(Space);
-    //BindFieldGet(GameSession);
+    BindMethod(GetParent);
+    BindMethod(AttachTo);
+    ZilchBindProperty(builder, type, &GameObject::GetParent, &GameObject::AttachTo, "Parent");
+    BindMethod(FindChildByName);
+    BindMethod(AddChild);
+    BindMethod(RemoveChild);
+    BindMethodOverload(AddComponent, void, const Handle&);
+    BindMethodOverload(AddComponent, void, const Handle&, DataComponent*);
+    BindFieldGet(Space);
+    BindFieldGet(GameSession);
+    BindFieldGetSet(Transform);
+    BindMethod(Disconnect);
 }
 
 Array<Type*>* GameObject::SerializeFunction = nullptr;
@@ -78,6 +86,14 @@ void GameObject::Initialize()
     UpdateAllChildren(LastState);
 }
 
+void GameObject::Detach()
+{
+    if (Parent)
+    {
+        Parent->RemoveChild(this);
+    }
+}
+
 void GameObject::AttachTo(GameObject* parent)
 {
     parent->AddChild(this);
@@ -113,7 +129,7 @@ Component* GameObject::FindComponentByName(const String& name)
 {
     for (unsigned i = 0; i < Components.size(); ++i)
     {
-        if (Components[i].Type->ToString() == name)
+        if (Components[i].Type->ToString().CompareTo(name) == 0)
         {
             return (Component*)Components[i].Dereference();
         }
@@ -122,15 +138,16 @@ Component* GameObject::FindComponentByName(const String& name)
     return nullptr;
 }
 
-void GameObject::AddComponent(Handle comp, DataComponent* data)
+void GameObject::AddComponent(const Handle& comp, DataComponent* data)
 {
+    ((Component*)comp.Dereference())->Name = comp.Type->ToString();
     ((Component*)comp.Dereference())->Owner = this;
     ((Component*)comp.Dereference())->Space = this->Space;
     ((Component*)comp.Dereference())->GameSession = this->GameSession;
     Components.push_back(comp);
     if (data != nullptr)
     {
-        Function* ZilchSerialize = Components.back().Type->FindFunction("Serialize", *GameObject::SerializeFunction, ZilchTypeId(void), FindMemberOptions::None);
+        Function* ZilchSerialize = comp.Type->FindFunction("Serialize", *GameObject::SerializeFunction, ZilchTypeId(void), FindMemberOptions::None);
         ErrorIf(ZilchSerialize == nullptr, "Failed to find function 'Serialize' on Zilch type %s", ((Component*)comp.Dereference())->Name.c_str());
         {
             Zilch::Call call(ZilchSerialize, ZILCH->GetDependencies());
@@ -147,7 +164,7 @@ void GameObject::AddComponent(Handle comp, DataComponent* data)
     }
 
 }
-void GameObject::RemoveComponent(Handle comp)
+void GameObject::RemoveComponent(const Handle& comp)
 {
     if (LastState < ObjectState::Destroy)
     {
@@ -158,7 +175,7 @@ void GameObject::RemoveComponent(Handle comp)
         }
     }
     Components.erase_value(comp);
-    comp.Delete();
+    //comp.Delete();
 }
 
 
@@ -265,8 +282,8 @@ void GameObject::UpdateAllComponents(ObjectState stateToCall)
 {
     String functionName = GetStringFromState(stateToCall);
 
-
-    for (unsigned i = 0; i < Components.size(); ++i)
+    unsigned Count = Components.size();
+    for (unsigned i = 0; i < Count; ++i)
     {
         
         if (LastState <= stateToCall)
@@ -280,7 +297,16 @@ void GameObject::UpdateAllComponents(ObjectState stateToCall)
     }
 }
 
-void GameObject::AddComponent(Handle comp) 
+void GameObject::AddComponent(const Handle& comp)
 { 
     AddComponent(comp, nullptr); 
+}
+
+void GameObject::Disconnect(const Handle& sender, const Handle& reciever, const String& EventName, const Handle& thisPointer)
+{
+    EventHandler* Sender = (EventHandler*)sender.Dereference();
+    EventHandler* Reciever = (EventHandler*)sender.Dereference();
+    EventHandler* ThisPointer = (EventHandler*)thisPointer.Dereference();
+
+    EventDisconnect(Sender, Reciever, EventName, ThisPointer);
 }

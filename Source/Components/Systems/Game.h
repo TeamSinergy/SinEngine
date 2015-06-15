@@ -19,10 +19,3 @@ public:
 private:
 };
 
-class UpdateEvent : public EventData
-{
-public:
-    UpdateEvent(float dt = 0.0f) : EventData(), Dt(dt) {}
-    float Dt;
-};
-

@@ -24,6 +24,7 @@ enum ObjectState
 class GameObject : public SinEntity
 {
 public:
+    
     GameObject() : SinEntity(){};
     GameObject(const String& name) : SinEntity(name){}
 
@@ -44,6 +45,9 @@ public:
     void Uninitialize() override;
     void Destroy() override;
 
+    GameObject* GetParent() { return Parent; }
+    const Array<Handle>& GetAllChildren() { return Children; }
+    void Detach();
     void AttachTo(GameObject* parent);
     void AddChild(GameObject* child);
     void RemoveChild(GameObject* child);
@@ -52,14 +56,22 @@ public:
     void UpdateAllComponents(ObjectState stateToCall);
     
 
-    void AddComponent(Handle comp, DataComponent* data);
-    void AddComponent(Handle comp);
-    void RemoveComponent(Handle comp);
+    void AddComponent(const Handle&, DataComponent* data);
+    void AddComponent(const Handle&);
+    void RemoveComponent(const Handle&);
 
     Component* FindComponentByName(const String& name);
 
+
+    void Disconnect(const Handle& sender, const Handle& reciever, const String& EventName, const Handle& thisPointer);
+
+    static Array<Type*>* SerializeFunction;
+    static Array<Type*>* Default;
+    static EventData* EmptyEventData;
     
 
+
+//should be private
     Array<Handle> Components;
     Array<Handle> Children;
     GameObject* Parent;
@@ -70,7 +82,5 @@ public:
     ObjectState GetStateFromString(const String& stateName);
     String GetStringFromState(ObjectState state);
     
-    static Array<Type*>* SerializeFunction;
-    static Array<Type*>* Default;
-    static EventData* EmptyEventData;
+    
 };

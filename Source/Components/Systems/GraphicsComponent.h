@@ -18,7 +18,7 @@ class GraphicsComponent : public Component
     DXBuffer* GetVertexBuffer() const { return VertexBuffer; }
 
     unsigned GetVertexCount() const { return Vertices.size(); }
-protected:
+//protected:
     GraphicsSystem* graphics;
 
     Array<Vertex> Vertices;

@@ -15,7 +15,6 @@ struct Unsigned2
 template < typename DataType >
 class ArrayRange
 {
-    friend class ArrayRange;
 public:
     ArrayRange() : Data(nullptr)
     {

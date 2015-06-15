@@ -6,8 +6,9 @@
 
 DefineType(Component, SinningZilch)
 {
+    //type->HandleManager = ZilchManagerId(Zilch::PointerManager);
     BindComponent(Component);
-    
+    BindFieldGet(Owner);
 }
 
 
@@ -31,4 +32,14 @@ void Component::Uninitialize()
 void Component::Destroy()
 {
 
+}
+
+DefineType(Animal, SinningZilch)
+{
+    BindFieldGet(Name);
+}
+
+DefineType(Dog, SinningZilch)
+{
+    //BindFieldGet(Name);
 }

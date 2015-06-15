@@ -17,7 +17,7 @@ void ZilchCompiledLib::Serialize(DataNode* node)
 void ZilchCompiledLib::Create() 
 {
     
-    //Debugger.Host(8000); //ASK TREVOR ABOUT ZERO::THREAD ERROR
+    //Debugger.Host(8000); 
 
     // Setup the console so that when we call 'Console.WriteLine' it outputs to stdio
     Zilch::EventConnect(&Console::Events, Events::ConsoleWrite, DefaultWriteText);
@@ -31,7 +31,9 @@ void ZilchCompiledLib::Create()
 
     // Here, we can register our own callback for when compilation errors occur
     // The default callback prints the file, line/character number, and message to stderr
-    Zilch::EventConnect(&Errors, Events::CompilationError, Zilch::DefaultErrorCallback);
+    Zilch::EventConnect(&CompiledProject, Events::CompilationError, Zilch::DefaultErrorCallback);
+
+    
 }
 void ZilchCompiledLib::Initialize() 
 {
@@ -51,7 +53,7 @@ void ZilchCompiledLib::Initialize()
     ErrorIf(ExecState == nullptr, "Failed to link libraries together");
     Zilch::EventConnect(ExecState, Events::UnhandledException, Zilch::DefaultExceptionCallback);
     
-    //Debugger.AddProject(CompiledProject);
+    //Debugger.AddProject(&CompiledProject);
     //Debugger.AddState(ExecState);
     
 
@@ -97,14 +99,14 @@ namespace ZilchHandler
 {
     void GetComponent(Call& call, ExceptionReport& report)
     {
-        /*GameObject* gameObject = (GameObject*)call.GetHandle(Call::This).Dereference();
+        GameObject* gameObject = (GameObject*)call.GetHandle(Call::This).Dereference();
 
         BoundType* componentType = (BoundType*)call.GetFunction()->UserData;
 
         Component* comp = gameObject->FindComponentByName(componentType->Name);
 
         call.DisableReturnChecks();
-        call.Set(Call::Return, GameObject());*/
+        call.Set(Call::Return, comp);
     }
 
     void TypeParsedCallback(ParseEvent* event)
@@ -126,7 +128,7 @@ void ZilchCompiledLib::CompileScripts(Zilch::Project& project, Zilch::Module& de
     //not sure what "Test" is?!?
 
     //Adds the callback to get ZilchCOmponents from just saying .comp
-    //EventConnect(&project, Events::TypeParsed, ZilchHandler::TypeParsedCallback);
+    EventConnect(&project, Events::TypeParsed, ZilchHandler::TypeParsedCallback);
 
     CompiledLib = project.Compile("LibraryOfSin", dependencies, EvaluationMode::Project);
     
@@ -150,9 +152,8 @@ std::string ZStringToStdString(const String& input)
     return std::string(input.c_str(), input.size());
 }
 
-//ZilchDefineRedirectType(std::string, StdStringToZString, ZStringToStdString);
-
+ZilchDefineRedirectType(std::string, StdStringToZString, ZStringToStdString);
 //ZilchDefineImplicitRedirectType(std::string);
 
-ZilchDefineEvent(UpdateEvent);
+//
 

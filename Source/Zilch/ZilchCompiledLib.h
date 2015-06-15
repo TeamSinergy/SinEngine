@@ -3,6 +3,7 @@
 #define ScriptFilePath "../Assets/ZilchScripts"
 
 ZilchStaticLibrary(SinningZilch);
+ZilchDeclareRedirectType(std::string, Zilch::String);
 
 class ZilchCompiledLib : public SinEntity
 {
@@ -29,7 +30,7 @@ public:
     /* This class encompasses all compilation errors that can occur when compiling
     Zilch code. Its responsibility is to provide friendly error messages,
     error codes, and callbacks to the user*/
-    CompilationErrors Errors;
+    //CompilationErrors Errors;
 
     Project CompiledProject;
 
@@ -41,7 +42,7 @@ private:
     int ScriptCount;
     
 
-    //Debugger Debugger;    /* Link all the libraries together into one ExecutableState*/
+    Debugger Debugger;    /* Link all the libraries together into one ExecutableState*/
     ExecutableState* ExecState;
 
 
@@ -91,3 +92,5 @@ extern ZilchCompiledLib* ZILCH;
 #define BindStaticFieldGetAs(Type, Name) (ZilchBindField(builder, type, (&ZilchSelf::Type), Name, Zilch::PropertyBinding::Get))
 #define BindStaticFieldSetAs(Type, Name) (ZilchBindField(builder, type, (&ZilchSelf::Type), Name, Zilch::PropertyBinding::Set))
 #define BindStaticFieldGetSetAs(Type, Name) (ZilchBindField(builder, type, (&ZilchSelf::Type), Name, Zilch::PropertyBinding::GetSet))
+
+#define BindProperty(Getter, Setter, Name) ZilchBindProperty(builder, type, &ZilchSelf::Getter, &ZilchSelf::Setter, Name)

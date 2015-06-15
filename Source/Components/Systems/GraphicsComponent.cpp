@@ -24,9 +24,9 @@ void GraphicsComponent::UpdateVertexBuffer()
 {
     // copy the vertices into the buffer
     D3D11_MAPPED_SUBRESOURCE ms;
-    graphics->DeviceContext->Map(VertexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);    // map the buffer
+    graphics->GetDeviceContext()->Map(VertexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);    // map the buffer
     memcpy(ms.pData, Vertices.data(), sizeof(Vertex) * Vertices.size());                            // copy the data
-    graphics->DeviceContext->Unmap(VertexBuffer, NULL);                                      // unmap the buffer
+    graphics->GetDeviceContext()->Unmap(VertexBuffer, NULL);                                      // unmap the buffer
 }
 
 void GraphicsComponent::Uninitialize()

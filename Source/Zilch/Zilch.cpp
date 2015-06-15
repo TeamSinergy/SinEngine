@@ -7,8 +7,8 @@
 
 // Includes
 
-//#define ZilchUnsafeEvents true
-#define ZilchOutsideStackAllocation true
+#define ZilchUnsafeEvents true
+#define ZilchOutsideStackAllocation false
 
 namespace Zilch
 {
@@ -12259,6 +12259,8 @@ namespace Zilch
   {
     ZilchBindMethod(builder, type, &EventsClass::Send, ZilchNoOverload, "Send", "sender, eventName, event");
     ZilchBindMethod(builder, type, &EventsClass::Connect, ZilchNoOverload, "Connect", "sender, eventName, callback");
+    //JOSH
+    ZilchBindMethod(builder, type, &EventsClass::Disconnect, ZilchNoOverload, "Disconnect", "sender, reciever, eventName, thisPointer");
   }
 
   //***************************************************************************
@@ -12659,6 +12661,32 @@ namespace Zilch
     
     // Connect the event handler up to this newly created member delegate
     EventConnect(senderHandler, eventName, eventDelegate, receiverHandler);
+  }
+  //JOSH WROTE THIS
+  void EventsClass::Disconnect(const Handle& sender, const Handle& reciever, StringParam EventName, const Handle& thisPointer)
+  {
+      // Get the state that called the function (this is thread local and therefore safe)
+      ExecutableState* state = ExecutableState::CallingState;
+      ExceptionReport& report = *state->StackFrames.back()->Report;
+      EventHandler* Sender = (EventHandler*)sender.Dereference();
+      if (Sender == nullptr)
+      {
+          state->ThrowException(report, "The sender was not a valid event handler and cannot send or receive events");
+          return;
+      }
+      EventHandler* Reciever = (EventHandler*)sender.Dereference();
+      if (Reciever == nullptr)
+      {
+          state->ThrowException(report, "The receiver was not a valid event handler and cannot send or receive events");
+          return;
+      }
+      EventHandler* ThisPointer = (EventHandler*)thisPointer.Dereference();
+      if (ThisPointer == nullptr)
+      {
+          state->ThrowException(report, "The this pointer or unique id was null.");
+          return;
+      }
+      EventDisconnect(Sender, Reciever, EventName, ThisPointer);
   }
 }
 /**************************************************************\

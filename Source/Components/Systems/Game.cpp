@@ -1,6 +1,7 @@
 #include <Precompiled.h>
 #include "Game.h"
 #include "GameClock.h"
+#include "InputManager.h"
 
 #define StartingSpaceComp "StartingLevel"
 #define FilePropertyName "DataFile"
@@ -20,32 +21,65 @@ void Game::Update()
 {
     // this struct holds Windows event messages
     MSG msg;
-    UpdateEvent* eventData = new UpdateEvent();
+    Handle eventHandle = ZilchAllocate<UpdateEvent>();
+    UpdateEvent* eventData = (UpdateEvent*)eventHandle.Dereference();
+    KeyboardEvent* keyboardEventData = new KeyboardEvent(0, 0);
     MemCheck(eventData, "UpdateEvent");
     // wait for the next message in the queue, store the result in 'msg'
     GameClock clock;
+    bool Continue = true;
 
-    while (true)
+    EventConnect(this, Events::KeyDown, &InputManager::OnKeyEvent);
+    EventConnect(this, Events::KeyUp, &InputManager::OnKeyEvent);
+
+    while (Continue)
     {
         if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
         {
-            // translate keystroke messages into the right format
             TranslateMessage(&msg);
-
-            // send the message to the WindowProc function
             DispatchMessage(&msg);
-            // check to see if it's time to quit
-            if (msg.message == WM_QUIT)
-                break;
+            // translate keystroke messages into the right format
+            switch (msg.message)
+            {
+                case WM_KEYDOWN:
+                {
+                    keyboardEventData->Key = msg.wParam;
+                    keyboardEventData->IsKeyDown = true;
+                    EventSend(this, Events::KeyDown, keyboardEventData);
+                }break;
+                case WM_KEYUP:
+                {
+                    keyboardEventData->Key = msg.wParam;
+                    keyboardEventData->IsKeyDown = false;
+                    EventSend(this, Events::KeyUp, keyboardEventData);
+                }break;
+                case WM_MBUTTONDOWN:
+                {
+                    //SinWriteLine((int)msg.wParam);
+                }break;
+                case WM_MOUSEMOVE:
+                {
+
+                }break;
+                case WM_QUIT:
+                {
+                    Continue = false;
+                }break;
+            }
+         
         }
         else
         {
             eventData->Dt = (float) clock.Update();
-            EventSend(this, "EngineUpdate", eventData);
+            EventSend(this, Events::EngineUpdate, eventData);
+            InputManager::Update();
         }
     }
 
-    delete eventData;
+    EventDisconnect(this,this, Events::KeyDown, this);
+    EventDisconnect(this, this, Events::KeyUp, this);
+    delete keyboardEventData;
+    eventHandle.Delete();
 }
 
 void Game::LoadSpace(DataObject* spaceArchetype, DataLevel* level)

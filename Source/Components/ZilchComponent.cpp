@@ -4,6 +4,9 @@
 DefineType(ZilchComponent, SinningZilch)
 {
     BindComponent(ZilchComponent);
+    BindFieldGet(Owner);
+    BindFieldGet(Space);
+    BindFieldGet(GameSession);
 }
 
 void ZilchComponent::Serialize(DataNode* node)

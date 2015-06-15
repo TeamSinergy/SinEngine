@@ -87,6 +87,7 @@ using namespace Zilch;
 #include "SinEntity.h"
 #include "Utility.h"
 #include "ZilchCompiledLib.h"
+#include "Events.h"
 #include "ArrayRange.h"
 #include "Serializer.h"
 #include "DataComponent.h"

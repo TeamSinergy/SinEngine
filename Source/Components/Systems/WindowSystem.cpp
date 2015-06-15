@@ -4,8 +4,7 @@
 
 DefineType(WindowSystem, SinningZilch)
 {
-    BindConstructor();
-    BindDestructor();
+    BindComponent(WindowSystem);
     RegisterComponent(WindowSystem);
 }
 

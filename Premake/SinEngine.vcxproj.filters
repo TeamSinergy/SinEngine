@@ -134,6 +134,9 @@
     <ClInclude Include="..\Source\Core\Managers\GraphicsManager.h">
       <Filter>Source\Core\Managers</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Core\Managers\InputManager.h">
+      <Filter>Source\Core\Managers</Filter>
+    </ClInclude>
     <ClInclude Include="..\Source\Core\Managers\ResourceManager.h">
       <Filter>Source\Core\Managers</Filter>
     </ClInclude>
@@ -144,6 +147,9 @@
       <Filter>Source\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Utilities\ArrayRange.h">
+      <Filter>Source\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Utilities\Events.h">
       <Filter>Source\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Utilities\GameClock.h">
@@ -232,6 +238,9 @@
     <ClCompile Include="..\Source\Core\Managers\GraphicsManager.cpp">
       <Filter>Source\Core\Managers</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Core\Managers\InputManager.cpp">
+      <Filter>Source\Core\Managers</Filter>
+    </ClCompile>
     <ClCompile Include="..\Source\Core\Managers\ResourceManager.cpp">
       <Filter>Source\Core\Managers</Filter>
     </ClCompile>
@@ -242,6 +251,9 @@
       <Filter>Source\Core</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Utilities\ArrayRange.cpp">
+      <Filter>Source\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Utilities\Events.cpp">
       <Filter>Source\Utilities</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Utilities\GameClock.cpp">

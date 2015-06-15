@@ -21,7 +21,7 @@ public:
     
     void UninitializeSpace();
 
-    const Array<Handle>& ObjectList = Children;
+    const Array<Handle>& ObjectList = GetAllChildren();
 
     ~Space() {};
 private:

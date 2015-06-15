@@ -56,7 +56,7 @@ DataObject* DataLevel::AddObject(DataObject* Object, bool modifyFile)
 {
     if (DataObjects.containsKey(Object->GetName()))
     {
-        Error("Level %s already has an object with name %s", *Name, Object->GetName());
+        Error("Level %s already has an object with name %s", Name->c_str(), Object->GetName());
         return nullptr;
     }
 

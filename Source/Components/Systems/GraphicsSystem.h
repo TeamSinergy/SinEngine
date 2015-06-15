@@ -53,7 +53,7 @@ typedef D3D11_BUFFER_DESC DXBufferDescription;
 
 class GraphicsSystem : public Component
 {
-    friend GraphicsComponent;
+    
     ZilchDeclareDerivedType(GraphicsSystem, Component);
     void Serialize(DataNode* node) override; //DataLevel
     void Create() override;
@@ -78,6 +78,8 @@ class GraphicsSystem : public Component
     DXBuffer* CreateBuffer(const DXBufferDescription& desc);
     void DestroyBuffer(DXBuffer* buffer);
 
+    DXDeviceInterface* GetDevice() const { return DeviceInterface; }
+    DXDeviceContext* GetDeviceContext() const { return DeviceContext; }
 
     Camera* MainCamera;
 private:

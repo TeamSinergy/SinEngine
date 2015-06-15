@@ -6,7 +6,15 @@ DefineType(Transform, SinningZilch)
 {
     BindComponent(Transform);
     BindMethodOverload(GetTranslation, Real3&);
-    
+    BindProperty(GetTranslation, SetTranslation, "Translation");
+    BindMethod(SetTranslation);
+    BindMethod(GetTranslation);
+    BindProperty(GetScale, SetScale, "Scale");
+    BindMethod(SetScale);
+    BindMethod(GetScale);
+    BindProperty(GetRotation, SetRotation, "Rotation");
+    BindMethod(SetRotation);
+    BindMethod(GetRotation);
 }
 
 void Transform::Serialize(DataNode* node)

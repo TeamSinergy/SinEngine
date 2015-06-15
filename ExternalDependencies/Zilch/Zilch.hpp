@@ -2384,8 +2384,8 @@ public:
   {
 
   }
-
-private:
+//JOSH CHANGED THIS!
+//private:
 
   //InList is not copyable (not really a valid operation)
   InList(const InList&){}
@@ -24101,6 +24101,10 @@ namespace Zilch
     // This validates that we did not get a null delegate, the this pointer was not null (static functions are ok!),
     // and that the delegate has no return and only one argument that inherits from the EventData type
     static void Connect(const Handle& sender, StringParam eventName, const Delegate& callback);
+    
+    //JOSH MADE THIS
+    static void Disconnect(const Handle& sender, const Handle& reciever, StringParam EventName, const Handle& thisPointer);
+    
   };
 }
 
