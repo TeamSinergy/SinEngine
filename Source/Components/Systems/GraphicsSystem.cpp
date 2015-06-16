@@ -491,12 +491,29 @@ void GraphicsSystem::InitializePipeline()
     DeviceInterface->CreateBuffer(&bd, NULL, &VSConstantBuffer);
     DeviceContext->VSSetConstantBuffers(0, 1, &VSConstantBuffer);
 
-    //WorldMatrix = XMMatrixTranspose(WorldMatrix);
-    //ViewMatrix = XMMatrixTranspose(ViewMatrix);
-    //ProjectionMatrix = XMMatrixTranspose(ProjectionMatrix);
+    //INDEX BUFFER
+    // Fill in a buffer description.
+    D3D11_BUFFER_DESC bufferDesc;
+    ZeroMemory(&bufferDesc, sizeof(bufferDesc));
 
-    // located wherever, but most likely in RenderFrame()
-    // create an OFFSET struct and fill it out
+    bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    bufferDesc.ByteWidth = sizeof(unsigned int) * 3 * 2;
+    bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    bufferDesc.CPUAccessFlags = 0;
+    bufferDesc.MiscFlags = 0;
+
+    // Create indices.
+    unsigned int indices[] = { 0, 1, 2, 0, 2, 3};
+    // Define the resource data.
+    D3D11_SUBRESOURCE_DATA InitData;
+    InitData.pSysMem = indices;
+    InitData.SysMemPitch = 0;
+    InitData.SysMemSlicePitch = 0;
+
+    // Create the buffer with the device.
+    DeviceInterface->CreateBuffer(&bufferDesc, &InitData, &IndexBuffer);
+    // Set the buffer.
+    DeviceContext->IASetIndexBuffer(IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
     
 }
 
@@ -569,6 +586,8 @@ void GraphicsSystem::DrawDebugTriangle()
     memcpy(ms.pData, OurVertices, sizeof(OurVertices));                            // copy the data
     DeviceContext->Unmap(buffer, NULL);                                      // unmap the buffer
 
+    
+
 }
 
 void GraphicsSystem::RenderFrame(UpdateEvent* event)
@@ -584,6 +603,7 @@ void GraphicsSystem::RenderFrame(UpdateEvent* event)
     WorldViewProj.WorldViewProjection = GraphicsComponents[0]->Owner->Transform->GetWorldMatrix() * MainCamera->ViewProjectionMatrix();
     //MainCamera->ViewMatrix() * MainCamera->ProjectionMatrix();
     WorldViewProj.WorldViewProjection.Transpose();
+    
     unsigned vertexCount = 0;
     for (unsigned i = 0; i < GraphicsComponents.size(); ++i)
     {
@@ -592,40 +612,45 @@ void GraphicsSystem::RenderFrame(UpdateEvent* event)
 
     // set the new values for the constant buffer
     DeviceContext->UpdateSubresource(VSConstantBuffer, 0, 0, &WorldViewProj, 0, 0);
+    //Prefer map/unmap ^
     
+
     
+
     // Clear the depth buffer.
     //DeviceContext->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
     
     // do 3D rendering on the back buffer here
     //This is the primary bottleneck
-    unsigned stride = sizeof(Vertex);
-    unsigned offset = 0;
-    DeviceContext->IASetVertexBuffers(0, VertexBuffers.size(), VertexBuffers.data(), &stride, &offset);
+    unsigned stride[2] = { sizeof(Vertex), sizeof(Vertex) };
+    unsigned offset[2] = { 0, 0 };
+    DeviceContext->IASetVertexBuffers(0, VertexBuffers.size(), VertexBuffers.data(), stride, offset);
     DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     
 
-    DeviceContext->Draw(3, 0);
+    //DeviceContext->Draw(3, 0);
+    
+    //DeviceContext->IASetVertexBuffers(0, 1, &VertexBuffers[1], stride, offset);
+    //DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    // Set the buffer.
+    //DeviceContext->IASetIndexBuffer(g_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+    DeviceContext->DrawIndexed(6, 0, 0);
+
+    WorldViewProj.WorldViewProjection = GraphicsComponents[1]->Owner->Transform->GetWorldMatrix() * MainCamera->ViewProjectionMatrix();
+    //MainCamera->ViewMatrix() * MainCamera->ProjectionMatrix();
+    WorldViewProj.WorldViewProjection.Transpose();
+    DeviceContext->UpdateSubresource(VSConstantBuffer, 0, 0, &WorldViewProj, 0, 0);
+    DeviceContext->DrawIndexed(6, 0, 0);
+    //DeviceContext->DrawIndexedInstanced(3, 2, 0, 0, 0);
     //DeviceContext->Draw(3, 3);
     /*HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     MatrixBufferType* dataPtr;
     
     unsigned int bufferNumber;*/
+
     
-
-    //DeviceContext->Map(MatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-    //// Get a pointer to the data in the constant buffer.
-    //dataPtr = (MatrixBufferType*)mappedResource.pData;
-
-    ////// Copy the matrices into the constant buffer.
-    //dataPtr->world = XMMatrixIdentity();
-
-    //dataPtr->view = XMMATRIX(MainCamera->ViewMatrix().array);
-    //dataPtr->projection = XMMATRIX(MainCamera->ProjectionMatrix().array);
-
-    ////// Unlock the constant buffer.
-    //DeviceContext->Unmap(MatrixBuffer, 0);
 
     ////// Set the position of the constant buffer in the vertex shader.
     //bufferNumber = 0;
@@ -689,9 +714,8 @@ void GraphicsSystem::Destroy()
     ReleaseCOM(DeviceContext);
     ReleaseCOM(DeviceInterface);
     ReleaseCOM(SwapChain);
-    ReleaseCOM(MatrixBuffer);
     ReleaseCOM(InputLayout);
-
+    ReleaseCOM(IndexBuffer);
     ReleaseCOM(VSConstantBuffer);
     ReleaseCOM(PSConstantBuffer);
     VertexBuffers.clear();

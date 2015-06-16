@@ -64,7 +64,7 @@ Level =
     {
         Transform = 
         {
-            Real3 Translation = [2,0,7];
+            Real3 Translation = [2,0,6];
             Real3 Rotation = [0,0,0];
             Real3 Scale = [1,1,1];
         },

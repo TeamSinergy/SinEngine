@@ -127,7 +127,8 @@ private:
     Array<DXBuffer*> VertexBuffers; //For all the stored vertices.
     DXBuffer* VSConstantBuffer; //For all the user-defined variables in the VertexShader.
     DXBuffer* PSConstantBuffer; //For all the user-defined variables in the PixelShader.
-    DXBuffer* MatrixBuffer; //No idea yet
+
+    DXBuffer* IndexBuffer;
 
     DXInputLayout* InputLayout; //This holds the layout of our Vertex struct.
 

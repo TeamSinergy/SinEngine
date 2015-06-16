@@ -57,6 +57,7 @@ private:
 
 };
 
+
 extern ZilchCompiledLib* ZILCH;
 
 //ZilchDefines so we don't need to redo ALL the binding

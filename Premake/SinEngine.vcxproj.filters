@@ -57,6 +57,9 @@
     <None Include="..\Assets\ZilchScripts\ScriptTest.z">
       <Filter>Assets\ZilchScripts</Filter>
     </None>
+    <None Include="..\Assets\ZilchScripts\Utility.z">
+      <Filter>Assets\ZilchScripts</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Build\Console\SinSole.h">

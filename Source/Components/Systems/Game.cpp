@@ -41,6 +41,7 @@ void Game::Update()
             // translate keystroke messages into the right format
             switch (msg.message)
             {
+                //DISPATCH EVENT ON LOSE FOCUS, ELSE INPUT STICKS
                 case WM_KEYDOWN:
                 {
                     keyboardEventData->Key = msg.wParam;

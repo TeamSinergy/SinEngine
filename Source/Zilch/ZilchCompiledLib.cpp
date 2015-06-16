@@ -24,7 +24,7 @@ void ZilchCompiledLib::Create()
 
     // We can also setup the console so that any 'Read' functions will attempt to read from stdin
     Zilch::EventConnect(&Console::Events, Events::ConsoleRead, DefaultReadText);
-
+    
     // This class encompasses all compilation errors that can occur when compiling Zilch code
     // Its responsibility is to provide friendly error messages, error codes, and callbacks to the user
     //CompilationErrors errors; //this is a public member of Zilch system
@@ -32,6 +32,8 @@ void ZilchCompiledLib::Create()
     // Here, we can register our own callback for when compilation errors occur
     // The default callback prints the file, line/character number, and message to stderr
     Zilch::EventConnect(&CompiledProject, Events::CompilationError, Zilch::DefaultErrorCallback);
+    Zilch::EventConnect(&CompiledProject, Events::UnhandledException, Zilch::DefaultExceptionCallback);
+    Zilch::EventConnect(&CompiledProject, Events::MemoryLeak, Zilch::DefaultErrorCallback);
 
     
 }
@@ -63,6 +65,8 @@ void ZilchCompiledLib::Initialize()
     GameObject::EmptyEventData = new EventData();
     /////////////////////////////////////////////////////////////////
     std::cout << "Zilch Initialized" << std::endl;
+
+    
 }
 void ZilchCompiledLib::Uninitialize()
 {
@@ -155,5 +159,17 @@ std::string ZStringToStdString(const String& input)
 ZilchDefineRedirectType(std::string, StdStringToZString, ZStringToStdString);
 //ZilchDefineImplicitRedirectType(std::string);
 
+//enum Butts
+//{
+//    a,
+//};
 //
+//ZilchDeclareExternalBaseType(Butts, TypeCopyMode::ValueType);
+//
+//ZilchDefineExternalType(Core, Butts, "Butts", builder, type)
+//{
+//    ZilchBindEnum(builder, type, SpecialType::Enumeration);
+//    ZilchBindEnumValue(builder, type, Butts::a, "A");
+//
+//}
 

@@ -204,6 +204,7 @@ void GameObject::Destroy()
     UpdateAllChildren(LastState);
     UpdateAllComponents(LastState);
     
+    
 }
 
 ObjectState GameObject::GetStateFromString(const String& stateName)
@@ -272,10 +273,6 @@ void GameObject::UpdateAllChildren(ObjectState stateToCall)
             CallFunctionOnObject(Children[i], functionName);
         }
     }
-    if (stateToCall == ObjectState::Destroy)
-    {
-        Children.clear();
-    }
 }
 
 void GameObject::UpdateAllComponents(ObjectState stateToCall)
@@ -291,10 +288,6 @@ void GameObject::UpdateAllComponents(ObjectState stateToCall)
             CallFunctionOnObject(Components[i], functionName);
         }
     }
-    if (stateToCall == ObjectState::Destroy)
-    {
-        Components.clear();
-    }
 }
 
 void GameObject::AddComponent(const Handle& comp)
@@ -309,4 +302,19 @@ void GameObject::Disconnect(const Handle& sender, const Handle& reciever, const 
     EventHandler* ThisPointer = (EventHandler*)thisPointer.Dereference();
 
     EventDisconnect(Sender, Reciever, EventName, ThisPointer);
+}
+
+GameObject::~GameObject()
+{
+    for (unsigned i = 0; i < Children.size(); ++i)
+    {
+        Children[i].Delete();
+    }
+    Children.clear();
+
+    for (unsigned i = 0; i < Components.size(); ++i)
+    {
+        Components[i].Delete();
+    }
+    Components.clear();
 }

@@ -65,6 +65,8 @@ public:
 
     void Disconnect(const Handle& sender, const Handle& reciever, const String& EventName, const Handle& thisPointer);
 
+    virtual ~GameObject();
+
     static Array<Type*>* SerializeFunction;
     static Array<Type*>* Default;
     static EventData* EmptyEventData;

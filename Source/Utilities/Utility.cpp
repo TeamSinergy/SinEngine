@@ -334,3 +334,4 @@ void Zilch::CallFunctionOnObject(Handle object, const String& functionName)
         call.Invoke(ZILCH->Report);
     }
 }
+

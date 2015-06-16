@@ -7,8 +7,6 @@ class CompTest : ZilchComponent
     function Initialize()
     {
         Console.WriteLine(this.Owner.Name);
-        this.Owner.AddComponent(new Faggot());
-        Trace(this.Owner.Faggot);
         Events.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
         //debug break;
     }
@@ -28,6 +26,16 @@ class CompTest : ZilchComponent
             
             this.Owner.Transform.Translation = this.Owner.Transform.Translation +  Real3(0,0,20) * event.Dt;
         }
+        if(InputManager.IsKeyDown(Keys.Q))
+        {
+            
+            this.Owner.Transform.Translation = this.Owner.Transform.Translation + Real3(-20,0,0) * event.Dt;
+        }
+        if(InputManager.IsKeyDown(Keys.E))
+        {
+            
+            this.Owner.Transform.Translation = this.Owner.Transform.Translation +  Real3(20,0,0) * event.Dt;
+        }
         if(InputManager.IsKeyDown(Keys.A))
         {
             
@@ -43,26 +51,7 @@ class CompTest : ZilchComponent
     function Destroy()
     {
         //Must disconnect or else error?
-        Events.Disconnect(this.Space, this.Owner, Events.LogicUpdate, this);
-    }
-    
-    function SayHi()
-    {
-        Console.WriteLine("Gives Error");
-        Console.WriteLine(2);
-    }
-}
-
-class Faggot : ZilchComponent
-{
-    var Hello:String = "Srsly, u are";
-    constructor() : base()
-    {
-    }
-    
-    function Initialize()
-    {
-        Console.WriteLine("Ure a faget");
+        //Events.Disconnect(this.Space, this.Owner, Events.LogicUpdate, this);
     }
     
     function SayHi()
