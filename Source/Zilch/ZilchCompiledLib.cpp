@@ -35,6 +35,7 @@ void ZilchCompiledLib::Create()
     Zilch::EventConnect(&CompiledProject, Events::UnhandledException, Zilch::DefaultExceptionCallback);
     Zilch::EventConnect(&CompiledProject, Events::MemoryLeak, Zilch::DefaultErrorCallback);
 
+    //ExecState->MaxRecursionDepth = 2000;
     
 }
 void ZilchCompiledLib::Initialize() 

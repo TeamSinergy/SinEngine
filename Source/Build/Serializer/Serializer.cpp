@@ -136,7 +136,7 @@ void Serializer::ToValueFromString(const String& input, int& store, unsigned lin
     {
         for (unsigned i = 0; i < input.size(); ++i)
         {
-            if ((input[i] < '0' || input[i] > '9') && input[i] != '.')
+            if ((input[i] < '0' || input[i] > '9') && !(input[i] == '.' || input[i] == '-'))
             {
                 Error("Integer value on line %i must not contain any characters.", line + 1);
             }

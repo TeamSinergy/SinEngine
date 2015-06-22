@@ -308,7 +308,12 @@ void DataProperty::SetName(const String& name)
     
 }
 
-const BoundType* DataProperty::GetType()
+const BoundType* DataProperty::GetType() const
+{
+    return Value.Type;
+}
+
+BoundType* DataProperty::GetType()
 {
     return Value.Type;
 }

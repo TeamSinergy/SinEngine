@@ -47,7 +47,8 @@ public:
     const String& GetName();
     void SetName(const String& Name);
     
-    const BoundType* GetType();
+    const BoundType* GetType() const;
+    BoundType* GetType();
     void SetType(BoundType* Type);
 
     void PrintData();

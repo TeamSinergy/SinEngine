@@ -45,6 +45,7 @@ Level =
         },
         CompTest = 
         {
+            Integer3 SerializedValue = [10, 15, -200];
         },
     },
     TestTriangle = 

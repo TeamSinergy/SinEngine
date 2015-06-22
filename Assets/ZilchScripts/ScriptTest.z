@@ -1,11 +1,16 @@
 class CompTest : ZilchComponent
 {
+    var SerializedValue:Integer3 = Integer3();
+    
     constructor() : base()
     {
     }
     
     function Initialize()
     {
+        Trace("This value is loaded into Zilch:");
+        Trace(this.SerializedValue);
+        Trace("This is the name of my Owner:");
         Console.WriteLine(this.Owner.Name);
         Events.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
         //debug break;
