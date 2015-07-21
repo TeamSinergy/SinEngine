@@ -23,8 +23,8 @@ void VectorGraphic::Serialize(DataNode* node)
 }
 void VectorGraphic::Create()
 {
-    Dependancy(Space->GraphicsSystem);
-    graphics = Space->GraphicsSystem;
+    Dependancy(GameSession->GraphicsSystem);
+    graphics = GameSession->GraphicsSystem;
 
     // create the vertex buffer
     D3D11_BUFFER_DESC bd;

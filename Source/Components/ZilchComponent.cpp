@@ -25,20 +25,25 @@ void ZilchComponent::Serialize(DataNode* node)
         {
             DataProperty* valueData = data->FindProperty(field->Name);
             const BoundType* valueType = valueData->GetType();
-            ErrorIf(valueType->ToString() != field->PropertyType->ToString(), "The property %s on the component %s has conlicting types.", field->Name.c_str(), Name.c_str());
+            ErrorIf(valueType->ToString() != field->PropertyType->ToString(), "The property %s on the component %s has conflicting types.", field->Name.c_str(), Name.c_str());
             fields.popFront();
             Call call(field->Set, ZILCH->GetDependencies());
             call.SetHandle(Zilch::Call::This, handle);
+            const BoundType*& type = valueType;
             if (valueData->GetType()->CopyMode == TypeCopyMode::ReferenceType)
-            {
-                call.Set(0, valueData->GetHandle()); //This may change the file directly
+            {   
+                if (type == ZilchTypeId(String))
+                {
+                    String copy = **(String**)valueData->GetHandle().Dereference();
+                    call.SetHandle(0, copy);
+                }
             }
             else //It is a value type
             {
-                const BoundType*& type = valueType;
+                
                 if (type == ZilchTypeId(Integer))
                 {
-                    call.Set(0, (Integer)valueData->GetHandle().Data);
+                    call.Set(0, *(Integer*)valueData->GetHandle().Data);
                 }
                 else if (type == ZilchTypeId(Boolean))
                 {

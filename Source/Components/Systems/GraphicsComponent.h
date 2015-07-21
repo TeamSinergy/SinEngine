@@ -22,7 +22,9 @@ class GraphicsComponent : public Component
     GraphicsSystem* graphics;
 
     Array<Vertex> Vertices;
+    Array<Unsigned3> Indices;
     DXBuffer* VertexBuffer;
+    DXBuffer* IndexBuffer;
     
 
     VertexShader* vertexShader = nullptr;    // the vertex shader

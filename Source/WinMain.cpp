@@ -25,8 +25,7 @@ int OnExit(void)
 int main(void)
 {
     //EngineInstance program = GetModuleHandle(0);
-
-    onexit(OnExit); //Not really needed
+    onexit(OnExit);
     SinSole::CreateConsole("SinSole");
     std::cout << "---- SinSole Initialized ----" << std::endl;
 

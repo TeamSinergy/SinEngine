@@ -70,102 +70,108 @@ void DataProperty::LoadProperty(String* data)
 void DataProperty::ParseValue(String& valueString, BoundType* type)
 {
     //Most common types first. Wish I could of used a Switch :(
-    if (type == ZilchTypeId(String))
+    if (type->CopyMode == TypeCopyMode::ReferenceType)
     {
-        if (valueString[0] != '\"' || valueString.back() != '\"')
+        if (type == ZilchTypeId(String))
         {
-            Error("String on line %i must start and end with |\"\"|.\n\tExample: |\"\"Hello World\"\"|", Index + 1);
+            if (valueString[0] != '\"' || valueString.back() != '\"')
+            {
+                Error("String on line %i must start and end with |\"\"|.\n\tExample: |\"\"Hello World\"\"|", Index + 1);
+            }
+            *(String**)Value.Data = new String(valueString.sub_string(1, valueString.size() - DataSyntax::GroupEnd.size() - 1));
+            MemCheck(*(String**)Value.Data, "String in Propery.cpp");
+            //SinWriteLine(**(String**)Value.Data);
         }
-        *(String**)Value.Data = new String(valueString.sub_string(1, valueString.size() - DataSyntax::GroupEnd.size() - 1));
-        
-        MemCheck(*(String**)Value.Data, "String in Propery.cpp");
-        //SinWriteLine(**(String**)Value.Data);
     }
-    else if (type == ZilchTypeId(Integer))
+    else //It is a value type, and requires no allocation.
     {
-        Serializer::ToValueFromString(valueString, *(int*)Value.Data, Index);
-        //SinWriteLine(*(int*)Value.Data);
+        if (type == ZilchTypeId(Integer))
+        {
+            Serializer::ToValueFromString(valueString, *(int*)Value.Data, Index);
+            //SinWriteLine(*(int*)Value.Data);
+        }
+        else if (type == ZilchTypeId(Boolean))
+        {
+            Serializer::ToValueFromString(valueString, *(bool*)Value.Data, Index);
+            //SinWriteLine(*(bool*)Value.Data);
+        }
+        else if (type == ZilchTypeId(Real))
+        {
+            Serializer::ToValueFromString(valueString, *(float*)Value.Data, Index);
+            //SinWriteLine(*(float*)Value.Data);
+        }
+        else if (type == ZilchTypeId(Integer2))
+        {
+            Array<int> store = Array<int>(2);
+            FillArray<int>(store, valueString, Index, "Integer2");
+            *(Integer2*)Value.Data = Integer2(store[0], store[1]);
+            //SinWriteLine(*(Integer2*)Value.Data);
+        }
+        else if (type == ZilchTypeId(Integer3))
+        {
+            Array<int> store = Array<int>(3);
+            FillArray<int>(store, valueString, Index, "Integer3");
+            *(Integer3*)Value.Data = Integer3(store[0], store[1], store[2]);
+            //SinWriteLine(*(Integer3*)Value.Data);
+        }
+        else if (type == ZilchTypeId(Integer4))
+        {
+            Array<int> store = Array<int>(4);
+            FillArray<int>(store, valueString, Index, "Integer4");
+            *(Integer4*)Value.Data = Integer4(store[0], store[1], store[2], store[3]);
+            //SinWriteLine(*(Integer4*)Value.Data);
+        }
+        else if (type == ZilchTypeId(Boolean2))
+        {
+            Array<bool> store = Array<bool>(2);
+            FillArray<bool>(store, valueString, Index, "Boolean2");
+            *(Boolean2*)Value.Data = Boolean2(store[0], store[1]);
+            //SinWriteLine(*(Boolean2*)Value.Data);
+        }
+        else if (type == ZilchTypeId(Boolean3))
+        {
+            Array<bool> store = Array<bool>(3);
+            FillArray<bool>(store, valueString, Index, "Boolean3");
+            *(Boolean3*)Value.Data = Boolean3(store[0], store[1], store[2]);
+            //SinWriteLine(*(Boolean3*)Value.Data);
+        }
+        else if (type == ZilchTypeId(Boolean4))
+        {
+            Array<bool> store = Array<bool>(4);
+            FillArray<bool>(store, valueString, Index, "Boolean4");
+            *(Boolean4*)Value.Data = Boolean4(store[0], store[1], store[2], store[3]);
+            //SinWriteLine(*(Boolean4*)Value.Data);
+        }
+        else if (type == ZilchTypeId(Real2))
+        {
+            Array<float> store = Array<float>(2);
+            FillArray<float>(store, valueString, Index, "Real2");
+            *(Real2*)Value.Data = Real2(store[0], store[1]);
+            //SinWriteLine(*(Real2*)Value.Data);
+        }
+        else if (type == ZilchTypeId(Real3))
+        {
+            Array<float> store = Array<float>(3);
+            FillArray<float>(store, valueString, Index, "Real3");
+            *(Real3*)Value.Data = Real3(store[0], store[1], store[2]);
+            //SinWriteLine(*(Real3*)Value.Data);
+        }
+        else if (type == ZilchTypeId(Real4))
+        {
+            Array<float> store = Array<float>(4);
+            FillArray<float>(store, valueString, Index, "Real4");
+            *(Real4*)Value.Data = Real4(store[0], store[1], store[2], store[3]);
+            //SinWriteLine(*(Real4*)Value.Data);
+        }
+        else if (type == ZilchTypeId(Quaternion))
+        {
+            Array<float> store = Array<float>(4);
+            FillArray<float>(store, valueString, Index, "Quaternion");
+            *(Quaternion*)Value.Data = Quaternion(store[0], store[1], store[2], store[3]);
+            //SinWriteLine(*(Quaternion*)Value.Data);
+        }
     }
-    else if (type == ZilchTypeId(Boolean))
-    {
-        Serializer::ToValueFromString(valueString, *(bool*)Value.Data, Index);
-        //SinWriteLine(*(bool*)Value.Data);
-    }
-    else if (type == ZilchTypeId(Real))
-    {
-        Serializer::ToValueFromString(valueString, *(float*)Value.Data, Index);
-        //SinWriteLine(*(float*)Value.Data);
-    }
-    else if (type == ZilchTypeId(Integer2))
-    {
-        Array<int> store = Array<int>(2);
-        FillArray<int>(store, valueString, Index, "Integer2");
-        *(Integer2*)Value.Data = Integer2(store[0], store[1]);
-        //SinWriteLine(*(Integer2*)Value.Data);
-    }
-    else if (type == ZilchTypeId(Integer3))
-    {
-        Array<int> store = Array<int>(3);
-        FillArray<int>(store, valueString, Index, "Integer3");
-        *(Integer3*)Value.Data = Integer3(store[0], store[1], store[2]);
-        //SinWriteLine(*(Integer3*)Value.Data);
-    }
-    else if (type == ZilchTypeId(Integer4))
-    {
-        Array<int> store = Array<int>(4);
-        FillArray<int>(store, valueString, Index, "Integer4");
-        *(Integer4*)Value.Data = Integer4(store[0], store[1], store[2], store[3]);
-        //SinWriteLine(*(Integer4*)Value.Data);
-    }
-    else if (type == ZilchTypeId(Boolean2))
-    {
-        Array<bool> store = Array<bool>(2);
-        FillArray<bool>(store, valueString, Index, "Boolean2");
-        *(Boolean2*)Value.Data = Boolean2(store[0], store[1]);
-        //SinWriteLine(*(Boolean2*)Value.Data);
-    }
-    else if (type == ZilchTypeId(Boolean3))
-    {
-        Array<bool> store = Array<bool>(3);
-        FillArray<bool>(store, valueString, Index, "Boolean3");
-        *(Boolean3*)Value.Data = Boolean3(store[0], store[1], store[2]);
-        //SinWriteLine(*(Boolean3*)Value.Data);
-    }
-    else if (type == ZilchTypeId(Boolean4))
-    {
-        Array<bool> store = Array<bool>(4);
-        FillArray<bool>(store, valueString, Index, "Boolean4");
-        *(Boolean4*)Value.Data = Boolean4(store[0], store[1], store[2], store[3]);
-        //SinWriteLine(*(Boolean4*)Value.Data);
-    }
-    else if (type == ZilchTypeId(Real2))
-    {
-        Array<float> store = Array<float>(2);
-        FillArray<float>(store, valueString, Index, "Real2");
-        *(Real2*)Value.Data = Real2(store[0], store[1]);
-        //SinWriteLine(*(Real2*)Value.Data);
-    }
-    else if (type == ZilchTypeId(Real3))
-    {
-        Array<float> store = Array<float>(3);
-        FillArray<float>(store, valueString, Index, "Real3");
-        *(Real3*)Value.Data = Real3(store[0], store[1], store[2]);
-        //SinWriteLine(*(Real3*)Value.Data);
-    }
-    else if (type == ZilchTypeId(Real4))
-    {
-        Array<float> store = Array<float>(4);
-        FillArray<float>(store, valueString, Index, "Real4");
-        *(Real4*)Value.Data = Real4(store[0], store[1], store[2], store[3]);
-        //SinWriteLine(*(Real4*)Value.Data);
-    }
-    else if (type == ZilchTypeId(Quaternion))
-    {
-        Array<float> store = Array<float>(4);
-        FillArray<float>(store, valueString, Index, "Quaternion");
-        *(Quaternion*)Value.Data = Quaternion(store[0], store[1], store[2], store[3]);
-        //SinWriteLine(*(Quaternion*)Value.Data);
-    }
+    
 }
 
 String DataProperty::GetValueString()
@@ -319,14 +325,24 @@ BoundType* DataProperty::GetType()
 }
 void DataProperty::SetType(BoundType* type)
 {
+    DeleteValue();
+    *FileData = FileData->Replace(TypeString, type->ToString());
+    Value.Type = type;
+    ParseValue(ValueString, Value.Type);
+}
+
+void DataProperty::DeleteValue()
+{
+    if (Value.Type->CopyMode != TypeCopyMode::ReferenceType)
+    {
+        return; //No need for deallocation
+    }
+
     if (Value.Type == ZilchTypeId(String))
     {
         delete *(String**)Value.Data;
         *(String**)Value.Data = nullptr;
     }
-    *FileData = FileData->Replace(TypeString, type->ToString());
-    Value.Type = type;
-    ParseValue(ValueString, Value.Type);
 }
 
 void DataProperty::PrintData()

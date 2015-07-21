@@ -1,6 +1,7 @@
 class CompTest : ZilchComponent
 {
     var SerializedValue:Integer3 = Integer3();
+    var Name:String = "HelloWorld";
     
     constructor() : base()
     {
@@ -13,6 +14,9 @@ class CompTest : ZilchComponent
         Trace("This is the name of my Owner:");
         Console.WriteLine(this.Owner.Name);
         Events.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+        
+        Trace(this.Name);
+        this.Name = "Freddie";
         //debug break;
     }
     sends LogicUpdate:UpdateEvent;

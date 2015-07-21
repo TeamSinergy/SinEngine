@@ -4,8 +4,11 @@
 #include "Game.h"
 #include "DataComponent.h"
 
+//#define MacroTest(x) ##x
+
 DefineType(GameObject, SinningZilch)
 {
+    
     BindComponent(GameObject);
     BindMethod(FindComponentByName);
     BindVirtualConstructor(const String&);
@@ -23,6 +26,8 @@ DefineType(GameObject, SinningZilch)
     BindMethod(Disconnect);
 }
 
+
+
 Array<Type*>* GameObject::SerializeFunction = nullptr;
 Array<Type*>* GameObject::Default = nullptr;
 EventData* GameObject::EmptyEventData = nullptr;
@@ -33,6 +38,8 @@ void GameObject::Serialize(DataNode* node)
     DataObject* objectData = static_cast<DataObject*>(node);
     const Array<DataComponent*>& ComponentsData = objectData->AllComponents();
     Name = objectData->GetName();
+
+    //auto a = MacroTest(objectData);
 
     Handle currentComp;
     for (unsigned i = 0; i < ComponentsData.size(); ++i)

@@ -5,7 +5,7 @@
 #include "TimeSystem.h"
 #include "Camera.h"
 #include "Transform.h"
-
+#include "GraphicsManager.h"
 
 class Game;
 class Space;
@@ -34,8 +34,9 @@ public:
     void Create() override;
     void Initialize() override;
 
-    ComponentPointer(WindowSystem);
     ComponentPointer(GraphicsSystem);
+    ComponentPointer(WindowSystem);
+    ComponentPointer(GraphicsManager);
     ComponentPointer(TimeSystem);
     ComponentPointer(DefaultGameSetup);
     ComponentPointer(Camera);

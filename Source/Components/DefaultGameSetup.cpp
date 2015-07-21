@@ -22,15 +22,15 @@ void DefaultGameSetup::Serialize(DataNode* node)
 void DefaultGameSetup::Create()
 {
     
+   
+}
+void DefaultGameSetup::Initialize()
+{
     DataObject* spaceArchetype = ResourceManager::FindArchetype(SpaceArchetype);
     ErrorIf(spaceArchetype == nullptr, "Failed to find a space archetype with name %s.", SpaceArchetype.c_str());
     DataLevel* level = ResourceManager::FindLevel(LevelName);
     ErrorIf(level == nullptr, "Failed to find a level with name %s.", LevelName.c_str());
     GameSession->LoadSpace(spaceArchetype, level);
-}
-void DefaultGameSetup::Initialize()
-{
-
 }
 void DefaultGameSetup::Uninitialize()
 {

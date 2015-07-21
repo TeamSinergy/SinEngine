@@ -37,7 +37,7 @@ void Camera::Create()
 {
     Dependancy(Owner->Transform);
     transform = Owner->Transform;
-    Space->GraphicsSystem->MainCamera = this;
+    GameSession->GraphicsSystem->MainCamera = this;
 }
 void Camera::Initialize()
 {

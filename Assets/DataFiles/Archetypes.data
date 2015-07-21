@@ -2,18 +2,6 @@ Archetypes =
 {
     Space = 
     {
-        GraphicsSystem = 
-        {
-            //DirectX
-            Real4 ClearColor = [0, 126, 130, 1.0];
-            Integer SampleRate = 8;
-            Integer QualityLevel = 4;
-            Boolean DebugMode = true;
-            Integer FieldOfView = 90;
-            Real NearPlane = 0.1;
-            Real FarPlane = 1000;
-            Boolean AntiAliasedLines = true;
-        },
         TimeSystem = 
         {
             Integer MinimumFPS = 30;
@@ -46,6 +34,7 @@ Level =
         CompTest = 
         {
             Integer3 SerializedValue = [10, 15, -200];
+            String Name = "Bob";
         },
     },
     TestTriangle = 

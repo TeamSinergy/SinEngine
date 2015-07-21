@@ -11,6 +11,17 @@ struct Unsigned2
     bool operator==(const Unsigned2& rhs) { return (x == rhs.x && y == rhs.y); }
     bool operator!=(const Unsigned2& rhs) { return (x != rhs.x || y != rhs.y); }
 };
+struct Unsigned3
+{
+    Unsigned3() : x(0), y(0), z(0){}
+    Unsigned3(size_t X, size_t Y, size_t Z) : x(X), y(Y), z(Z){}
+    size_t x;
+    size_t y;
+    size_t z;
+
+    bool operator==(const Unsigned3& rhs) { return (x == rhs.x && y == rhs.y && z == rhs.z); }
+    bool operator!=(const Unsigned3& rhs) { return (x != rhs.x || y != rhs.y || z != rhs.z); }
+};
 
 template < typename DataType >
 class ArrayRange

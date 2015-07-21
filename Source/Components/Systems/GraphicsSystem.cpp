@@ -583,7 +583,7 @@ void GraphicsSystem::DrawDebugTriangle()
     // copy the vertices into the buffer
     D3D11_MAPPED_SUBRESOURCE ms;
     DeviceContext->Map(buffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);    // map the buffer
-    memcpy(ms.pData, OurVertices, sizeof(OurVertices));                            // copy the data
+    memcpy(ms.pData, OurVertices, sizeof(OurVertices));                      // copy the data
     DeviceContext->Unmap(buffer, NULL);                                      // unmap the buffer
 
     
@@ -680,7 +680,7 @@ void GraphicsSystem::RenderFrame(UpdateEvent* event)
         SwapChain->Present(0, 0);
     }
 
-    EventSend(Space, Events::FrameUpdate, event);
+    EventSend((EventHandler*)GameSession->Children[0].Dereference(), Events::FrameUpdate, event);
 }
 void GraphicsSystem::Uninitialize()
 {
@@ -701,11 +701,11 @@ void GraphicsSystem::Destroy()
         DeviceInterface->Release();
         DeviceContext->Release();*/
 
-        // Before shutting down set to windowed mode or when you release the swap chain it will throw an exception.
-        if (SwapChain)
-        {
-            SwapChain->SetFullscreenState(false, NULL);
-        }
+    // Before shutting down set to windowed mode or when you release the swap chain it will throw an exception.
+    if (SwapChain)
+    {
+        SwapChain->SetFullscreenState(false, NULL);
+    }
     ReleaseCOM(RasterState);
     ReleaseCOM(DepthStencilView);
     ReleaseCOM(DepthStencilState);

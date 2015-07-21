@@ -17,6 +17,15 @@ SinEngine =
             Boolean Resizable = false;
             Boolean CursorVisible = true;
         },
+        GraphicsSystem = 
+        {
+            //DirectX
+            Real4 ClearColor = [0, 126, 130, 1.0];
+            Integer SampleRate = 8;
+            Integer QualityLevel = 4;
+            Boolean DebugMode = true;
+            Boolean AntiAliasedLines = true;
+        },
         DefaultGameSetup = 
         {
             String SpaceArchetype = "Space";

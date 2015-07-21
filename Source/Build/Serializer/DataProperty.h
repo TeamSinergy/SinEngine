@@ -94,6 +94,7 @@ public:
 
 private:
     void ParseValue(String& data, BoundType* type);
+    void DeleteValue();
 
     unsigned Index;
     DataComponent* const Parent;

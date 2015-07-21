@@ -12,7 +12,11 @@ Handle ZilchAllocate()
     return state->AllocateDefaultConstructedHeapObject(ZilchTypeId(T), ZILCH->Report, Zilch::HeapFlags::ReferenceCounted);
 }
 
-
+template <typename T>
+void SetCall(Call& call, const T& value)
+{
+    call.Set(0, *(Integer*)valueData->GetHandle().Data);
+}
 
 ///Game Component Creator Interface.
 ///Used to create components in data driven method in the ObjectSystem.

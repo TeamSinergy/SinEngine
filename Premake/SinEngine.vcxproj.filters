@@ -95,6 +95,9 @@
     <ClInclude Include="..\Source\Components\DefaultGameSetup.h">
       <Filter>Source\Components</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Components\ForwardRenderer.h">
+      <Filter>Source\Components</Filter>
+    </ClInclude>
     <ClInclude Include="..\Source\Components\Systems\Component.h">
       <Filter>Source\Components\Systems</Filter>
     </ClInclude>
@@ -197,6 +200,9 @@
       <Filter>Source\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Components\DefaultGameSetup.cpp">
+      <Filter>Source\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Components\ForwardRenderer.cpp">
       <Filter>Source\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Components\Systems\Component.cpp">
