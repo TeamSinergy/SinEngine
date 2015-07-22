@@ -50,43 +50,45 @@ struct VSBufferDefault
     Math::Matrix4 WorldViewProjection;
 };
 typedef D3D11_BUFFER_DESC DXBufferDescription;
+typedef D3D11_VIEWPORT DXViewport;
 
 class GraphicsSystem : public Component
 {
-    
+public:
+    static Array<DXViewport> AllViewports;
+
     ZilchDeclareDerivedType(GraphicsSystem, Component);
     void Serialize(DataNode* node) override; //DataLevel
     void Create() override;
     void Initialize() override;
     
-    //TO BE CHANGED
-    void SetRenderTargetView(DXTexture2D* target = nullptr);
-    //TO BE CHANGED
-    void SetWindowAsViewport(WindowSystem* window);
+    
+    void SetPrimaryRenderTargetView();
+    
+    //void SetWindowAsViewport(WindowSystem* window);
+    void OnLevelLoaded(EventData* event);
+    void UpdateCameraViewports();
 
-    void InitializePipeline();
-
-    void DrawDebugTriangle();
-
-
-    void RenderFrame(UpdateEvent* event);
     void Uninitialize() override;
     void Destroy() override;
 
-    void AddGraphicsComponent(GraphicsComponent* comp, const DXBufferDescription& bufferDesc);
-    void RemoveGraphicsComponent(GraphicsComponent* comp);
-    DXBuffer* CreateBuffer(const DXBufferDescription& desc);
-    void DestroyBuffer(DXBuffer* buffer);
+    
+    
 
     DXDeviceInterface* GetDevice() const { return DeviceInterface; }
     DXDeviceContext* GetDeviceContext() const { return DeviceContext; }
+    DXSwapChain* GetSwapChain() const { return SwapChain; }
+    DXRenderTargetView* GetPrimaryRenderTarget() const { return RenderTarget; }
+    bool IsVSyncEnabled() const { return VSync; }
+    Camera* GetMainCamera() const { return MainCamera; }
+    unsigned GetColorMode() const { return ColorMode; }
+    /*DXRenderTargetView* GetPrimaryRenderTarget() const { return RenderTarget; }*/
 
     Camera* MainCamera;
 private:
     WindowSystem* Window;
     //DIRECTX11
-    int ColorMode;
-    Real4 ClearColor;
+    int ColorMode = ColorMode::RGBa;
     int SampleRate;
     int QualityLevel;
     bool DebugMode;
@@ -108,10 +110,10 @@ private:
     void CreateRasterState();
     //SetRendertTarget
     //SetWindowAsViewport
-    void CalculateProjectionMatrix();
-    void CalculateWorldMatrix();
-    void CalculateOrthographicMatrix();
-    void CalculateViewMatrix();
+    ///*void CalculateProjectionMatrix();
+    //void CalculateWorldMatrix();
+    //void CalculateOrthographicMatrix();
+    //void CalculateViewMatrix();*/
     //void InitializePipeline();
     //DrawTriangle
     //RenderFrame
@@ -123,24 +125,13 @@ private:
 
     DXRenderTargetView* RenderTarget; //The Back-Buffer.
 
-    Array<GraphicsComponent*> GraphicsComponents; //For all the graphics components we are drawing. Maybe array of arrays?
-    Array<DXBuffer*> VertexBuffers; //For all the stored vertices.
-    DXBuffer* VSConstantBuffer; //For all the user-defined variables in the VertexShader.
-    DXBuffer* PSConstantBuffer; //For all the user-defined variables in the PixelShader.
-
-    DXBuffer* IndexBuffer;
-
-    DXInputLayout* InputLayout; //This holds the layout of our Vertex struct.
-
     DXTexture2D* DepthStencilBuffer;
     DXDepthStencilState* DepthStencilState;
     DXDepthStencilView* DepthStencilView;
     DXRasterizerState* RasterState;
     
     
-    //MAKE A HASHMAP
-    ID3D11VertexShader *pVS;    // the vertex shader
-    ID3D11PixelShader *pPS;     // the pixel shader
+    
 };
 
 #define ReleaseCOM(obj) if(obj != nullptr){obj->Release(); obj = nullptr;}

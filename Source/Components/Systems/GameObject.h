@@ -6,6 +6,8 @@
 #include "Camera.h"
 #include "Transform.h"
 #include "GraphicsManager.h"
+#include "ForwardRenderer.h"
+#include "CameraViewport.h"
 
 class Game;
 class Space;
@@ -34,6 +36,8 @@ public:
     void Create() override;
     void Initialize() override;
 
+    ComponentPointer(CameraViewport);
+    ComponentPointer(GraphicsSpace); //Where all the graphics objects are stored;
     ComponentPointer(GraphicsSystem);
     ComponentPointer(WindowSystem);
     ComponentPointer(GraphicsManager);
@@ -42,6 +46,7 @@ public:
     ComponentPointer(Camera);
     ComponentPointer(Transform);
     ComponentPointer(VectorGraphic);
+    ComponentPointer(ForwardRenderer);
 
     void Uninitialize() override;
     void Destroy() override;

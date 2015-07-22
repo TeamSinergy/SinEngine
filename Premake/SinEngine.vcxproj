@@ -115,8 +115,10 @@
     <ClInclude Include="..\Source\Build\Serializer\DataProperty.h" />
     <ClInclude Include="..\Source\Build\Serializer\Serializer.h" />
     <ClInclude Include="..\Source\Components\Camera.h" />
+    <ClInclude Include="..\Source\Components\CameraViewport.h" />
     <ClInclude Include="..\Source\Components\DefaultGameSetup.h" />
     <ClInclude Include="..\Source\Components\ForwardRenderer.h" />
+    <ClInclude Include="..\Source\Components\GraphicsSpace.h" />
     <ClInclude Include="..\Source\Components\Systems\Component.h" />
     <ClInclude Include="..\Source\Components\Systems\Game.h" />
     <ClInclude Include="..\Source\Components\Systems\GameObject.h" />
@@ -155,8 +157,10 @@
     <ClCompile Include="..\Source\Build\Serializer\DataProperty.cpp" />
     <ClCompile Include="..\Source\Build\Serializer\Serializer.cpp" />
     <ClCompile Include="..\Source\Components\Camera.cpp" />
+    <ClCompile Include="..\Source\Components\CameraViewport.cpp" />
     <ClCompile Include="..\Source\Components\DefaultGameSetup.cpp" />
     <ClCompile Include="..\Source\Components\ForwardRenderer.cpp" />
+    <ClCompile Include="..\Source\Components\GraphicsSpace.cpp" />
     <ClCompile Include="..\Source\Components\Systems\Component.cpp" />
     <ClCompile Include="..\Source\Components\Systems\Game.cpp" />
     <ClCompile Include="..\Source\Components\Systems\GameObject.cpp" />

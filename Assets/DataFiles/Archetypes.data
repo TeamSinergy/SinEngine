@@ -11,6 +11,9 @@ Archetypes =
             //How many LogicUpdates updates before a frame is rendered;
             Integer StepCount = 1;
         },
+        GraphicsSpace = 
+        {
+        },
     },
 },
 
@@ -35,6 +38,16 @@ Level =
         {
             Integer3 SerializedValue = [10, 15, -200];
             String Name = "Bob";
+        },
+        ForwardRenderer = 
+        {
+            Real4 ClearColor = [0, 126, 130, 1.0];
+        },
+        CameraViewport = 
+        {
+            Integer2 AspectRatio = [1920, 1080];
+            Integer ScalingMode = 0;
+            Real4 MarginColor = [1, 1, 1, 1];
         },
     },
     TestTriangle = 

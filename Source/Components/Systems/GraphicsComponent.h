@@ -19,7 +19,7 @@ class GraphicsComponent : public Component
 
     unsigned GetVertexCount() const { return Vertices.size(); }
 //protected:
-    GraphicsSystem* graphics;
+    GraphicsSpace* graphics;
 
     Array<Vertex> Vertices;
     Array<Unsigned3> Indices;

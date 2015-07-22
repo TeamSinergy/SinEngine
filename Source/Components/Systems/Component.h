@@ -3,7 +3,7 @@
 #include "SinEntity.h"
 
 #define Dependancy(comp) ErrorIf(comp == nullptr, "Component %s has a dependancy on Component %s.", Name.c_str(), String(#comp).Replace("Owner->", "").c_str())
-
+#define AssignDependancy(variable, compPath) Dependancy(compPath); variable = compPath;
 class Game;
 class Space;
 class GameObject;

@@ -92,10 +92,16 @@
     <ClInclude Include="..\Source\Components\Camera.h">
       <Filter>Source\Components</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Components\CameraViewport.h">
+      <Filter>Source\Components</Filter>
+    </ClInclude>
     <ClInclude Include="..\Source\Components\DefaultGameSetup.h">
       <Filter>Source\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Components\ForwardRenderer.h">
+      <Filter>Source\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Components\GraphicsSpace.h">
       <Filter>Source\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Components\Systems\Component.h">
@@ -199,10 +205,16 @@
     <ClCompile Include="..\Source\Components\Camera.cpp">
       <Filter>Source\Components</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Components\CameraViewport.cpp">
+      <Filter>Source\Components</Filter>
+    </ClCompile>
     <ClCompile Include="..\Source\Components\DefaultGameSetup.cpp">
       <Filter>Source\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Components\ForwardRenderer.cpp">
+      <Filter>Source\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Components\GraphicsSpace.cpp">
       <Filter>Source\Components</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Components\Systems\Component.cpp">

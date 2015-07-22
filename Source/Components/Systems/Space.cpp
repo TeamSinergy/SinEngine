@@ -45,6 +45,7 @@ void Space::LoadLevel(DataLevel* level)
     }
 
     EventSend(this, "LevelLoaded", GameObject::EmptyEventData);
+    EventSend(GameSession, "LevelLoaded", GameObject::EmptyEventData);
 }
 
 void Space::UninitializeSpace()

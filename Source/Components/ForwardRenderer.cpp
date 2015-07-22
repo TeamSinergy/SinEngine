@@ -1,42 +1,157 @@
 #include <Precompiled.h>
-//#include "DefaultGameSetup.h"
-//
-//DefineType(DefaultGameSetup, SinningZilch)
-//{
-//    RegisterComponent(DefaultGameSetup);
-//    BindConstructor();
-//    BindDestructor();
-//    BindMethod(Create);
-//    BindMethod(Initialize);
-//    BindMethod(Uninitialize);
-//    BindMethod(Destroy);
-//}
-//
-//void DefaultGameSetup::Serialize(DataNode* node)
-//{
-//    Owner->DefaultGameSetup = this;
-//    DataComponent* data = static_cast<DataComponent*>(node);
-//    SerializeValue(data, SpaceArchetype);
-//    SerializeValue(data, LevelName);
-//}
-//void DefaultGameSetup::Create()
-//{
-//    
-//   
-//}
-//void DefaultGameSetup::Initialize()
-//{
-//    DataObject* spaceArchetype = ResourceManager::FindArchetype(SpaceArchetype);
-//    ErrorIf(spaceArchetype == nullptr, "Failed to find a space archetype with name %s.", SpaceArchetype.c_str());
-//    DataLevel* level = ResourceManager::FindLevel(LevelName);
-//    ErrorIf(level == nullptr, "Failed to find a level with name %s.", LevelName.c_str());
-//    GameSession->LoadSpace(spaceArchetype, level);
-//}
-//void DefaultGameSetup::Uninitialize()
-//{
-//
-//}
-//void DefaultGameSetup::Destroy()
-//{
-//
-//}
+#include "ForwardRenderer.h"
+#include "GraphicsComponent.h"
+
+DefineType(ForwardRenderer, SinningZilch)
+{
+    BindComponent(ForwardRenderer);
+}
+
+void ForwardRenderer::Serialize(DataNode* node)
+{
+    Owner->ForwardRenderer = this;
+    DataComponent* data = static_cast<DataComponent*>(node);
+    AssignDependancy(Graphics, GameSession->GraphicsSystem);
+    AssignDependancy(GraphicsSpace, Space->GraphicsSpace);
+
+    SerializeValue(data, ClearColor);
+    GraphicsManager::NormalizeColor(ClearColor, Graphics->GetColorMode());
+    
+}
+void ForwardRenderer::Create()
+{
+    EventConnect(GameSession, Events::EngineUpdate, &ForwardRenderer::RenderSpace, this);
+    SetRenderTargetView();
+}
+void ForwardRenderer::Initialize()
+{
+    
+}
+
+void ForwardRenderer::SetRenderTargetView(DXTexture2D* target)
+{
+    HRESULT result;
+    if (target == nullptr) //Set the render target to the back buffer
+    {
+        RenderTarget = Graphics->GetPrimaryRenderTarget();
+        return;
+    }
+    DXDeviceInterface* DeviceInterface = Graphics->GetDevice();
+    DXDeviceContext* DeviceContext = Graphics->GetDeviceContext();
+    // use the buffer address to create the render target
+    result = DeviceInterface->CreateRenderTargetView(target, NULL, &RenderTarget);
+    ErrorIf(FAILED(result), "Failed to Initialize DirectX11");
+
+    // set the render target as the buffer
+    //Number of render targets
+    //Pointer to an array of render targets
+    target->Release();
+    // Initailze the depth stencil view.
+    // Bind the render target view and depth stencil buffer to the output render pipeline.
+
+    // set the render target as the back buffer
+    DeviceContext->OMSetRenderTargets(1, &RenderTarget, NULL);
+}
+
+void ForwardRenderer::RenderSpace(UpdateEvent* event)
+{
+    // clear the back buffer to the clearcolor
+    float color[4] = { ClearColor.x, ClearColor.y, ClearColor.z, ClearColor.w };
+    Graphics->GetDeviceContext()->ClearRenderTargetView(RenderTarget, color);
+
+    DXDeviceInterface* DeviceInterface = Graphics->GetDevice();
+    DXDeviceContext* DeviceContext = Graphics->GetDeviceContext();
+
+    VSBufferDefault WorldViewProj;
+
+    WorldViewProj.WorldViewProjection = GraphicsSpace->GraphicsComponents[0]->Owner->Transform->GetWorldMatrix() * Graphics->GetMainCamera()->ViewProjectionMatrix();
+    //MainCamera->ViewMatrix() * MainCamera->ProjectionMatrix();
+    WorldViewProj.WorldViewProjection.Transpose();
+
+    unsigned vertexCount = 0;
+    for (unsigned i = 0; i < GraphicsSpace->GraphicsComponents.size(); ++i)
+    {
+        vertexCount += GraphicsSpace->GraphicsComponents[i]->GetVertexCount();
+    }
+
+    // set the new values for the constant buffer
+    DeviceContext->UpdateSubresource(GraphicsSpace->VSConstantBuffer, 0, 0, &WorldViewProj, 0, 0);
+    //Prefer map/unmap ^
+
+
+
+
+    // Clear the depth buffer.
+    //DeviceContext->ClearDepthStencilView(DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+    // do 3D rendering on the back buffer here
+    //This is the primary bottleneck
+    unsigned stride[2] = { sizeof(Vertex), sizeof(Vertex) };
+    unsigned offset[2] = { 0, 0 };
+    DeviceContext->IASetVertexBuffers(0, GraphicsSpace->VertexBuffers.size(), GraphicsSpace->VertexBuffers.data(), stride, offset);
+    DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+
+    //DeviceContext->Draw(3, 0);
+
+    //DeviceContext->IASetVertexBuffers(0, 1, &VertexBuffers[1], stride, offset);
+    //DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    // Set the buffer.
+    //DeviceContext->IASetIndexBuffer(g_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+    DeviceContext->DrawIndexed(6, 0, 0);
+
+    WorldViewProj.WorldViewProjection = GraphicsSpace->GraphicsComponents[1]->Owner->Transform->GetWorldMatrix() * Graphics->GetMainCamera()->ViewProjectionMatrix();
+    //MainCamera->ViewMatrix() * MainCamera->ProjectionMatrix();
+    WorldViewProj.WorldViewProjection.Transpose();
+    DeviceContext->UpdateSubresource(GraphicsSpace->VSConstantBuffer, 0, 0, &WorldViewProj, 0, 0);
+    DeviceContext->DrawIndexed(6, 0, 0);
+    //DeviceContext->DrawIndexedInstanced(3, 2, 0, 0, 0);
+    //DeviceContext->Draw(3, 3);
+    /*HRESULT result;
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    MatrixBufferType* dataPtr;
+
+    unsigned int bufferNumber;*/
+
+
+
+    ////// Set the position of the constant buffer in the vertex shader.
+    //bufferNumber = 0;
+
+    ////// Finanly set the constant buffer in the vertex shader with the updated values.
+    //DeviceContext->VSSetConstantBuffers(bufferNumber, 1, &MatrixBuffer);
+
+    ////// Set the vertex input layout.
+    //DeviceContext->IASetInputLayout(InputLayout);
+
+
+    //// Set the vertex and pixel shaders that will be used to render this triangle.
+
+    //// Render the triangle.
+    //DeviceContext->DrawIndexed(3, 0, 0);
+
+
+    // Present the back buffer to the screen since rendering is complete.
+    if (Graphics->IsVSyncEnabled())
+    {
+        // Lock to screen refresh rate.
+        Graphics->GetSwapChain()->Present(1, 0);
+    }
+    else
+    {
+        // Present as fast as possible.
+        Graphics->GetSwapChain()->Present(0, 0);
+    }
+
+    EventSend(Space, Events::FrameUpdate, event);
+}
+
+void ForwardRenderer::Uninitialize()
+{
+
+}
+void ForwardRenderer::Destroy()
+{
+    EventDisconnect(GameSession, this, Events::EngineUpdate, this);
+}

@@ -46,5 +46,6 @@ namespace Zilch
         ZilchDefineEvent(RightMouseDown);
         ZilchDefineEvent(MiddleMouseUp);
         ZilchDefineEvent(MiddleMouseDown);
+        ZilchDefineEvent(LevelLoaded);
     };
 };
