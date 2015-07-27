@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Assets">
@@ -39,6 +39,9 @@
     </Filter>
     <Filter Include="Source\Utilities">
       <UniqueIdentifier>{41B3B086-2DAC-CFD8-56DE-B45D4236AFE4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Utilities\ActionSystem">
+      <UniqueIdentifier>{D311B255-3F2A-997F-08D7-281974AE2D19}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Zilch">
       <UniqueIdentifier>{1F1365F3-0B76-F497-B4FB-2C4EA03DC01A}</UniqueIdentifier>
@@ -158,6 +161,33 @@
     <ClInclude Include="..\Source\Core\SinEntity.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
+    <ClInclude Include="..\Source\Utilities\ActionSystem\ActionBase.h">
+      <Filter>Source\Utilities\ActionSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Utilities\ActionSystem\ActionCall.h">
+      <Filter>Source\Utilities\ActionSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Utilities\ActionSystem\ActionDelay.h">
+      <Filter>Source\Utilities\ActionSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Utilities\ActionSystem\ActionGroup.h">
+      <Filter>Source\Utilities\ActionSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Utilities\ActionSystem\ActionMath.h">
+      <Filter>Source\Utilities\ActionSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Utilities\ActionSystem\ActionProperty.h">
+      <Filter>Source\Utilities\ActionSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Utilities\ActionSystem\ActionSequence.h">
+      <Filter>Source\Utilities\ActionSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Utilities\ActionSystem\ActionSystem.h">
+      <Filter>Source\Utilities\ActionSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Utilities\ActionSystem\SampleCurve.h">
+      <Filter>Source\Utilities\ActionSystem</Filter>
+    </ClInclude>
     <ClInclude Include="..\Source\Utilities\ArrayRange.h">
       <Filter>Source\Utilities</Filter>
     </ClInclude>
@@ -270,6 +300,18 @@
     </ClCompile>
     <ClCompile Include="..\Source\Core\SinEntity.cpp">
       <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Utilities\ActionSystem\ActionCall.cpp">
+      <Filter>Source\Utilities\ActionSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Utilities\ActionSystem\ActionDelay.cpp">
+      <Filter>Source\Utilities\ActionSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Utilities\ActionSystem\ActionGroup.cpp">
+      <Filter>Source\Utilities\ActionSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Utilities\ActionSystem\ActionSequence.cpp">
+      <Filter>Source\Utilities\ActionSystem</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Utilities\ArrayRange.cpp">
       <Filter>Source\Utilities</Filter>

@@ -17,6 +17,8 @@ class ForwardRenderer : public Component
     void Uninitialize() override;
     void Destroy() override;
 
+    void CreateDepthBuffer();
+
     void SetRenderTargetView(DXTexture2D* target = nullptr);
 
     void RenderSpace(UpdateEvent* event);
@@ -27,6 +29,7 @@ private:
     const GraphicsSystem* Graphics;
     const GraphicsSpace* GraphicsSpace;
 
+    DXDepthStencilView* DepthBuffer;
     DXRenderTargetView* RenderTarget;
 };
 

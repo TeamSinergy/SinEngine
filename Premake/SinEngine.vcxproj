@@ -58,14 +58,14 @@
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\Systems;..\Source\Core\Managers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\GamePlay;..\Source\Components\Systems;..\Source\Core\Managers;..\Source\Utilities\ActionSystem;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <ProgramDataBaseFileName>$(OutDir)SinEngine.pdb</ProgramDataBaseFileName>
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\Systems;..\Source\Core\Managers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\GamePlay;..\Source\Components\Systems;..\Source\Core\Managers;..\Source\Utilities\ActionSystem;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -81,7 +81,7 @@
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\Systems;..\Source\Core\Managers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\GamePlay;..\Source\Components\Systems;..\Source\Core\Managers;..\Source\Utilities\ActionSystem;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ProgramDataBaseFileName>$(OutDir)SinEngine.pdb</ProgramDataBaseFileName>
       <Optimization>Full</Optimization>
@@ -92,7 +92,7 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\Systems;..\Source\Core\Managers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\GamePlay;..\Source\Components\Systems;..\Source\Core\Managers;..\Source\Utilities\ActionSystem;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -137,6 +137,15 @@
     <ClInclude Include="..\Source\Core\Managers\ResourceManager.h" />
     <ClInclude Include="..\Source\Core\Managers\SoundManager.h" />
     <ClInclude Include="..\Source\Core\SinEntity.h" />
+    <ClInclude Include="..\Source\Utilities\ActionSystem\ActionBase.h" />
+    <ClInclude Include="..\Source\Utilities\ActionSystem\ActionCall.h" />
+    <ClInclude Include="..\Source\Utilities\ActionSystem\ActionDelay.h" />
+    <ClInclude Include="..\Source\Utilities\ActionSystem\ActionGroup.h" />
+    <ClInclude Include="..\Source\Utilities\ActionSystem\ActionMath.h" />
+    <ClInclude Include="..\Source\Utilities\ActionSystem\ActionProperty.h" />
+    <ClInclude Include="..\Source\Utilities\ActionSystem\ActionSequence.h" />
+    <ClInclude Include="..\Source\Utilities\ActionSystem\ActionSystem.h" />
+    <ClInclude Include="..\Source\Utilities\ActionSystem\SampleCurve.h" />
     <ClInclude Include="..\Source\Utilities\ArrayRange.h" />
     <ClInclude Include="..\Source\Utilities\Events.h" />
     <ClInclude Include="..\Source\Utilities\GameClock.h" />
@@ -179,6 +188,10 @@
     <ClCompile Include="..\Source\Core\Managers\ResourceManager.cpp" />
     <ClCompile Include="..\Source\Core\Managers\SoundManager.cpp" />
     <ClCompile Include="..\Source\Core\SinEntity.cpp" />
+    <ClCompile Include="..\Source\Utilities\ActionSystem\ActionCall.cpp" />
+    <ClCompile Include="..\Source\Utilities\ActionSystem\ActionDelay.cpp" />
+    <ClCompile Include="..\Source\Utilities\ActionSystem\ActionGroup.cpp" />
+    <ClCompile Include="..\Source\Utilities\ActionSystem\ActionSequence.cpp" />
     <ClCompile Include="..\Source\Utilities\ArrayRange.cpp" />
     <ClCompile Include="..\Source\Utilities\Events.cpp" />
     <ClCompile Include="..\Source\Utilities\GameClock.cpp" />

@@ -36,8 +36,9 @@ void CameraViewport::Create()
     Viewport->TopLeftY = 0;
     Viewport->Width = static_cast<float>(Dimensions.x);
     Viewport->Height = static_cast<float>(Dimensions.y);
-    Viewport->MaxDepth = 1;
+    //How far away an object can be on the depth buffer.
     Viewport->MinDepth = 0;
+    Viewport->MaxDepth = 1;
 
     
 }

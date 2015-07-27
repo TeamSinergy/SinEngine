@@ -21,7 +21,11 @@ void ForwardRenderer::Serialize(DataNode* node)
 void ForwardRenderer::Create()
 {
     EventConnect(GameSession, Events::EngineUpdate, &ForwardRenderer::RenderSpace, this);
+    
     SetRenderTargetView();
+    //Needs to happen after
+    CreateDepthBuffer();
+    
 }
 void ForwardRenderer::Initialize()
 {
@@ -53,11 +57,63 @@ void ForwardRenderer::SetRenderTargetView(DXTexture2D* target)
     DeviceContext->OMSetRenderTargets(1, &RenderTarget, NULL);
 }
 
+void ForwardRenderer::CreateDepthBuffer()
+{
+    //Create the texture for the Depth Buffer
+    HRESULT result;
+    D3D11_TEXTURE2D_DESC depthBufferDesc;
+    DXTexture2D* DepthStencilBuffer;
+    //Depth buffer
+    // Initialize the description of the depth buffer.
+    ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
+
+    // Set up the description of the depth buffer.
+    depthBufferDesc.Width = GameSession->WindowSystem->GetDimensions().x;
+    depthBufferDesc.Height = GameSession->WindowSystem->GetDimensions().y;
+    depthBufferDesc.MipLevels = 1;
+    depthBufferDesc.ArraySize = 1;
+    depthBufferDesc.Format = DXGI_FORMAT_D32_FLOAT;
+    depthBufferDesc.SampleDesc.Count = Graphics->GetSampleRate();
+    depthBufferDesc.SampleDesc.Quality = Graphics->GetQualityLevel() - 1;
+    depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    /*depthBufferDesc.CPUAccessFlags = 0;
+    depthBufferDesc.MiscFlags = 0;*/
+
+    // Create the texture for the depth buffer using the filled out description.
+    result = Graphics->GetDevice()->CreateTexture2D(&depthBufferDesc, NULL, &DepthStencilBuffer);
+    ErrorIf(FAILED(result), "Failed to Initialize DirectX11");
+    
+    D3D11_DEPTH_STENCIL_VIEW_DESC zBuffer;
+    ZeroMemory(&zBuffer, sizeof(zBuffer));
+
+    // Set up the depth stencil view description.
+    zBuffer.Format = DXGI_FORMAT_D32_FLOAT;
+    if (depthBufferDesc.SampleDesc.Count > 1)
+    {
+        zBuffer.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
+    }
+    else
+    {
+        zBuffer.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    }
+    //zBuffer.Texture2D.MipSlice = 0;
+
+    // Create the depth stencil view.
+    result = Graphics->GetDevice()->CreateDepthStencilView(DepthStencilBuffer, &zBuffer, &DepthBuffer);
+    ReleaseCOM(DepthStencilBuffer);
+
+    Graphics->GetDeviceContext()->OMSetRenderTargets(1, &RenderTarget, DepthBuffer);
+}
+
 void ForwardRenderer::RenderSpace(UpdateEvent* event)
 {
     // clear the back buffer to the clearcolor
     float color[4] = { ClearColor.x, ClearColor.y, ClearColor.z, ClearColor.w };
     Graphics->GetDeviceContext()->ClearRenderTargetView(RenderTarget, color);
+
+    //clear the depth buffer
+    Graphics->GetDeviceContext()->ClearDepthStencilView(DepthBuffer, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
     DXDeviceInterface* DeviceInterface = Graphics->GetDevice();
     DXDeviceContext* DeviceContext = Graphics->GetDeviceContext();
@@ -89,7 +145,7 @@ void ForwardRenderer::RenderSpace(UpdateEvent* event)
     unsigned stride[2] = { sizeof(Vertex), sizeof(Vertex) };
     unsigned offset[2] = { 0, 0 };
     DeviceContext->IASetVertexBuffers(0, GraphicsSpace->VertexBuffers.size(), GraphicsSpace->VertexBuffers.data(), stride, offset);
-    DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 
     //DeviceContext->Draw(3, 0);
@@ -144,6 +200,8 @@ void ForwardRenderer::RenderSpace(UpdateEvent* event)
         Graphics->GetSwapChain()->Present(0, 0);
     }
 
+
+
     EventSend(Space, Events::FrameUpdate, event);
 }
 
@@ -153,5 +211,8 @@ void ForwardRenderer::Uninitialize()
 }
 void ForwardRenderer::Destroy()
 {
+    ReleaseCOM(DepthBuffer);
+    //If it is different then we need to:
+    //ReleaseCOM(RenderTarget);
     EventDisconnect(GameSession, this, Events::EngineUpdate, this);
 }
