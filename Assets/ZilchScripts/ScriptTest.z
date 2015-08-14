@@ -27,7 +27,6 @@ class CompTest : ZilchComponent
         
         if(InputManager.IsKeyDown(Keys.W))
         {
-            
             this.Owner.Transform.Translation = this.Owner.Transform.Translation + Real3(0,0,-20) * event.Dt;
         }
         if(InputManager.IsKeyDown(Keys.S))

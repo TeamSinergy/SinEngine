@@ -82,9 +82,13 @@ public:
     bool IsVSyncEnabled() const { return VSync; }
     Camera* GetMainCamera() const { return MainCamera; }
     unsigned GetColorMode() const { return ColorMode; }
+
+    int GetQualityLevel() const { return QualityLevel; }
+    int GetSampleRate() const { return SampleRate; }
     /*DXRenderTargetView* GetPrimaryRenderTarget() const { return RenderTarget; }*/
 
     Camera* MainCamera;
+    
 private:
     WindowSystem* Window;
     //DIRECTX11
@@ -104,9 +108,7 @@ private:
     void GetDeviceInformation();
     void CreateDeviceAndSwapChain();
     
-    void CreateDepthStencilBuffer();
-    void CreateDepthStencilState();
-    void CreateDepthStencilView();
+    //void CreateDepthStencilState();
     void CreateRasterState();
     //SetRendertTarget
     //SetWindowAsViewport
@@ -125,9 +127,9 @@ private:
 
     DXRenderTargetView* RenderTarget; //The Back-Buffer.
 
-    DXTexture2D* DepthStencilBuffer;
-    DXDepthStencilState* DepthStencilState;
-    DXDepthStencilView* DepthStencilView;
+    //DXTexture2D* DepthStencilBuffer;
+    //DXDepthStencilState* DepthStencilState;
+    
     DXRasterizerState* RasterState;
     
     

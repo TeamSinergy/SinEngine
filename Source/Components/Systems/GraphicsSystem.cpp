@@ -51,10 +51,6 @@ void GraphicsSystem::Initialize()
 {
     EventConnect(GameSession, Events::LevelLoaded, &GraphicsSystem::OnLevelLoaded, this);
     //SetWindowAsViewport(Window);
-    //CreateDepthStencilBuffer();
-    //CreateDepthStencilState();
-
-    //CreateDepthStencilView();
 
     CreateRasterState();
 
@@ -249,83 +245,42 @@ void GraphicsSystem::CreateDeviceAndSwapChain()
 
 }
 
-void GraphicsSystem::CreateDepthStencilBuffer()
-{
-    HRESULT result;
-    D3D11_TEXTURE2D_DESC depthBufferDesc;
+//void GraphicsSystem::CreateDepthStencilState()
+//{
+//    HRESULT result;
+//    D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
+//    // Initialize the description of the stencil state.
+//    ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
+//
+//    // Set up the description of the stencil state.
+//    depthStencilDesc.DepthEnable = true;
+//    depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+//    depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
+//
+//    depthStencilDesc.StencilEnable = true;
+//    depthStencilDesc.StencilReadMask = 0xFF;
+//    depthStencilDesc.StencilWriteMask = 0xFF;
+//
+//    // Stencil operations if pixel is front-facing.
+//    depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+//    depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+//    depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+//    depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+//
+//    // Stencil operations if pixel is back-facing.
+//    depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+//    depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+//    depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+//    depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+//
+//    // Create the depth stencil state.
+//    result = DeviceInterface->CreateDepthStencilState(&depthStencilDesc, &DepthStencilState);
+//    ErrorIf(FAILED(result), "Failed to Initialize DirectX11");
+//
+//    // Set the depth stencil state.
+//    DeviceContext->OMSetDepthStencilState(DepthStencilState, 1);
+//}
 
-    //Depth buffer
-    // Initialize the description of the depth buffer.
-    ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
-
-    // Set up the description of the depth buffer.
-    depthBufferDesc.Width = Window->GetDimensions().x;
-    depthBufferDesc.Height = Window->GetDimensions().y;
-    depthBufferDesc.MipLevels = 1;
-    depthBufferDesc.ArraySize = 1;
-    depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    depthBufferDesc.SampleDesc.Count = SampleRate;
-    depthBufferDesc.SampleDesc.Quality = QualityLevel - 1;
-    depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    depthBufferDesc.CPUAccessFlags = 0;
-    depthBufferDesc.MiscFlags = 0;
-
-    // Create the texture for the depth buffer using the filled out description.
-    result = DeviceInterface->CreateTexture2D(&depthBufferDesc, NULL, &DepthStencilBuffer);
-    ErrorIf(FAILED(result), "Failed to Initialize DirectX11");
-}
-void GraphicsSystem::CreateDepthStencilState()
-{
-    HRESULT result;
-    D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
-    // Initialize the description of the stencil state.
-    ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
-
-    // Set up the description of the stencil state.
-    depthStencilDesc.DepthEnable = true;
-    depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-    depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
-
-    depthStencilDesc.StencilEnable = true;
-    depthStencilDesc.StencilReadMask = 0xFF;
-    depthStencilDesc.StencilWriteMask = 0xFF;
-
-    // Stencil operations if pixel is front-facing.
-    depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-    depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-    depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-    depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-
-    // Stencil operations if pixel is back-facing.
-    depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-    depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
-    depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-    depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-
-    // Create the depth stencil state.
-    result = DeviceInterface->CreateDepthStencilState(&depthStencilDesc, &DepthStencilState);
-    ErrorIf(FAILED(result), "Failed to Initialize DirectX11");
-
-    // Set the depth stencil state.
-    DeviceContext->OMSetDepthStencilState(DepthStencilState, 1);
-}
-void GraphicsSystem::CreateDepthStencilView()
-{
-    HRESULT result;
-    D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
-    ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
-
-    // Set up the depth stencil view description.
-    depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
-    depthStencilViewDesc.Texture2D.MipSlice = 0;
-
-    // Create the depth stencil view.
-    result = DeviceInterface->CreateDepthStencilView(DepthStencilBuffer, &depthStencilViewDesc, &DepthStencilView);
-
-    DeviceContext->OMSetRenderTargets(1, &RenderTarget, DepthStencilView);
-}
 void GraphicsSystem::CreateRasterState()
 {
     HRESULT result;
@@ -490,9 +445,8 @@ void GraphicsSystem::Destroy()
         SwapChain->SetFullscreenState(false, NULL);
     }
     ReleaseCOM(RasterState);
-    ReleaseCOM(DepthStencilView);
-    ReleaseCOM(DepthStencilState);
-    ReleaseCOM(DepthStencilBuffer);
+    
+    
     ReleaseCOM(RenderTarget);
     ReleaseCOM(DeviceContext);
     ReleaseCOM(DeviceInterface);

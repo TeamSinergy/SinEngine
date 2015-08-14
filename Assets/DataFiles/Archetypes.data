@@ -4,11 +4,12 @@ Archetypes =
     {
         TimeSystem = 
         {
-            Integer MinimumFPS = 30;
+            Integer MinimumFPS = 1;
             Integer MaximumFPS = 60;
             Real TimeScale = 1;
             Boolean Paused = false;
             //How many LogicUpdates updates before a frame is rendered;
+            //should really sleep until update
             Integer StepCount = 1;
         },
         GraphicsSpace = 
@@ -50,19 +51,6 @@ Level =
             Real4 MarginColor = [1, 1, 1, 1];
         },
     },
-    TestTriangle = 
-    {
-        Transform = 
-        {
-            Real3 Translation = [0,0,5];
-            Real3 Rotation = [0,0,0];
-            Real3 Scale = [1,1,1];
-        },
-        VectorGraphic = 
-        {
-            Real4 Color = [255,255,255,1];
-        },
-    },
     TestTriangle2 = 
     {
         Transform = 
@@ -76,6 +64,20 @@ Level =
             Real4 Color = [255,255,255,1];
         },
     },
+    TestTriangle = 
+    {
+        Transform = 
+        {
+            Real3 Translation = [0,0,5];
+            Real3 Rotation = [0,0,0];
+            Real3 Scale = [1,1,1];
+        },
+        VectorGraphic = 
+        {
+            Real4 Color = [255,255,255,1];
+        },
+    },
+    
 },
 
 

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Precompiled.h"
 #include "Serializer.h"
 #include "SinSole.h"
@@ -34,11 +34,12 @@ int main(void)
     ZilchCompiledLib* ZilchLibrary = new ZilchCompiledLib("ZilchCompiledLib");
     ZilchLibrary->Create();
     ZilchLibrary->Initialize();
-    
+
     //Static Initializations
     Serializer::Initialize();
     ResourceManager::Initialize();
-
+    
+    
     DataFile* settingsFile = ResourceManager::FindResourceType<DataFile>(SettingsPath);
     //settingsFile->AddLevel("Level6")->AddObject("Object10")->AddComponent("_Movement")->AddProperty("Integer", "Speed", "10");
     //settingsFile->RemoveLevel("Level6");
