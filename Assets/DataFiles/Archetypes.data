@@ -15,6 +15,9 @@ Archetypes =
         GraphicsSpace = 
         {
         },
+        SoundSpace = 
+        {
+        },
     },
 },
 
@@ -24,7 +27,7 @@ Level =
     {
         Transform = 
         {
-            Real3 Translation = [2,0,10];
+            Real3 Translation = [0,0,10];
             Real3 Rotation = [0,0,0];
             Real3 Scale = [1,1,1];
         },
@@ -33,6 +36,8 @@ Level =
             Real FieldOfView = 45;
             Real NearPlane = 0.1;
             Real FarPlane = 1000;
+            //0 is Perspective, 1 is Orthographic
+            Integer ProjectionMode = 1;
             //Real3 Forward = [0,0,0];
         },
         CompTest = 
@@ -55,26 +60,40 @@ Level =
     {
         Transform = 
         {
-            Real3 Translation = [2,0,6];
+            Real3 Translation = [0,0,1];
             Real3 Rotation = [0,0,0];
             Real3 Scale = [1,1,1];
         },
-        VectorGraphic = 
+        Sprite = 
         {
-            Real4 Color = [255,255,255,1];
+            Real4 Color = [255,255,0,1];
+            String SpriteSource = "wood.jpg";
+        },
+        Reactive = 
+        {
+        },
+        AudioComponent = 
+        {
+            Boolean Playing = false;
+            String SoundName = "TEST";
+            String FileName = "fx_win.ogg";
+            //Boolean Looping = true; LOOPING DOES NOT WORK
         },
     },
     TestTriangle = 
     {
         Transform = 
         {
-            Real3 Translation = [0,0,5];
+            Real3 Translation = [5,0,5];
             Real3 Rotation = [0,0,0];
             Real3 Scale = [1,1,1];
         },
         VectorGraphic = 
         {
-            Real4 Color = [255,255,255,1];
+        },
+        Rotator = 
+        {
+            Real3 RotationChange = [0,45,45];
         },
     },
     

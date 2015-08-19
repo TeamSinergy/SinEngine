@@ -3451,6 +3451,7 @@ public:
   {
     (void)value;
     (void)dest;
+	//JOSH, ASK TREVOR WHY "CAMERA" IS COLLIDING
     Error("Double insert, value was not inserted!");
     return NULL;
   }
@@ -5610,6 +5611,7 @@ public:
   bool insertOrError(const VType& value, cstr error)
   {
     (void)error;
+
     bool result = insertOrError(value);
     ErrorIf(result == false, "%s", error);
     return result;

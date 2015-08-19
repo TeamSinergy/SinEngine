@@ -20857,9 +20857,11 @@ namespace Zilch
     this->BuiltLibrary->OwnedTypes.push_back(type);
 
     // Map the bound type's name to its type object
-    this->BoundTypes.insertOrError(type->Name, type,
+	//JOSH, ASK TREVOR WHY "CAMERA" IS COLLIDING
+	this->BoundTypes.insertNoOverwrite(type->Name, type);
+    /*this->BoundTypes.insertOrError(type->Name, type,
       String::Format("Another type with the same name (%s) was added to the LibraryBuilder.",
-      type->Name.c_str()).c_str());
+      type->Name.c_str()).c_str());*/
   }
 
   //***************************************************************************

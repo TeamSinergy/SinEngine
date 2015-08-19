@@ -5,6 +5,7 @@
 
 bool InputManager::InputStatesDown[MAX_KEYS] = { false };
 bool InputManager::InputStatesWasDown[MAX_KEYS] = { false };
+Real2 InputManager::MousePosition = Real2();
 
 DefineType(InputManager, SinningZilch)
 {
@@ -14,22 +15,23 @@ DefineType(InputManager, SinningZilch)
     BindStaticMethod(IsKeyDown);
     BindStaticMethod(IsKeyTriggered);
     BindStaticMethod(IsKeyReleased);
+	BindStaticMethod(GetMousePosition);
 }
 
 //Mouse
 bool InputManager::IsMouseDown(const unsigned& button)
 {
-    return InputStatesWasDown[button] && InputStatesDown[button];
+    return IsKeyDown(button);
 }
 
 bool InputManager::IsMouseTriggered(const unsigned& button)
 {
-    return !InputStatesWasDown[button] && InputStatesDown[button];
+	return IsKeyTriggered(button);
 }
 
 bool InputManager::IsMouseReleased(const unsigned& button)
 {
-    return !InputStatesDown[button] && InputStatesWasDown[button];
+	return IsKeyReleased(button);
 }
 
 //Keyboard
@@ -54,15 +56,9 @@ void InputManager::OnKeyEvent(KeyboardEvent* event)
     InputStatesDown[event->Key] = static_cast<bool>(event->IsKeyDown);
 }
 
-void InputManager::OnMouseButtonEvent(MouseEvent* event)
+void InputManager::OnMouseMoveEvent(MouseEvent* event)
 {
-        // Set the Mouse's State
-    InputStatesDown[event->Button] = static_cast<bool>(event->IsButtonDown);
-}
-
-void InputManager::OnMouseMoveEvent(const Real2& screenPosition)
-{
-
+	MousePosition = event->MousePosition;
 }
 //Bool update
 void InputManager::Update()

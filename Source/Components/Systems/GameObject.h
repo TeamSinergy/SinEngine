@@ -8,6 +8,10 @@
 #include "GraphicsManager.h"
 #include "ForwardRenderer.h"
 #include "CameraViewport.h"
+#include "Sprite.h"
+#include "AudioComponent.h"
+#include "Microphone.h"
+#include "SoundSpace.h"
 
 class Game;
 class Space;
@@ -47,6 +51,10 @@ public:
     ComponentPointer(Transform);
     ComponentPointer(VectorGraphic);
     ComponentPointer(ForwardRenderer);
+	ComponentPointer(Sprite);
+    ComponentPointer(AudioComponent);
+    ComponentPointer(Microphone);
+    ComponentPointer(SoundSpace);
 
     void Uninitialize() override;
     void Destroy() override;

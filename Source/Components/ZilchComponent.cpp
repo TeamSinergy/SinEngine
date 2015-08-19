@@ -26,7 +26,7 @@ void ZilchComponent::Serialize(DataNode* node)
             DataProperty* valueData = data->FindProperty(field->Name);
             const BoundType* valueType = valueData->GetType();
             ErrorIf(valueType->ToString() != field->PropertyType->ToString(), "The property %s on the component %s has conflicting types.", field->Name.c_str(), Name.c_str());
-            fields.popFront();
+            
             Call call(field->Set, ZILCH->GetDependencies());
             call.SetHandle(Zilch::Call::This, handle);
             const BoundType*& type = valueType;
@@ -98,9 +98,10 @@ void ZilchComponent::Serialize(DataNode* node)
                     Error("Invalid type %s on component &s.", type->ToString().c_str(), Name.c_str());
                 }
             }
-
+			
             call.Invoke(ZILCH->Report);
         }
+		fields.popFront();
     }
 }
 void ZilchComponent::Create()

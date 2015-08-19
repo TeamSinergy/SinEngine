@@ -15,13 +15,16 @@ public:
     static bool IsKeyReleased(const unsigned& key);
 
     static void OnKeyEvent(KeyboardEvent* event);
-    static void OnMouseButtonEvent(MouseEvent* event);
-    static void OnMouseMoveEvent(const Real2& screenPosition);
+	static void OnMouseMoveEvent(MouseEvent* event);
     static void Update();
+
+	static Real2 GetMousePosition() { return MousePosition; }
+	//static void SetMousePosition(Real2*& pos) { MousePosition = pos; }
 private:
     static bool InputStatesDown[MAX_KEYS];
     static bool InputStatesWasDown[MAX_KEYS];
 
+	static Real2 MousePosition;
 };
 
 enum Keys

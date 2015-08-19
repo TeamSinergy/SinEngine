@@ -10,6 +10,7 @@ DefineType(Space, SinningZilch)
     BindMethod(Initialize);
     BindMethod(Uninitialize);
     BindMethod(Destroy);
+	BindMethodAs(FindChildByName, "FindObjectByName");
 }
 
 void Space::InitializeSpace()

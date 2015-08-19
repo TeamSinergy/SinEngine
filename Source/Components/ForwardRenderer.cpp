@@ -119,11 +119,8 @@ void ForwardRenderer::RenderSpace(UpdateEvent* event)
     DXDeviceContext* DeviceContext = Graphics->GetDeviceContext();
 
     VSBufferDefault WorldViewProj;
-
-    WorldViewProj.WorldViewProjection = GraphicsSpace->GraphicsComponents[0]->Owner->Transform->GetWorldMatrix() * Graphics->GetMainCamera()->ViewProjectionMatrix();
-    //MainCamera->ViewMatrix() * MainCamera->ProjectionMatrix();
-    WorldViewProj.WorldViewProjection.Transpose();
-
+	
+    
     unsigned vertexCount = 0;
     for (unsigned i = 0; i < GraphicsSpace->GraphicsComponents.size(); ++i)
     {
@@ -131,10 +128,8 @@ void ForwardRenderer::RenderSpace(UpdateEvent* event)
     }
 
     // set the new values for the constant buffer
-    DeviceContext->UpdateSubresource(GraphicsSpace->VSConstantBuffer, 0, 0, &WorldViewProj, 0, 0);
+    //DeviceContext->UpdateSubresource(GraphicsSpace->VSConstantBuffer, 0, 0, &WorldViewProj, 0, 0);
     //Prefer map/unmap ^
-
-
 
 
     // Clear the depth buffer.
@@ -142,12 +137,50 @@ void ForwardRenderer::RenderSpace(UpdateEvent* event)
 
     // do 3D rendering on the back buffer here
     //This is the primary bottleneck
-    unsigned stride[2] = { sizeof(Vertex), sizeof(Vertex) };
+    unsigned stride[2] = { sizeof(Vertex), sizeof(Vertex)};
     unsigned offset[2] = { 0, 0 };
-    DeviceContext->IASetVertexBuffers(0, GraphicsSpace->VertexBuffers.size(), GraphicsSpace->VertexBuffers.data(), stride, offset);
-    DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	//DeviceContext->IASetVertexBuffers(0, GraphicsSpace->VertexBuffers.size(), GraphicsSpace->VertexBuffers.data(), stride, offset);
+    
+	
+    for (unsigned i = 0; i < GraphicsSpace->GraphicsComponents.size(); ++i)
+    {
+		
+		GraphicsComponent* comp = GraphicsSpace->GraphicsComponents[i];
+		DeviceContext->IASetVertexBuffers(0, 1, &GraphicsSpace->VertexBuffers[i], stride, offset);
 
+		DeviceContext->IASetPrimitiveTopology(static_cast<D3D11_PRIMITIVE_TOPOLOGY>(comp->GetPrimitiveTopology()));
+		WorldViewProj.WorldViewProjection = comp->Owner->Transform->GetWorldMatrix() * Graphics->GetMainCamera()->ViewProjectionMatrix();
+        //MainCamera->ViewMatrix() * MainCamera->ProjectionMatrix();
+        WorldViewProj.WorldViewProjection.Transpose();
+		
+		DeviceContext->VSSetShader(comp->GetVertexShader()->StoredShader, nullptr, 0);
+		DeviceContext->PSSetShader(comp->GetPixelShader()->StoredShader, nullptr, 0);
+		DeviceContext->IASetInputLayout(comp->GetVertexShader()->InputLayout);
 
+		if (comp->GetSpriteSource())
+		{
+			DeviceContext->PSSetShaderResources(0, 1, &comp->GetSpriteSource()->StoredTexture);
+		}
+		// set the shader objects
+		
+
+        DeviceContext->UpdateSubresource(GraphicsSpace->VSConstantBuffer, 0, 0, &WorldViewProj, 0, 0);
+		if (comp->GetIndexBuffer())
+		{
+			DeviceContext->IASetIndexBuffer(comp->GetIndexBuffer(), DXGI_FORMAT_R32_UINT, 0);
+		}
+		if (comp->GetIndexBuffer())
+		{
+			DeviceContext->DrawIndexed(comp->GetIndexCount() * 3, 0, 0);
+		}
+		else
+		{
+			DeviceContext->Draw(comp->GetVertexCount(), 0);
+		}
+        //3 because the indices array is made of unsigned 3's
+		
+        //
+    }
     //DeviceContext->Draw(3, 0);
 
     //DeviceContext->IASetVertexBuffers(0, 1, &VertexBuffers[1], stride, offset);
@@ -155,13 +188,14 @@ void ForwardRenderer::RenderSpace(UpdateEvent* event)
     // Set the buffer.
     //DeviceContext->IASetIndexBuffer(g_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
-    DeviceContext->DrawIndexed(6, 0, 0);
+    
 
-    WorldViewProj.WorldViewProjection = GraphicsSpace->GraphicsComponents[1]->Owner->Transform->GetWorldMatrix() * Graphics->GetMainCamera()->ViewProjectionMatrix();
-    //MainCamera->ViewMatrix() * MainCamera->ProjectionMatrix();
-    WorldViewProj.WorldViewProjection.Transpose();
-    DeviceContext->UpdateSubresource(GraphicsSpace->VSConstantBuffer, 0, 0, &WorldViewProj, 0, 0);
-    DeviceContext->DrawIndexed(6, 0, 0);
+    //WorldViewProj.WorldViewProjection = GraphicsSpace->GraphicsComponents[1]->Owner->Transform->GetWorldMatrix() * Graphics->GetMainCamera()->ViewProjectionMatrix();
+    ////MainCamera->ViewMatrix() * MainCamera->ProjectionMatrix();
+    //WorldViewProj.WorldViewProjection.Transpose();
+    //DeviceContext->UpdateSubresource(GraphicsSpace->VSConstantBuffer, 0, 0, &WorldViewProj, 0, 0);
+    //DeviceContext->DrawIndexed(6, 0, 0);
+
     //DeviceContext->DrawIndexedInstanced(3, 2, 0, 0, 0);
     //DeviceContext->Draw(3, 3);
     /*HRESULT result;

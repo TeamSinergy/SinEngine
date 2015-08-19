@@ -12,7 +12,8 @@
 solution "SinEngine"
   configurations { "Debug", "Release" }
   location "../"
-  linker    =   {"Zilch.lib"}
+  linker    =   {"Zilch.lib", "fmod_vc.lib", "fmod.dll"}
+  toolset "v120"
   project "SinEngine"
     targetname "SinEngine"
     location "."
@@ -43,15 +44,16 @@ solution "SinEngine"
     includedirs 
     {
         "../ExternalDependencies/Include",
+        "../ExternalDependencies/Include/WICTextureLoader",
         "../ExternalDependencies/Zilch",
         "../Source/**",
-        
+        "../ExternalDependencies/Include/FMod/include"
 	}
     
     libdirs 
     {
         "../ExternalDependencies/Zilch",
-        
+        "../ExternalDependencies/Include/FMod/library"
     }
 
 
@@ -63,6 +65,7 @@ solution "SinEngine"
       targetdir "../Solution/"
       postbuildcommands
               {
+                "copy ..\\ExternalDependencies\\Include\\FMod\\library\\fmod.dll ..\\Solution\\",
               }
         
 --[[ Release Configuration ]]        
@@ -73,5 +76,6 @@ solution "SinEngine"
       links {linker}
       targetdir "../Solution/BinaryFiles/Release"
       postbuildcommands
-              {       
+              {   
+                "copy ..\\ExternalDependencies\\Include\\FMod\\library\\fmod.dll ..\\Solution\\",
               }

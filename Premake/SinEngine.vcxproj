@@ -12,9 +12,9 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{455CF059-B1C6-A4D0-FA04-567666AE8225}</ProjectGuid>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>SinEngine</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -27,7 +27,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -59,22 +59,20 @@
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\GamePlay;..\Source\Components\Systems;..\Source\Core\Managers;..\Source\Utilities\ActionSystem;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Include\WICTextureLoader;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\Systems;..\Source\Core\Managers;..\Source\Core\Managers\SoundManager;..\Source\Utilities\ActionSystem;..\ExternalDependencies\Include\FMod\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <ProgramDataBaseFileName>$(OutDir)SinEngine.pdb</ProgramDataBaseFileName>
       <Optimization>Disabled</Optimization>
     </ClCompile>
-    <ResourceCompile>
-      <PreprocessorDefinitions>_DEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\GamePlay;..\Source\Components\Systems;..\Source\Core\Managers;..\Source\Utilities\ActionSystem;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Zilch.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\ExternalDependencies\Zilch;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Zilch.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\ExternalDependencies\Zilch;..\ExternalDependencies\Include\FMod\library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
+    <PostBuildEvent>
+      <Command>copy ..\ExternalDependencies\Include\FMod\library\fmod.dll ..\Solution\BinaryFiles\Debug\</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -82,28 +80,26 @@
       <PrecompiledHeaderFile>Precompiled.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\GamePlay;..\Source\Components\Systems;..\Source\Core\Managers;..\Source\Utilities\ActionSystem;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Include\WICTextureLoader;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\Systems;..\Source\Core\Managers;..\Source\Core\Managers\SoundManager;..\Source\Utilities\ActionSystem;..\ExternalDependencies\Include\FMod\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <ProgramDataBaseFileName>$(OutDir)SinEngine.pdb</ProgramDataBaseFileName>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
     </ClCompile>
-    <ResourceCompile>
-      <PreprocessorDefinitions>NDEBUG;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\ExternalDependencies\Include;..\ExternalDependencies\Zilch;..\Source\Build;..\Source\Components;..\Source\Core;..\Source\Utilities;..\Source\Zilch;..\Source\Build\Console;..\Source\Build\MemoryManager;..\Source\Build\Serializer;..\Source\Components\GamePlay;..\Source\Components\Systems;..\Source\Core\Managers;..\Source\Utilities\ActionSystem;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>Zilch.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\ExternalDependencies\Zilch;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Zilch.lib;fmod_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\ExternalDependencies\Zilch;..\ExternalDependencies\Include\FMod\library;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
+    <PostBuildEvent>
+      <Command>copy ../ExternalDependencies/Include/FMod/library/fmod.dll ../Solution/BinaryFiles/Release/</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\Build\Console\SinSole.h" />
@@ -120,6 +116,7 @@
     <ClInclude Include="..\Source\Components\DefaultGameSetup.h" />
     <ClInclude Include="..\Source\Components\ForwardRenderer.h" />
     <ClInclude Include="..\Source\Components\GraphicsSpace.h" />
+    <ClInclude Include="..\Source\Components\Sprite.h" />
     <ClInclude Include="..\Source\Components\Systems\Component.h" />
     <ClInclude Include="..\Source\Components\Systems\Game.h" />
     <ClInclude Include="..\Source\Components\Systems\GameObject.h" />
@@ -137,6 +134,11 @@
     <ClInclude Include="..\Source\Core\Managers\InputManager.h" />
     <ClInclude Include="..\Source\Core\Managers\ResourceManager.h" />
     <ClInclude Include="..\Source\Core\Managers\SoundManager.h" />
+    <ClInclude Include="..\Source\Core\Managers\SoundManager\AudioComponent.h" />
+    <ClInclude Include="..\Source\Core\Managers\SoundManager\AudioEvents.h" />
+    <ClInclude Include="..\Source\Core\Managers\SoundManager\SoundSpace.h" />
+    <ClInclude Include="..\Source\Core\Managers\SoundManager\Microphone.h" />
+    <ClInclude Include="..\Source\Core\Managers\SoundManager\Sound.h" />
     <ClInclude Include="..\Source\Core\SinEntity.h" />
     <ClInclude Include="..\Source\Utilities\ActionSystem\ActionBase.h" />
     <ClInclude Include="..\Source\Utilities\ActionSystem\ActionCall.h" />
@@ -171,6 +173,7 @@
     <ClCompile Include="..\Source\Components\DefaultGameSetup.cpp" />
     <ClCompile Include="..\Source\Components\ForwardRenderer.cpp" />
     <ClCompile Include="..\Source\Components\GraphicsSpace.cpp" />
+    <ClCompile Include="..\Source\Components\Sprite.cpp" />
     <ClCompile Include="..\Source\Components\Systems\Component.cpp" />
     <ClCompile Include="..\Source\Components\Systems\Game.cpp" />
     <ClCompile Include="..\Source\Components\Systems\GameObject.cpp" />
@@ -188,6 +191,14 @@
     <ClCompile Include="..\Source\Core\Managers\InputManager.cpp" />
     <ClCompile Include="..\Source\Core\Managers\ResourceManager.cpp" />
     <ClCompile Include="..\Source\Core\Managers\SoundManager.cpp" />
+    <ClCompile Include="..\Source\Core\Managers\SoundManager\AudioComponent.cpp" />
+    <ClCompile Include="..\Source\Core\Managers\SoundManager\AudioEvents.cpp" />
+    <ClCompile Include="..\Source\Core\Managers\SoundManager\SoundSpace.cpp" />
+    <ClCompile Include="..\Source\Core\Managers\SoundManager\DSP_System.cpp" />
+    <ClCompile Include="..\Source\Core\Managers\SoundManager\Microphone.cpp" />
+    <ClCompile Include="..\Source\Core\Managers\SoundManager\MicrophoneSystem.cpp" />
+    <ClCompile Include="..\Source\Core\Managers\SoundManager\ProceduralSynthesis.cpp" />
+    <ClCompile Include="..\Source\Core\Managers\SoundManager\Sound.cpp" />
     <ClCompile Include="..\Source\Core\SinEntity.cpp" />
     <ClCompile Include="..\Source\Utilities\ActionSystem\ActionCall.cpp" />
     <ClCompile Include="..\Source\Utilities\ActionSystem\ActionDelay.cpp" />

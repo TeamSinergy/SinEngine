@@ -1,6 +1,6 @@
 class Utility
 {
-	
+	sends MouseMove:MouseEvent;
     
 }
 
@@ -77,10 +77,9 @@ enum Mouse
 {
 	LEFT = 1,
 	RIGHT = 2,
-    CANCEL = 3,
-	MIDDLE = 4,
-	BUTTONX1 = 5,
-	BUTTONX2 = 6
+	MIDDLE = 3,
+	BUTTONX1 = 4,
+	BUTTONX2 = 5
 }
 
 enum ControllerDir

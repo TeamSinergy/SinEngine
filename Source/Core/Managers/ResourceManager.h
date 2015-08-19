@@ -2,6 +2,7 @@
 #include <Precompiled.h>
 #include "DataLevel.h"
 #include "DataObject.h"
+
 class DataFile;
 
 #define FreeResource(mapName) \
@@ -13,7 +14,10 @@ class DataFile;
         comps.popFront(); \
                         } \
         mapName.deallocate(); \
-        } \
+        } 
+
+//template<typename T1, typename T2>
+//using MapRange = Zero::HashedContainer<Zero::Pair<T1, T2>, Zero::PairHashAdapter<Zero::HashPolicy<T1>, T1, T2>, Zero::DefaultAllocator>::range;
 
 class Icon
 {
@@ -47,10 +51,12 @@ public:
     VertexShader() {};
     VertexShader(String& name) : Name(name) {};
     void Initialize();
-    ID3DBlob* StoredShader;
+    ID3DBlob* ShaderDesc;
+	ID3D11VertexShader* StoredShader;
+	DXInputLayout* InputLayout;
 
     String Name;
-    ~VertexShader() { StoredShader->Release(); };
+	~VertexShader() { ReleaseCOM(ShaderDesc); ReleaseCOM(StoredShader); ReleaseCOM(InputLayout); };
 };
 
 class PixelShader
@@ -60,10 +66,28 @@ public:
     PixelShader() {};
     PixelShader(String& name) : Name(name) {};
     void Initialize();
-    ID3DBlob* StoredShader;
+	ID3DBlob* ShaderDesc;
+	ID3D11PixelShader* StoredShader;
 
     String Name;
-    ~PixelShader() { StoredShader->Release(); };
+	~PixelShader() { ReleaseCOM(ShaderDesc); ReleaseCOM(StoredShader); };
+};
+
+typedef ID3D11ShaderResourceView DXTexture;
+
+class Texture
+{
+public:
+    ZilchDeclareBaseType(Texture, TypeCopyMode::ReferenceType);
+    Texture() {};
+    Texture(String& name);
+    void LoadInTexture(ID3D11Device* device);
+    void Initialize() {};
+    Real4 Sample(Real2 uvCoordinates);
+    DXTexture* StoredTexture = nullptr;
+
+    String Name;
+	~Texture() { ReleaseCOM(StoredTexture); };
 };
 
 class ResourceManager
@@ -126,6 +150,17 @@ public:
     static DataLevel* FindLevel(const String& levelName);
 
     static DataObject* ResourceManager::FindArchetype(const String& archName);
+
+	//Very expensive to do this.
+	template<typename T>
+	static typename HashMap<String, T*>::range GetRange()
+	{
+		HashMap<String, T*>* objects = nullptr;
+
+		objects = (HashMap<String, T*>*) GetVector(ZilchTypeId(T));
+
+		return objects->all();
+	}
     //Sounds
 
     //Fonts
@@ -166,5 +201,6 @@ private:
     static HashMap<String, FragmentShader*> FragmentShaders;
     static HashMap<String, VertexShader*> VertexShaders;
     static HashMap<String, PixelShader*> PixelShaders;
+    static HashMap<String, Texture*> Textures;
 };
 
