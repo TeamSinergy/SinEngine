@@ -21,16 +21,24 @@ void Game::Update()
 {
     // this struct holds Windows event messages
     MSG msg;
-    Handle eventHandle = ZilchAllocate<UpdateEvent>();
+    Handle eventHandle = ZilchAllocate<UpdateEvent>(); //For Logic Update
+	Handle scrollEventHandle = ZilchAllocate<ScrollEvent>(); //For ALL mouse/keyboard events.
+    Handle focusEventHandle = ZilchAllocate<FocusEvent>();//For window focus in/out
     UpdateEvent* eventData = (UpdateEvent*)eventHandle.Dereference();
-    KeyboardEvent* keyboardEventData = new KeyboardEvent(0, 0);
-    MemCheck(eventData, "UpdateEvent");
+	ScrollEvent* keyboardEventData = (ScrollEvent*)scrollEventHandle.Dereference();
+    FocusEvent* focusEventData = (FocusEvent*)focusEventHandle.Dereference();
+
     // wait for the next message in the queue, store the result in 'msg'
     GameClock clock;
     bool Continue = true;
 
     EventConnect(this, Events::KeyDown, &InputManager::OnKeyEvent);
     EventConnect(this, Events::KeyUp, &InputManager::OnKeyEvent);
+	EventConnect(this, Events::MouseDown, &InputManager::OnKeyEvent);
+	EventConnect(this, Events::MouseUp, &InputManager::OnKeyEvent);
+	EventConnect(this, Events::MouseMove, &InputManager::OnMouseMoveEvent);
+	EventSend(this, Events::MouseMove, keyboardEventData);
+	
 
     while (Continue)
     {
@@ -54,13 +62,86 @@ void Game::Update()
                     keyboardEventData->IsKeyDown = false;
                     EventSend(this, Events::KeyUp, keyboardEventData);
                 }break;
-                case WM_MBUTTONDOWN:
-                {
-                    //SinWriteLine((int)msg.wParam);
-                }break;
+				case WM_LBUTTONDOWN:
+				case WM_RBUTTONDOWN:
+				{
+					keyboardEventData->Key = msg.wParam;
+					keyboardEventData->IsKeyDown = true;
+					EventSend(this, Events::MouseDown, keyboardEventData);
+				}break;
+				case WM_XBUTTONDOWN:
+				{
+					if (msg.wParam == 1)
+					{
+						keyboardEventData->Key = 4;
+					}
+					else
+					{
+						keyboardEventData->Key = 5;
+					}
+					keyboardEventData->IsKeyDown = true;
+					EventSend(this, Events::MouseDown, keyboardEventData);
+				}break;
+				//It registers Middle mouse as 16!?!?!?!
+				case WM_MBUTTONDOWN:
+				{
+					keyboardEventData->Key = 3;
+					keyboardEventData->IsKeyDown = true;
+					EventSend(this, Events::MouseDown, keyboardEventData);
+				}break;
+				//It registers the proper key on mouse DOWN but not UP?????
+				case WM_LBUTTONUP:
+				{
+					keyboardEventData->Key = 1;
+					keyboardEventData->IsKeyDown = false;
+					EventSend(this, Events::MouseUp, keyboardEventData);
+				}break;
+				case WM_RBUTTONUP:
+				{
+					keyboardEventData->Key = 2;
+					keyboardEventData->IsKeyDown = false;
+					EventSend(this, Events::MouseUp, keyboardEventData);
+				}break;
+				case WM_MBUTTONUP:
+				{
+					keyboardEventData->Key = 3;
+					keyboardEventData->IsKeyDown = false;
+					EventSend(this, Events::MouseUp, keyboardEventData);
+				}break;
+				case WM_XBUTTONUP:
+				{
+					if (msg.wParam == 1)
+					{
+						keyboardEventData->Key = 4;
+					}
+					else
+					{
+						keyboardEventData->Key = 5;
+					}
+					keyboardEventData->IsKeyDown = false;
+					EventSend(this, Events::MouseUp, keyboardEventData);
+				}break;
                 case WM_MOUSEMOVE:
                 {
-
+					keyboardEventData->MousePosition = Real2(static_cast<float>(msg.pt.x), static_cast<float>(msg.pt.y));
+					EventSend(this, Events::MouseMove, keyboardEventData);
+                }break;
+				case WM_MOUSEWHEEL:
+				{
+					keyboardEventData->WheelDelta = msg.wParam;
+					SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0, &keyboardEventData->ScrollLines, 0);
+					EventSend(this, Events::MouseScroll, keyboardEventData);
+				}break;
+                case WM_KILLFOCUS:
+                {
+                    //I'm not sure if this is actually working.
+                    focusEventData->InFocus = false;
+                    EventSend(this, Events::FocusEvent, focusEventData);
+                }break;
+                case WM_SETFOCUS:
+                {
+                    focusEventData->InFocus = true;
+                    EventSend(this, Events::FocusEvent, focusEventData);
                 }break;
                 case WM_QUIT:
                 {
@@ -79,7 +160,7 @@ void Game::Update()
 
     EventDisconnect(this,this, Events::KeyDown, this);
     EventDisconnect(this, this, Events::KeyUp, this);
-    delete keyboardEventData;
+	scrollEventHandle.Delete();
     eventHandle.Delete();
 }
 

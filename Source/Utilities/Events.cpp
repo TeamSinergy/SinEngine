@@ -16,6 +16,24 @@ DefineType(KeyboardEvent, SinningZilch)
 
 DefineType(MouseEvent, SinningZilch)
 {
-    BindFieldGet(Button);
-    BindFieldGet(IsButtonDown);
+	BindConstructor();
+	BindDestructor();
+    BindFieldGetAs(Key, "Button");
+    BindFieldGetAs(IsKeyDown, "IsButtonDown");
+	BindFieldGet(MousePosition);
+}
+
+DefineType(ScrollEvent, SinningZilch)
+{
+	BindConstructor();
+	BindDestructor();
+	BindFieldGet(ScrollLines);
+	BindFieldGet(WheelDelta);
+}
+
+DefineType(FocusEvent, SinningZilch)
+{
+    BindConstructor();
+    BindDestructor();
+    BindFieldGet(InFocus);
 }

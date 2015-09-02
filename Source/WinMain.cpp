@@ -24,6 +24,7 @@ int OnExit(void)
 
 int main(void)
 {
+    
     //EngineInstance program = GetModuleHandle(0);
     onexit(OnExit);
     SinSole::CreateConsole("SinSole");

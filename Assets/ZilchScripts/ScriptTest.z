@@ -14,13 +14,19 @@ class CompTest : ZilchComponent
         Trace("This is the name of my Owner:");
         Console.WriteLine(this.Owner.Name);
         Events.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
-        
+        Events.Connect(this.GameSession, Events.MouseMove, this.OnMouseMove);
         Trace(this.Name);
         this.Name = "Freddie";
         //debug break;
     }
     sends LogicUpdate:UpdateEvent;
     sends KeyUp:KeyboardEvent;
+    
+    function OnMouseMove(event : MouseEvent)
+    {
+        //Trace(this.Space.FindObjectByName("Camera").Camera.MouseToWorldZPlane(event.MousePosition));
+        
+    }
     
     function OnLogicUpdate(event : UpdateEvent)
     {
@@ -54,6 +60,19 @@ class CompTest : ZilchComponent
             
             this.Owner.Transform.Rotation = this.Owner.Transform.Rotation +  Real3(0,20,0) * event.Dt;
         }
+        
+        if(InputManager.IsMouseTriggered(Mouse.LEFT))
+        {
+            Trace("LEFT");
+        }
+        if(InputManager.IsMouseTriggered(Mouse.RIGHT))
+        {
+            Trace("RIGHT");
+        }
+        if(InputManager.IsMouseTriggered(Mouse.MIDDLE))
+        {
+            Trace("MIDDLE");
+        }
     }
     
     function Destroy()
@@ -75,4 +94,140 @@ struct Trace
     {
         Console.WriteLine(output);
     }
+}
+
+class Rotator : ZilchComponent
+{
+    var RotationChange:Real3 = Real3();
+    
+    constructor() : base()
+    {
+    }
+    
+    function Initialize()
+    {
+        Events.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {  
+        this.Owner.Transform.Rotation = this.Owner.Transform.Rotation +  this.RotationChange * event.Dt;
+    }
+}
+
+class Reactive : ZilchComponent
+{
+    
+    var Rect:Rectangle = Rectangle(1, 1);
+    var Camera:Camera = null;
+    constructor() : base()
+    {
+    }
+    
+    function Initialize()
+    {
+        this.Camera = this.Space.FindObjectByName("Camera").Camera;
+        Events.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    }
+    
+    function OnLogicUpdate(event : UpdateEvent)
+    {  
+        var mousePos = InputManager.GetMousePosition();
+        mousePos = this.Camera.MouseToWorldZPlane(mousePos);
+        var pos = this.Owner.Transform.Translation;
+        
+        this.Rect.X = pos.X;
+        this.Rect.Y = pos.Y;
+        
+        if(this.Rect.Contains(mousePos))
+        {
+            this.Owner.Sprite.Color = Real4(255, 0, 0, 1);
+        }
+        else
+        {
+            this.Owner.Sprite.Color = Real4(0, 0, 255, 1);
+        }
+    }
+}
+
+struct Rectangle
+{
+	var Width: Real = 0;
+	var Height: Real = 0;
+	var X:Real = 0;
+	var Y:Real = 0;
+	
+	constructor()
+	{
+    }
+	constructor(width: Real, height: Real)
+	{
+		this.Width = width;
+		this.Height = height;
+	}
+	constructor(dimensions: Real2)
+	{
+		this.Width = dimensions.X;
+		this.Height = dimensions.Y;
+	}
+	
+	var HalfWidth: Real
+	{
+		get { return this.Width/2;}
+	}
+	
+	var HalfHeight: Real
+	{
+		get { return this.Height/2;}
+	}
+	
+	function Contains(x: Real, y: Real):Boolean
+	{
+		var halfWidth = this.HalfWidth;
+		var halfHeight = this.HalfHeight;
+		if(x <= (this.X + halfWidth) && x >= (this.X - halfWidth))
+		{
+			if(y <= (this.Y + halfHeight) && y >= (this.X - halfHeight))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	function Contains(pos:Real2):Boolean
+	{
+		var halfWidth = this.HalfWidth;
+		var halfHeight = this.HalfHeight;
+		if(pos.X < (this.X + halfWidth) && pos.X > (this.X - halfWidth))
+		{
+			if(pos.Y < (this.Y + halfHeight) && pos.Y > (this.Y - halfHeight))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	 
+	var TopLeft: Real2
+	{
+        get { return Real2(this.X - this.HalfWidth, this.Y + this.HalfHeight);}
+	}
+	
+	var TopRight: Real2
+	{
+		get { return Real2(this.X + this.HalfWidth, this.Y  + this.HalfHeight);}
+	}
+	
+	var BottomLeft: Real2
+	{
+		get { return Real2(this.X - this.HalfWidth, this.Y - this.HalfHeight);}
+	}
+	
+	var BottomRight: Real2
+	{
+		get { return Real2(this.X + this.HalfWidth, this.Y - this.HalfHeight);}
+	}
 }

@@ -1,7 +1,0 @@
-//Must take in: float4 position : SV_POSITION, but it is unreadable in the current compile method
-//Otherwise, position is put in the place of color.
-float4 PSMain(float4 position : SV_POSITION, float4 color : COLOR) : SV_TARGET
-{
-    
-    return color;
-}

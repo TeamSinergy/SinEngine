@@ -2,6 +2,13 @@
 #include "SinEntity.h"
 #include "ZilchCompiledLib.h"
 
+ZilchDefineStaticLibrary(SinningZilch)
+{
+    ZilchInitializeType(SinEntity);
+    ZilchInitializeType(Camera);
+    
+}
+
 DefineType(SinEntity, SinningZilch)
 {
     //type->HandleManager = ZilchManagerId(Zilch::PointerManager);

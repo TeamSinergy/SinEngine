@@ -44,6 +44,7 @@
 
 namespace Zilch
 {
+
   // Defines
   #ifndef ZilchLoop
     #define ZilchLoop for (;;)
@@ -4039,6 +4040,7 @@ public:
   {
     (void)value;
     (void)dest;
+	//JOSH, ASK TREVOR WHY "CAMERA" IS COLLIDING
     Error("Double insert, value was not inserted!");
     return NULL;
   }
@@ -6425,6 +6427,7 @@ public:
   bool insertOrError(const VType& value, cstr error)
   {
     (void)error;
+
     bool result = insertOrError(value);
     ErrorIf(result == false, "%s", error);
     return result;
@@ -24998,7 +25001,7 @@ virtual size_t Get1000()
   // Declare a base type (belongs inside the type definition)
   #define ZilchDeclareBaseType(SelfType, CopyType)                                      \
     ZilchDeclareHelper(SelfType, Zilch::NoType, CopyType)
-
+    
   // Declare a derived type (belongs inside the type definition)
   #define ZilchDeclareDerivedType(SelfType, BaseType)                                   \
     ZilchDeclareHelper(SelfType, BaseType, BaseType::ZilchCopyMode)

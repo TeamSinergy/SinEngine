@@ -25,15 +25,25 @@ void GraphicsSpace::Initialize()
     
 }
 
-void GraphicsSpace::AddGraphicsComponent(GraphicsComponent* comp, const DXBufferDescription& bufferDesc)
+//This extra step is inelegant but be very useful for optimization in the future.
+void GraphicsSpace::AddGraphicsComponent(GraphicsComponent* comp, const DXBufferDescription& vertexBuffer, const DXBufferDescription& indexBuffer)
 {
     GraphicsComponents.push_back(comp);
-    comp->SetVertexBuffer(CreateBuffer(bufferDesc));
+    if (vertexBuffer.ByteWidth != 0)
+    {
+        comp->SetVertexBuffer(CreateBuffer(vertexBuffer));
+    }
+    if (indexBuffer.ByteWidth != 0)
+    {
+        comp->SetIndexBuffer(CreateBuffer(indexBuffer));
+    }
+    
 }
 void GraphicsSpace::RemoveGraphicsComponent(GraphicsComponent* comp)
 {
     GraphicsComponents.erase_value(comp);
     DestroyBuffer(comp->GetVertexBuffer());
+    DestroyBuffer(comp->GetIndexBuffer());
 }
 
 DXBuffer* GraphicsSpace::CreateBuffer(const DXBufferDescription& desc)
@@ -46,12 +56,20 @@ DXBuffer* GraphicsSpace::CreateBuffer(const DXBufferDescription& desc)
     {
         VertexBuffers.push_back(buffer);
     }break;
+    case D3D11_BIND_INDEX_BUFFER:
+    {
+        IndexBuffers.push_back(buffer);
+    }break;
     }
     return buffer;
 }
 
 void GraphicsSpace::DestroyBuffer(DXBuffer* buffer)
 {
+    if (!buffer)
+    {
+        return;
+    }
     DXBufferDescription desc;
     buffer->GetDesc(&desc);
 
@@ -60,6 +78,10 @@ void GraphicsSpace::DestroyBuffer(DXBuffer* buffer)
     case D3D11_BIND_VERTEX_BUFFER:
     {
         VertexBuffers.erase_value(buffer);
+    }break;
+    case D3D11_BIND_INDEX_BUFFER:
+    {
+        IndexBuffers.erase_value(buffer);
     }break;
     }
 
@@ -70,29 +92,19 @@ void GraphicsSpace::InitializePipeline()
 {
 
     //Should initialize them all;
-    VertexShader* VS = ResourceManager::FindResourceType<VertexShader>("VertexTest.vert");
-    PixelShader* PS = ResourceManager::FindResourceType<PixelShader>("PixelTest.pix");
+    //VertexShader* VS = ResourceManager::FindResourceType<VertexShader>("VertexTest.vert");
+    //PixelShader* PS = ResourceManager::FindResourceType<PixelShader>("PixelTest.pix");
 
     DXDeviceInterface* DeviceInterface = Graphics->GetDevice();
     DXDeviceContext* DeviceContext = Graphics->GetDeviceContext();
 
-    DeviceInterface->CreateVertexShader(VS->StoredShader->GetBufferPointer(), VS->StoredShader->GetBufferSize(), NULL, &pVS);
-    DeviceInterface->CreatePixelShader(PS->StoredShader->GetBufferPointer(), PS->StoredShader->GetBufferSize(), NULL, &pPS);
+    
 
-    // set the shader objects
-    DeviceContext->VSSetShader(pVS, nullptr, 0);
-    DeviceContext->PSSetShader(pPS, nullptr, 0);
+    
 
 
-    //The element description
-    D3D11_INPUT_ELEMENT_DESC inputLayout[] =
-    {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-    };
-
-    DeviceInterface->CreateInputLayout(inputLayout, ARRAYSIZE(inputLayout), VS->StoredShader->GetBufferPointer(), VS->StoredShader->GetBufferSize(), &InputLayout);
-    DeviceContext->IASetInputLayout(InputLayout);
+	//D3D11_SAMPLER_DESC
+	DeviceContext->PSSetSamplers(0, 0, nullptr);
 
 
     //Perhaps I can add this to the GraphicsSystemClass
@@ -107,29 +119,50 @@ void GraphicsSpace::InitializePipeline()
     DeviceInterface->CreateBuffer(&bd, NULL, &VSConstantBuffer);
     DeviceContext->VSSetConstantBuffers(0, 1, &VSConstantBuffer);
 
+	D3D11_BLEND_DESC blendDesc;
+	blendDesc.RenderTarget[0].BlendEnable = TRUE;
+	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	blendDesc.IndependentBlendEnable = false;
+	blendDesc.AlphaToCoverageEnable = true;
+
+	DeviceInterface->CreateBlendState(&blendDesc, &BlendState);
+
+
+	//float BlendFactor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	DeviceContext->OMSetBlendState(BlendState, 0, 0xffffffff);
     //INDEX BUFFER
     // Fill in a buffer description.
-    D3D11_BUFFER_DESC bufferDesc;
-    ZeroMemory(&bufferDesc, sizeof(bufferDesc));
+    //D3D11_BUFFER_DESC bufferDesc;
+    //ZeroMemory(&bufferDesc, sizeof(bufferDesc));
 
-    bufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    bufferDesc.ByteWidth = sizeof(unsigned int) * 3 * 2;
-    bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    bufferDesc.CPUAccessFlags = 0;
-    bufferDesc.MiscFlags = 0;
+    //bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    //bufferDesc.ByteWidth = sizeof(unsigned int) * 3 * 2;
+    //bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    //bufferDesc.CPUAccessFlags = 0;
+    //bufferDesc.MiscFlags = 0;
 
-    // Create indices.
-    unsigned int indices[] = { 0, 1, 2, 0, 2, 3 };
-    // Define the resource data.
-    D3D11_SUBRESOURCE_DATA InitData;
-    InitData.pSysMem = indices;
-    InitData.SysMemPitch = 0;
-    InitData.SysMemSlicePitch = 0;
+    //// Create indices.
+    ////unsigned int indices[] = { 0, 1, 2, 0, 2, 3 }; //Triangle list
+    //unsigned int indices[] = { 0, 1, 2, 3, 2, 0}; //Triangle strip
+
+    ////Make it so that each object has their own index buffer.
+
+    //// Define the resource data.
+    //D3D11_SUBRESOURCE_DATA InitData;
+    //InitData.pSysMem = indices;
+    //InitData.SysMemPitch = 0;
+    //InitData.SysMemSlicePitch = 0;
 
     // Create the buffer with the device.
-    DeviceInterface->CreateBuffer(&bufferDesc, &InitData, &IndexBuffer);
+    //DeviceInterface->CreateBuffer(&bufferDesc, &InitData, &IndexBuffer);
     // Set the buffer.
-    DeviceContext->IASetIndexBuffer(IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+    //DeviceContext->IASetIndexBuffer(IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 }
 
@@ -170,10 +203,9 @@ void GraphicsSpace::Uninitialize()
 }
 void GraphicsSpace::Destroy()
 {
-    ReleaseCOM(pVS);
-    ReleaseCOM(pPS) //TO BE MADE HASMAPS
+    ReleaseCOM(BlendState);
     ReleaseCOM(InputLayout);
-    ReleaseCOM(IndexBuffer);
+    //ReleaseCOM(IndexBuffer);
     ReleaseCOM(VSConstantBuffer);
     ReleaseCOM(PSConstantBuffer);
     VertexBuffers.clear();

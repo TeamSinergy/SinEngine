@@ -17,13 +17,31 @@ public:
     bool IsKeyDown;
 };
 
-class MouseEvent : public EventData
+class MouseEvent : public KeyboardEvent
 {
 public:
-    ZilchDeclareDerivedType(MouseEvent, EventData);
-    MouseEvent(int button, bool buttonState) : EventData(), Button(button), IsButtonDown(buttonState) {}
-    int Button;
-    bool IsButtonDown;
+    ZilchDeclareDerivedType(MouseEvent, KeyboardEvent);
+	MouseEvent(int button = 0, bool buttonState = false) : KeyboardEvent(button, buttonState){}
+    int& Button = Key;
+    bool& IsButtonDown = IsKeyDown;
+	Real2 MousePosition;
+};
+
+class ScrollEvent : public MouseEvent
+{
+public:
+	ZilchDeclareDerivedType(ScrollEvent, MouseEvent);
+	ScrollEvent() : MouseEvent() {}
+	unsigned ScrollLines = 0;
+	int WheelDelta = 0;
+};
+
+class FocusEvent : public EventData
+{
+public:
+    ZilchDeclareDerivedType(FocusEvent, EventData);
+    FocusEvent() : EventData() {}
+    bool InFocus;
 };
 
 namespace Zilch
@@ -46,6 +64,10 @@ namespace Zilch
         ZilchDefineEvent(RightMouseDown);
         ZilchDefineEvent(MiddleMouseUp);
         ZilchDefineEvent(MiddleMouseDown);
+		ZilchDefineEvent(MouseMove);
+		ZilchDefineEvent(MouseScroll);
         ZilchDefineEvent(LevelLoaded);
+        ZilchDefineEvent(FocusEvent);
+		
     };
 };

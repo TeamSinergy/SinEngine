@@ -61,6 +61,7 @@ private:
 extern ZilchCompiledLib* ZILCH;
 
 //ZilchDefines so we don't need to redo ALL the binding
+//Aask Trevor about ZilchInitializeType(UpdateEvent);
 #define DefineType(Type, Library) ZilchDefineType(##Type, #Type, ##Library, builder, type)
 #define BindConstructor() ZilchBindConstructor(builder, type, ZilchSelf, ZilchNoNames)
 #define BindDestructor() ZilchBindDestructor(builder, type, ZilchSelf)

@@ -4,6 +4,7 @@
 #include "Game.h"
 #include "DataComponent.h"
 
+
 //#define MacroTest(x) ##x
 
 DefineType(GameObject, SinningZilch)
@@ -22,7 +23,9 @@ DefineType(GameObject, SinningZilch)
     BindMethodOverload(AddComponent, void, const Handle&, DataComponent*);
     BindFieldGet(Space);
     BindFieldGet(GameSession);
-    BindFieldGetSet(Transform);
+    BindFieldGet(Transform);
+	BindFieldGet(Sprite);
+	BindFieldGet(Camera);
     BindMethod(Disconnect);
 }
 

@@ -38,9 +38,10 @@ namespace Math
 
 struct Vertex
 {
-    Vertex(Real3 pos = Real3(), Real4 color = Real4(1, 1, 1, 1)) : Position(pos), Color(color){}
+    Vertex(Real3 pos = Real3(), Real4 color = Real4(1, 1, 1, 1), Real2 uv = Real2()) : Position(pos), Color(color), Uv(uv){}
     Real3 Position;      // position
     Real4 Color;         // color
+    Real2 Uv;
 };
 
 struct VSBufferDefault

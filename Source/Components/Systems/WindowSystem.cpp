@@ -90,6 +90,13 @@ void WindowSystem::Create()
     DesktopResolution = GraphicsManager::GetDesktopResolution(handle);
 }
 
+Integer2 WindowSystem::GetAdjustedDimensions() const 
+{
+	RECT wr = { 0, 0, Dimensions.x, Dimensions.y };
+	AdjustWindowRect(&wr, info.style, false);
+	return Integer2(wr.right, wr.bottom);
+}
+
 void WindowSystem::Initialize()
 {
     
@@ -98,6 +105,15 @@ void WindowSystem::Initialize()
 void WindowSystem::Uninitialize()
 {
     
+}
+
+Integer2 WindowSystem::GetPosition()
+{
+	RECT rect;
+	
+	GetWindowRect(handle, &rect);
+
+	return Integer2(rect.left, rect.top);
 }
 
 void WindowSystem::SetWidth(int width)

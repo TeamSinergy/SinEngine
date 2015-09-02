@@ -7,6 +7,9 @@
     <Filter Include="Assets\DataFiles">
       <UniqueIdentifier>{34296B32-2022-8A84-4954-6F0935AC6990}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets\Sounds">
+      <UniqueIdentifier>{6332DEE7-CFF2-591E-982D-A39B04AD9EFA}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Assets\ZilchScripts">
       <UniqueIdentifier>{4964BD8C-B5C5-9A9A-3E33-E14CAA93D159}</UniqueIdentifier>
     </Filter>
@@ -37,6 +40,9 @@
     <Filter Include="Source\Core\Managers">
       <UniqueIdentifier>{0B53DB5E-F7E1-6428-A000-79238C6E75CE}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core\Managers\SoundManager">
+      <UniqueIdentifier>{7E7A434F-EAE8-98CE-33D2-53CE9F7F8E6A}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source\Utilities">
       <UniqueIdentifier>{41B3B086-2DAC-CFD8-56DE-B45D4236AFE4}</UniqueIdentifier>
     </Filter>
@@ -56,6 +62,9 @@
     </None>
     <None Include="..\Assets\Settings.data">
       <Filter>Assets</Filter>
+    </None>
+    <None Include="..\Assets\Sounds\SoundAssets.txt">
+      <Filter>Assets\Sounds</Filter>
     </None>
     <None Include="..\Assets\ZilchScripts\ScriptTest.z">
       <Filter>Assets\ZilchScripts</Filter>
@@ -105,6 +114,9 @@
       <Filter>Source\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Components\GraphicsSpace.h">
+      <Filter>Source\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Components\Sprite.h">
       <Filter>Source\Components</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Components\Systems\Component.h">
@@ -157,6 +169,21 @@
     </ClInclude>
     <ClInclude Include="..\Source\Core\Managers\SoundManager.h">
       <Filter>Source\Core\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Managers\SoundManager\AudioComponent.h">
+      <Filter>Source\Core\Managers\SoundManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Managers\SoundManager\AudioEvents.h">
+      <Filter>Source\Core\Managers\SoundManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Managers\SoundManager\Microphone.h">
+      <Filter>Source\Core\Managers\SoundManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Managers\SoundManager\Sound.h">
+      <Filter>Source\Core\Managers\SoundManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\Core\Managers\SoundManager\SoundSpace.h">
+      <Filter>Source\Core\Managers\SoundManager</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Core\SinEntity.h">
       <Filter>Source\Core</Filter>
@@ -247,6 +274,9 @@
     <ClCompile Include="..\Source\Components\GraphicsSpace.cpp">
       <Filter>Source\Components</Filter>
     </ClCompile>
+    <ClCompile Include="..\Source\Components\Sprite.cpp">
+      <Filter>Source\Components</Filter>
+    </ClCompile>
     <ClCompile Include="..\Source\Components\Systems\Component.cpp">
       <Filter>Source\Components\Systems</Filter>
     </ClCompile>
@@ -297,6 +327,30 @@
     </ClCompile>
     <ClCompile Include="..\Source\Core\Managers\SoundManager.cpp">
       <Filter>Source\Core\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\Managers\SoundManager\AudioComponent.cpp">
+      <Filter>Source\Core\Managers\SoundManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\Managers\SoundManager\AudioEvents.cpp">
+      <Filter>Source\Core\Managers\SoundManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\Managers\SoundManager\DSP_System.cpp">
+      <Filter>Source\Core\Managers\SoundManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\Managers\SoundManager\Microphone.cpp">
+      <Filter>Source\Core\Managers\SoundManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\Managers\SoundManager\MicrophoneSystem.cpp">
+      <Filter>Source\Core\Managers\SoundManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\Managers\SoundManager\ProceduralSynthesis.cpp">
+      <Filter>Source\Core\Managers\SoundManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\Managers\SoundManager\Sound.cpp">
+      <Filter>Source\Core\Managers\SoundManager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Source\Core\Managers\SoundManager\SoundSpace.cpp">
+      <Filter>Source\Core\Managers\SoundManager</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Core\SinEntity.cpp">
       <Filter>Source\Core</Filter>

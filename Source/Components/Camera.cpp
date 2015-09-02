@@ -5,16 +5,20 @@
 DefineType(Camera, SinningZilch)
 {
     BindComponent(Camera);
+	BindMethod(MouseToWorldZPlane);
+	
 }
 
 void Camera::Serialize(DataNode* node)
 {
     Owner->Camera = this;
-
+	
     DataComponent* data = static_cast<DataComponent*>(node);
     FieldOfView = XM_PIDIV4;
     SerializeValue(data, FieldOfView);
     Dependancy(GameSession->WindowSystem);
+	SerializeValue(data, ProjectionMode);
+	SerializeValue(data, CameraSize);
     Integer2 dim = GameSession->WindowSystem->GetDimensions();
     AspectRatio = (float)dim.x / (float)dim.y;
     SerializeValue(data, AspectRatio);
@@ -42,7 +46,7 @@ void Camera::Create()
 void Camera::Initialize()
 {
     UpdateProjectionMatrix();
-    UpdateOrthographicMatrix();
+    //UpdateOrthographicMatrix();
     UpdateViewMatrix();
     EventConnect(GameSession, "EngineUpdate", &Camera::Update, this);
 }
@@ -70,6 +74,11 @@ void Camera::UpdateViewMatrix()
 }
 void Camera::UpdateProjectionMatrix()
 {
+	if (ProjectionMode == ProjectionMode::Orthographic)
+	{
+		UpdateOrthographicMatrix();
+		return;
+	}
     float fov = Math::DegToRad(FieldOfView);
     XMMATRIX proj = XMMatrixPerspectiveFovRH(fov, AspectRatio, NearPlane, FarPlane);
     XMStoreFloat4x4((XMFLOAT4X4*)&projectionMatrix.array, proj);
@@ -79,8 +88,33 @@ void Camera::UpdateOrthographicMatrix()
 {
     Integer2 dim = GameSession->WindowSystem->GetDimensions();
     // Create an orthographic projection matrix for 2D rendering.
-    XMMATRIX ortho = XMMatrixOrthographicRH((float)dim.x, (float)dim.y, NearPlane, FarPlane);
-    XMStoreFloat4x4((XMFLOAT4X4*)&orthographicMatrix.array, ortho);
+    XMMATRIX ortho = XMMatrixOrthographicRH((float)dim.x/CameraSize, (float)dim.y/CameraSize, NearPlane, FarPlane);
+	XMStoreFloat4x4((XMFLOAT4X4*)&projectionMatrix.array, ortho);
+}
+
+Real2 Camera::MouseToWorldZPlane(Real2 mousePos) const
+{
+	Integer2 dim = GameSession->WindowSystem->GetDimensions();
+	Integer2 pos = GameSession->WindowSystem->GetPosition();
+	
+	mousePos -= Real2((float)pos.x, (float)pos.y);
+	mousePos.x = ((2.0f * (float)mousePos.x) / (float)dim.x) - 1.0f;
+	mousePos.y = (((2.0f * (float)mousePos.y) / (float)dim.y) - 1.0f) * -1.0f;
+
+	Math::Vec3 nearPlane = Math::Vec3(mousePos.x, mousePos.y, 0);
+	//Math::Vec3 farPlane = Math::Vec3(mousePos.x, mousePos.y, 1);
+
+    Math::Matrix4 viewProjInv = ViewProjectionMatrix().Inverted();;
+
+    //FOR CASTING RAY
+	Math::Vec3 origin = Math::TransformPointCol(viewProjInv, nearPlane);
+	/*Math::Vec3 rayend = Math::TransformPointCol(viewProjInv, farPlane);
+	Math::Vec3 raydir = rayend - origin;
+	Math::Normalize(&raydir);*/
+
+	
+
+	return Real2(origin.x, origin.y);
 }
 
 void Camera::Reset()

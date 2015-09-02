@@ -54,6 +54,38 @@ void GraphicsSystem::Initialize()
 
     CreateRasterState();
 
+	//Loading in all of the textures now that the device has been created.
+	auto textures = ResourceManager::GetRange <Texture>();
+	while (!textures.empty())
+	{ 
+		textures.front().second->LoadInTexture(GetDevice());
+		textures.popFront();
+	}
+
+	D3D11_INPUT_ELEMENT_DESC inputLayout[] =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "UV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+
+	auto vShaders = ResourceManager::GetRange <VertexShader>();
+	while (!vShaders.empty())
+	{
+		VertexShader* VS = vShaders.front().second;
+		DeviceInterface->CreateVertexShader(VS->ShaderDesc->GetBufferPointer(), VS->ShaderDesc->GetBufferSize(), NULL, &VS->StoredShader);
+		//The element description
+		DeviceInterface->CreateInputLayout(inputLayout, ARRAYSIZE(inputLayout), VS->ShaderDesc->GetBufferPointer(), VS->ShaderDesc->GetBufferSize(), &VS->InputLayout);
+		vShaders.popFront();
+	}
+	auto pShaders = ResourceManager::GetRange <PixelShader>();
+	while (!pShaders.empty())
+	{
+		PixelShader* PS = pShaders.front().second;
+		DeviceInterface->CreatePixelShader(PS->ShaderDesc->GetBufferPointer(), PS->ShaderDesc->GetBufferSize(), NULL, &PS->StoredShader);
+		pShaders.popFront();
+	}
+	
     //InitializePipeline();
     //CreateVertexBuffer();
     ////CalculateWorldMatrix();
@@ -103,8 +135,9 @@ void GraphicsSystem::GetDeviceInformation()
         {
             if (displayModeList[i].Height == (unsigned int)Window->GetDesktopResolution().y)
             {
-                RefreshRate.x = displayModeList[i].RefreshRate.Numerator;
-                RefreshRate.y = displayModeList[i].RefreshRate.Denominator;
+                //60 works for the Asus, but may cause issues in other comps.
+                RefreshRate.x = 60;//displayModeList[i].RefreshRate.Numerator;
+                RefreshRate.y = 0;//displayModeList[i].RefreshRate.Denominator;
             }
         }
     }

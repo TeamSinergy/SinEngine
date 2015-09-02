@@ -58,12 +58,14 @@ public:
     void SetWidth(int width);
     void SetHeight(int height);
     
-
+	Integer2 GetPosition();
     void SetPosition(Integer2 position);
 
     void SetFullscreen(int screenMode);
 
     int GetScreenMode(){ return screenMode; }
+
+	Integer2 GetAdjustedDimensions() const;
 
     const Integer2& GetDimensions() const{ return Dimensions; }
     void SetDimensions(const Integer2&);

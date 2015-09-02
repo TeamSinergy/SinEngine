@@ -1,0 +1,10 @@
+//Must take in: float4 position : SV_POSITION, but it is unreadable in the current compile method
+//Otherwise, position is put in the place of color.
+Texture2D Texture;
+SamplerState ss;
+
+float4 PSMain(float4 position : SV_POSITION, float4 color : COLOR, float2 uv : UV) : SV_TARGET
+{
+    
+    return color * Texture.Sample(ss, uv);
+}

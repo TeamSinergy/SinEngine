@@ -9,11 +9,11 @@ SinEngine =
             String WindowClassName = "Window1";
             Boolean Visible = true;
             //Integer xPosition = 350;
-            //Integer yPosition = 350;
+            //Integer yPosition = 250;
             Integer Width = 1024;
             Integer Height = 800;
             String IconPath = "icon.ico";
-            Integer ScreenMode = 'W';
+            Integer ScreenMode = 'B';
             Boolean Resizable = false;
             Boolean CursorVisible = true;
         },
