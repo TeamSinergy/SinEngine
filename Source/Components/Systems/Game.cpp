@@ -21,11 +21,13 @@ void Game::Update()
 {
     // this struct holds Windows event messages
     MSG msg;
-    Handle eventHandle = ZilchAllocate<UpdateEvent>();
-	Handle scrollEventHandle = ZilchAllocate<ScrollEvent>();
+    Handle eventHandle = ZilchAllocate<UpdateEvent>(); //For Logic Update
+	Handle scrollEventHandle = ZilchAllocate<ScrollEvent>(); //For ALL mouse/keyboard events.
+    Handle focusEventHandle = ZilchAllocate<FocusEvent>();//For window focus in/out
     UpdateEvent* eventData = (UpdateEvent*)eventHandle.Dereference();
 	ScrollEvent* keyboardEventData = (ScrollEvent*)scrollEventHandle.Dereference();
-    MemCheck(eventData, "UpdateEvent");
+    FocusEvent* focusEventData = (FocusEvent*)focusEventHandle.Dereference();
+
     // wait for the next message in the queue, store the result in 'msg'
     GameClock clock;
     bool Continue = true;
@@ -130,6 +132,17 @@ void Game::Update()
 					SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0, &keyboardEventData->ScrollLines, 0);
 					EventSend(this, Events::MouseScroll, keyboardEventData);
 				}break;
+                case WM_KILLFOCUS:
+                {
+                    //I'm not sure if this is actually working.
+                    focusEventData->InFocus = false;
+                    EventSend(this, Events::FocusEvent, focusEventData);
+                }break;
+                case WM_SETFOCUS:
+                {
+                    focusEventData->InFocus = true;
+                    EventSend(this, Events::FocusEvent, focusEventData);
+                }break;
                 case WM_QUIT:
                 {
                     Continue = false;

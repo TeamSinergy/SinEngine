@@ -13,7 +13,7 @@ SinEngine =
             Integer Width = 1024;
             Integer Height = 800;
             String IconPath = "icon.ico";
-            Integer ScreenMode = 'W';
+            Integer ScreenMode = 'B';
             Boolean Resizable = false;
             Boolean CursorVisible = true;
         },

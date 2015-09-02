@@ -11,7 +11,7 @@ void VectorGraphic::Serialize(DataNode* node)
     this->GraphicsComponent::Serialize(node);
 
     Owner->VectorGraphic = this;
-
+    //PrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
     /*Vertices.push_back(Vertex(Real3(0.45f, 0.5f, 0), Real4(0.0f, 1.0f, 0.0f, 1.0f)));
     Vertices.push_back(Vertex(Real3(0.45f, -0.5, 0), Real4(0.0f, 1.0f, 0.0f, 1.0f)));
 
