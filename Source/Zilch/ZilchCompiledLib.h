@@ -2,7 +2,7 @@
 #include "Precompiled.h"
 #define ScriptFilePath "../Assets/ZilchScripts"
 
-ZilchStaticLibrary(SinningZilch);
+ZilchDeclareStaticLibrary(SinningZilch);
 ZilchDeclareRedirectType(std::string, Zilch::String);
 
 class ZilchCompiledLib : public SinEntity
@@ -61,7 +61,7 @@ private:
 extern ZilchCompiledLib* ZILCH;
 
 //ZilchDefines so we don't need to redo ALL the binding
-#define DefineType(Type, Library) ZilchDefineType(##Library, ##Type, #Type, builder, Type)
+#define DefineType(Type, Library) ZilchDefineType(##Type, #Type, ##Library, builder, type)
 #define BindConstructor() ZilchBindConstructor(builder, type, ZilchSelf, ZilchNoNames)
 #define BindDestructor() ZilchBindDestructor(builder, type, ZilchSelf)
 #define BindVirtualConstructor(...) ZilchBindConstructorVirtual(builder, type, ZilchSelf, ZilchNoNames, __VA_ARGS__)

@@ -192,7 +192,6 @@
     <ClCompile Include="..\Source\Utilities\ActionSystem\ActionDelay.cpp" />
     <ClCompile Include="..\Source\Utilities\ActionSystem\ActionGroup.cpp" />
     <ClCompile Include="..\Source\Utilities\ActionSystem\ActionSequence.cpp" />
-    <ClCompile Include="..\Source\Utilities\ActionSystem\ActionSystem.cpp" />
     <ClCompile Include="..\Source\Utilities\ArrayRange.cpp" />
     <ClCompile Include="..\Source\Utilities\Events.cpp" />
     <ClCompile Include="..\Source\Utilities\GameClock.cpp" />

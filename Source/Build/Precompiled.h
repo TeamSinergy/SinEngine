@@ -58,6 +58,7 @@
 #define NOMINMAX //Zilch defines these.
 #define _WINSOCKAPI_ //For Zilch Debugger
 #define NO_SHLWAPI_STRFCNS //Zilch also defines these.
+#define _WINSPOOL_ //ZIlch conflicts
 #include <WinSock2.h>
 #include <windows.h>
 #include <windowsx.h>

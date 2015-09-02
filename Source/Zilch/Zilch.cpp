@@ -12515,9 +12515,9 @@ namespace Zilch
     // Connect the event handler up to this newly created member delegate
     EventConnect(senderHandler, eventName, eventDelegate, receiverHandler);
   }
-  
-  //JOSH WROTE THIS
-  void EventsClass::Disconnect(const Handle& sender, const Handle& reciever, StringParam EventName, const Handle& thisPointer)
+
+  // JOSH WROTE THIS
+      void EventsClass::Disconnect(const Handle& sender, const Handle& reciever, StringParam EventName, const Handle& thisPointer)
   {
       // Get the state that called the function (this is thread local and therefore safe)
       ExecutableState* state = ExecutableState::CallingState;

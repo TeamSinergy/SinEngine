@@ -30,7 +30,7 @@ int main(void)
     std::cout << "---- SinSole Initialized ----" << std::endl;
 
     //A static initialization of the Zilch Project for the debugger.
-    ZilchStartup(StartupFlags::None);
+    ZilchSetup setup(StartupFlags::None);
     ZilchCompiledLib* ZilchLibrary = new ZilchCompiledLib("ZilchCompiledLib");
     ZilchLibrary->Create();
     ZilchLibrary->Initialize();
@@ -63,7 +63,7 @@ int main(void)
     ZilchLibrary->Uninitialize();
     ZilchLibrary->Destroy();
     delete ZilchLibrary;
-    ZilchShutdown();
+    
     
     
     /*Matrix m = Matrix(4, 2);
